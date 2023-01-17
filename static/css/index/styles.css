@@ -72,3 +72,100 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .codehilite .vi { color: #19177C } /* Name.Variable.Instance */
 .codehilite .vm { color: #19177C } /* Name.Variable.Magic */
 .codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
+
+html, body {
+    margin: 0;
+    height: 100%;
+    background: url('background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    font: inherit;
+    font-family: Euclid,sans-serif,Arial,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue;
+    font-size: 20px;
+    letter-spacing: -.63px;
+}
+.column{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.card {
+  height: 70%;
+  width: 50%;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba( 255, 255, 255, 0.3 );
+  box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+  backdrop-filter: blur( 4px );
+  -webkit-backdrop-filter: blur( 4px );
+  border-radius: 10px;
+  border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+/* Media query for screens smaller than 600px */
+@media (max-width: 600px) {
+  .card {
+      width: 90%; /* decrease the width of the card */
+      height: auto; /* adjust the height to fit the content */
+  }
+
+  /* adjust the font-size of the content inside the card */
+  .card .identification p {
+      font-size: calc(1vw + 40%);
+  }
+  .card .identification input {
+      font-size: calc(1vw + 40%);
+  }
+}
+.form{
+  width: 60%;
+  height: 80%;
+  color: rgb(39, 55, 76);
+	justify-content: space-around;
+	display: flex; 
+	flex-direction: column;
+	align-items: center;
+}
+input{
+  width: 100%;
+  height: 10%;
+  border: none;
+  border-radius: 10px;
+  background: white;
+  font-size:100%;
+  text-align: center;
+}
+/* Media query for screens smaller than 600px */
+@media (max-width: 600px) {
+  .card .identification input {
+      font-size: 10%;
+      text-align: center;
+  }
+}
+input::placeholder {
+  text-align: center;
+  color: rgb(56, 65, 74);
+  font-size: 1em;
+}
+input:focus{
+  outline: none;
+  box-shadow: 0 5px 10px rgba( 30, 30,30, 0.5 );
+}
+input[type="submit"] {
+  border-color: rgb(39, 55, 76);
+  color: white;
+  background:rgb(39, 55, 76) ;
+  transition: 0.5s ease;
+}
+input[type="submit"]:hover{
+  transform: scale(1.1);
+  cursor: pointer;
+  background:#DAF7A6;
+  border-color: #DAF7A6;
+  color: black;
+}
