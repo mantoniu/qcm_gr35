@@ -52,16 +52,24 @@ def register():
       password = request.form['password']
       name = request.form['name']
       firstname = request.form['firstname']
-      if not('email' in request.form and 'password' in request.form and 'name' in request.form and 'firstname' in request.form):
+      if ('email' in request.form and 'password' in request.form and 'name' in request.form and 'firstname' in request.form):
             if globals.users_data.addUser(User(email, password, name, firstname)):
                   session['email'] = email
                   session['password'] = password
                   return render_template('card.html')
             else:
-                  return render_template('index.html',html=html)
+                  return render_template('index.html')
 
-globals.users_data.addUser(User(email="fabiepnj@gmail.com", password="zebi", name="Wolchzbfhbzeh", firstname="Fabien"))
 print(globals.users_data.users_array)
+
+
+@app.route('/newcard')
+def newcard():
+      return {"id":1} ## Remplacer 1 par id
+
+@app.route('/newanswer')
+def newanswer():
+      return {"answercount":1} ## Remplacer 1 par id
 
 if __name__ == '__main__':
       app.run(debug=True)
