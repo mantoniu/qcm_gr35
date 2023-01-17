@@ -18,7 +18,7 @@
 <div class="column">
 	
 <div class="card" id="connection">
-	<form action="connexion.php" method="POST" class="form">
+	<form action="/login" method="POST" class="form">
 		<p style="font-size: 2em;margin: 0;height:10%;">J'ai déjà un compte</p>
 		<input type="email" name="email" placeholder="Adresse email" oninput="this.value=this.value.toLowerCase()" required="required">
 		<input type="password" name="password" placeholder="Mot de passe" onmouseenter="this.type='current-password'" onmouseleave="this.type='password'" required="required">
@@ -28,7 +28,7 @@
 <h3 id="s'inscrire">Je n'ai pas de compte ?&nbsp;<a href="#" onclick="inscription()">S'inscrire</a></h3>
 
 <div class="card" id="inscription" style="display:none;">
-	<form action="card.html" method="POST" class="form">
+	<form action="/register" method="POST" class="form">
 		<p style="font-size: 2em;margin: 0;height:10%;">Je m'inscris</p>
 		<input type="name" name="name" placeholder="Nom" required="required">
 		<input type="firstname" name="firstname" placeholder="Prénom" required="required">

@@ -11,7 +11,7 @@ class UsersData():
     
     def containsUser(self, user: User) -> bool:
         for users in self.users_array:
-            if(user.email == users.email):
+            if user.email == users.email:
                 return True
         return False
 
@@ -22,3 +22,12 @@ class UsersData():
             return True
         else:
             return False
+    
+    def login(self, email: str, password: str) -> bool:
+        for users in self.users_array:
+            if email == users.email:
+                if password == users.password:
+                    return True
+                else:
+                    return False
+        return False
