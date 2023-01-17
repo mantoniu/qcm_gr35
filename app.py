@@ -1,3 +1,4 @@
+import globals
 from flask import Flask,url_for,render_template,request
 from flaskext.markdown import Markdown
 import markdown
@@ -37,4 +38,5 @@ def index():
 
 
 if __name__ == '__main__':
-	app.run(debug=True)
+      app.run(debug=True)
+      globals.initialize() 
