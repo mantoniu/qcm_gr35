@@ -2,6 +2,7 @@ import globals
 from flask import Flask,url_for,render_template,request
 from flaskext.markdown import Markdown
 import markdown
+
 # Init App
 app = Flask(__name__)
 Markdown(app)
@@ -26,11 +27,22 @@ graph TB
 D --> E
 E --> F
 ​```
+
+
+$$e^{i\pi}+1=0$$
+
+
+
+```python
+class Qcm:
+    def __init__(self,statement,answers,good_answers):
+        self.statement = statement
+        self.answers = answers
+        self.good_answers = good_answers
+```
 """
 
-html = markdown.markdown(text, extensions=['md_mermaid'])
-
-
+html = markdown.markdown(text, extensions=['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code'])
 
 @app.route('/')
 def index():
