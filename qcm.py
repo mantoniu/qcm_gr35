@@ -5,7 +5,7 @@ class Question():
         self.possibles_responses = possibles_responses
         self.valids_responses = valids_reponses
     def get_display(self):
-        pass
+        return 
 
 
 class QCM:

@@ -6,3 +6,6 @@ class User():
         self.password = hash(password)
         self.name = name
         self.firstname = firstname
+    
+    def __repr__(self) -> str:
+        return self.email + ";" + self.password + ";" + self.name + ";" + self.firstname

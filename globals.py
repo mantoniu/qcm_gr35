@@ -1,4 +1,4 @@
-from saving import *
+from saving import UsersData
 
 def init():
     global users_data

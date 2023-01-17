@@ -2,11 +2,13 @@ import globals
 from flask import Flask,url_for,render_template,request
 from flaskext.markdown import Markdown
 import markdown
+from user import User
 
 # Init App
 app = Flask(__name__)
 Markdown(app)
-
+if __name__ == '__main__':
+      globals.init() 
 
 
 text = """
@@ -48,7 +50,8 @@ html = markdown.markdown(text, extensions=['md_mermaid','markdown.extensions.att
 def index():
       return render_template('index.html',html=html)
 
+globals.users_data.addUser(User(email="fabiepnj@gmail.com", password="zebi", name="Wolchzbfhbzeh", firstname="Fabien"))
+print(globals.users_data.users_array)
 
 if __name__ == '__main__':
       app.run(debug=True)
-      globals.initialize() 
