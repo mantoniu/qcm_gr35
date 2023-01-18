@@ -18,10 +18,10 @@ class Question():
 
 
 class QCM:
-    def __init__(self, name: str, questions_id: list, id:str = None) -> None:
+    def __init__(self, name: str, questions: list, id:str = None) -> None:
         self.id = id
         self.name = name
-        self.questions_id = questions_id
+        self.questions = questions
     
     def generate_id(self) -> str:
         self.id = hash(str(uuid4()))

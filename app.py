@@ -28,7 +28,7 @@ def index():
       if not('email' in session and 'password' in session):
             return render_template('index.html',html=html)
       else:
-            return render_template('card.html')
+            return render_template('card.html', qcm=saving.qcm_data.get_all_qcm())
 
 @app.route('/logout')
 def logout():
