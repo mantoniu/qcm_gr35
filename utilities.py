@@ -1,5 +1,6 @@
 import csv
 from hashlib import md5
+from os import mkdir, path
 
 global line_separator
 line_separator = "@__//1*"
@@ -27,3 +28,13 @@ def read_file(file_name: str) -> list:
         for line in lines:
             tab.append(line.split(row_separator))
     return tab
+
+def create_save_file(file_name: str) -> str:
+    if not(path.exists("saves")):
+        mkdir("saves")
+    try:
+        f = open("saves/" + file_name, 'x')
+        f.close()
+    except:
+        pass
+    return "saves/" + file_name

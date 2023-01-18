@@ -1,4 +1,5 @@
 import globals
+import saving
 from flask import Flask,url_for,render_template,request,session,redirect
 from flaskext.markdown import Markdown
 import markdown
@@ -6,10 +7,11 @@ from user import User
 
 # Init App
 app = Flask(__name__)
-app.secret_key = 'AHJBHG236RT6YT4GYH2BN_"_ç"rç372UYFG2EIU2YG'
+app.secret_key = 'AHJBHG236RT6YT4GYH2BN__r372UYFG2EIU2YG'
 Markdown(app)
 if __name__ == '__main__':
       globals.init() 
+      saving.init()
 
 
 text = """
@@ -19,7 +21,7 @@ Some text.
 
 """
 
-html = markdown.markdown(text, extensions=['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code'])
+html = markdown.markdown(text, extensions=globals.md_extentions)
 
 @app.route('/')
 def index():
@@ -36,27 +38,27 @@ def logout():
 
 @app.route('/login',methods = ['POST'])
 def login():
-      email = request.form['email']
-      password = request.form['password']
-      if email != "" and password != "":
+      if 'email' in request.form and 'password' in request.form:
+            email = request.form['email']
+            password = request.form['password']
             if globals.users_data.login(email, password):
                   session['email'] = email
                   session['password'] = password
-                  return render_template('card.html')
+                  return redirect('/')
             else:
                   return render_template('index.html',html=html)
 
 @app.route('/register', methods=['POST'])
 def register():
-      email = request.form['email']
-      password = request.form['password']
-      name = request.form['name']
-      firstname = request.form['firstname']
-      if not('email' in request.form and 'password' in request.form and 'name' in request.form and 'firstname' in request.form):
+      if 'email' in request.form and 'password' in request.form and 'name' in request.form and 'firstname' in request.form:
+            email = request.form['email']
+            password = request.form['password']
+            name = request.form['name']
+            firstname = request.form['firstname']
             if globals.users_data.addUser(User(email, password, name, firstname)):
                   session['email'] = email
                   session['password'] = password
-                  return render_template('card.html')
+                  return redirect('/')
             else:
                   return render_template('index.html',html=html)
 

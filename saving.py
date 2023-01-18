@@ -1,13 +1,14 @@
 from utilities import *
 from user import User
+from qcm import QCM, Question
 
 class UsersData():
     def __init__(self) -> None:
         self.users_array = []
-        tab = read_file("saves/users.txt")
+        tab = read_file(create_save_file("users.txt"))
         for row in tab:
             if len(row) > 3:
-                self.users_array.append(User(row[0], row[1], row[2], row[3]))
+                self.users_array.append(User(email=row[0], password=row[1], name=row[2], firstname=row[3]))
     
     def containsUser(self, user: User) -> bool:
         for users in self.users_array:
@@ -31,3 +32,71 @@ class UsersData():
                 else:
                     return False
         return False
+
+class QuestionsData():
+    def __init__(self) -> None:
+        self.questions_array = []
+        tab = read_file(create_save_file("questions.txt"))
+        for row in tab:
+            if len(row) > 3:
+                possibles_responses = []
+                for i in range(3, len(row)):
+                    possibles_responses.append(row[i])
+                self.questions_array.append(Question(id=row[0], question=row[1], valids_reponses=list(map(int, row[2].split(";"))), possibles_responses=possibles_responses))
+    
+    def contains_id(self, id: str):
+        for questions in self.questions_array:
+            if questions.id == id:
+                return True
+        return False
+
+    def contains_question(self, question: Question) -> bool:
+        return self.contains_id(question.id)
+
+    def add_question(self, question: Question) -> None:
+        id = question.generate_id()
+        while id == "" or self.contains_id(id):
+            id = question.generate_id()
+        valids_responses_indexes = str(question.valids_responses[0])
+        for i in range(1, len(question.valids_responses)):
+            valids_responses_indexes += ";" + str(question.valids_responses[i])
+        add_line_to_file('saves/questions.txt', [question.id, question.question, valids_responses_indexes, question.possibles_responses])
+        self.questions_array.append(question)
+    
+    def get_all_questions(self):
+        return self.questions_array
+
+class QCMData():
+    def __init__(self) -> None:
+        self.qcm_array = []
+        tab = read_file(create_save_file("qcm.txt"))
+        for row in tab:
+            if len(row) > 2:
+                questions_id = []
+                for i in range(2, len(row)):
+                    questions_id.append(row[i])
+                self.qcm_array.append(QCM(id=row[0], name=row[1], questions_id=questions_id))
+    
+    def contains_id(self, id: str):
+        for qcm in self.qcm_array:
+            if qcm.id == id:
+                return True
+        return False
+    
+    def contains_qcm(self, qcm: QCM) -> bool:
+        return self.contains_id(qcm.id)
+
+    def add_qcm(self, qcm: QCM) -> None:
+        id = qcm.generate_id()
+        while id == "" or self.contains_id(id):
+            id = qcm.generate_id()
+        add_line_to_file('saves/qcm.txt', [qcm.id, qcm.name, qcm.questions_id])
+        self.qcm_array.append(qcm)
+
+def init():
+    global users_data
+    users_data = UsersData()
+    global questions_data
+    questions_data = QuestionsData()
+    global qcm_data
+    qcm_data = QCMData()
