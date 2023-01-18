@@ -6,15 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="static/css/card/card-style.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.3.0/mermaid.min.js"></script>
+    <script type="text/javascript" src="/static/js/math-rendering.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/script.js"></script>
 </head>    
 <body>
+    <!-- Bonton de création d'une question -->
+
+    <button value="Ajouter card" onclick="new_card()" id="button-add-card">Ajouter une question</button>
+
+    <!--  Apparition des questions déjà enregistrées   -->
+
     {% for question in questions_array %}
     <div class='card' id ={{ question.id }}> 
         <div class='header-card'> 
-            <textarea class='enonce' type='text' spellcheck='false' placeholder="Ecrire l'énoncé..." id={{ "enonce_"+ question.id }}></textarea> \
+            {{ question.html|safe }}
         </div> 
         <div class='body-card'> 
             {% for i in range (0,len(question.possibles_responses)) %}
@@ -24,13 +34,11 @@
                         <input type='checkbox' id={{ "switch"+ i +"_"+ card.id }}> 
                         <label for={{ "switch"+ i +"_"+ card.id }}></label> 
                     </div> 
-                    <p>question.possibles_responses[i]</p> 
+                    <p> {{ question.possibles_responses[i] }}</p> 
                     <i class='fas fa-trash'></i> 
                 </div> 
             {% endfor %}
             <div class='card-navbar'> 
-                <button type='submit' id={{ "submitA_"+ question.id }}>Aperçu</button> 
-                <div onclick='add_answer()' class='circle'><i class='fas fa-plus'></i></div> 
                 <button type='submit' id={{ "submitV_"+ question.id }}>Valider</button> 
             </div> 
         </div> 
