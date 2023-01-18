@@ -8,7 +8,7 @@ class UsersData():
         tab = read_file(create_save_file("users.txt"))
         for row in tab:
             if len(row) > 3:
-                self.users_array.append(User(email=row[0], password=row[1], name=row[2], firstname=row[3], hash=False))
+                self.users_array.append(User(email=row[0], password=row[1], name=row[2], firstname=row[3], do_hash=False))
     
     def containsUser(self, user: User) -> bool:
         for users in self.users_array:
