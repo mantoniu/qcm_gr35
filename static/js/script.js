@@ -17,7 +17,7 @@ function connection(){
 function new_card(){
     document.getElementById('button-add-card').style.display = "none";
     html = ' \
-    <form action="/newcard" > \
+    <form action="/newcard" class="form-card"> \
         <div class="card"> \
             <div class="header-card"> \
                 <textarea type="text" spellcheck="false" placeholder="Ecrire l énoncé..." id="enonce"></textarea> \
@@ -31,7 +31,7 @@ function new_card(){
                                 <label for="switch3"></label> \
                             </div> \
                             <textarea type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea> \
-                            <button class="trash-button"><i class="fas fa-trash"></i></button> \
+                            <button onclick="deleteAnswer()" class="trash-button"><i class="fas fa-trash"></i></button> \
                         </div> \
                         <div class="response" id="response3"> \
                             <div class="switch"> \
