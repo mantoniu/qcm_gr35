@@ -1,9 +1,12 @@
 from utilities import *
 
 class User():
-    def __init__(self, email:str, password:str, name:str, firstname:str) -> None: #firstname = prénom
+    def __init__(self, email:str, password:str, name:str, firstname:str, do_hash:bool = True) -> None: #firstname = prénom
         self.email = email
-        self.password = hash(password)
+        if do_hash:
+            self.password = hash(password)
+        else:
+            self.password = password
         self.name = name
         self.firstname = firstname
     

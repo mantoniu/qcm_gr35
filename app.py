@@ -2,8 +2,9 @@ import globals
 import saving
 from flask import Flask,url_for,render_template,request,session,redirect
 from flaskext.markdown import Markdown
-import markdown
+import markdown as md
 from user import User
+from qcm import *
 
 # Init App
 app = Flask(__name__)
@@ -21,7 +22,7 @@ Some text.
 
 """
 
-html = markdown.markdown(text, extensions=globals.md_extentions)
+html = md.markdown(text, extensions=globals.md_extensions)
 
 @app.route('/')
 def index():
@@ -34,19 +35,20 @@ def index():
 def logout():
       session.pop('email')
       session.pop('password')
-      return render_template('index.html',html=html)
+      return redirect('/')
 
 @app.route('/login',methods = ['POST'])
 def login():
+      print("test1")
       if 'email' in request.form and 'password' in request.form:
+            print("test2")
             email = request.form['email']
             password = request.form['password']
-            if globals.users_data.login(email, password):
+            if saving.users_data.login(email, password):
+                  print("test3")
                   session['email'] = email
                   session['password'] = password
-                  return redirect('/')
-            else:
-                  return render_template('index.html',html=html)
+            return redirect('/')
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -55,15 +57,17 @@ def register():
             password = request.form['password']
             name = request.form['name']
             firstname = request.form['firstname']
-            if globals.users_data.addUser(User(email, password, name, firstname)):
+            if saving.users_data.addUser(User(email, password, name, firstname)):
                   session['email'] = email
                   session['password'] = password
                   return redirect('/')
             else:
                   return render_template('index.html',html=html)
 
-globals.users_data.addUser(User(email="fabiepnj@gmail.com", password="zebi", name="Wolchzbfhbzeh", firstname="Fabien"))
-print(globals.users_data.users_array)
+q1 = Question(question="Combien ?", possibles_responses=["Onze", "Treize"], valids_reponses=[0])
+q2 = Question(question="Où?", possibles_responses=["Ici", "Là-bas", "Par là"], valids_reponses=[2, 3])
+qcm1 = QCM("QCM Test", [q1, q2])
+saving.qcm_data.add_qcm(qcm1)
 
 if __name__ == '__main__':
       app.run(debug=True)

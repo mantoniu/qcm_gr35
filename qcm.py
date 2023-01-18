@@ -3,7 +3,7 @@ from uuid import uuid4
 from utilities import hash
 
 class Question():
-    def __init__(self, question: str, valids_reponses: list(int), possibles_responses: list(str), id: str = None) -> None:
+    def __init__(self, question: str, valids_reponses: list, possibles_responses: list, id: str = None) -> None:
         self.id = id
         self.question = question
         self.possibles_responses = possibles_responses
@@ -22,6 +22,14 @@ class QCM:
         self.id = id
         self.name = name
         self.questions = questions
+    
+    def add_question(self, question: Question) -> None:
+        self.questions.append(question)
+    
+    def remove_question(self, question: Question) -> None:
+        for i in range(len(self.questions)):
+            if self.questions[i].id == question.id:
+                self.questions.pop(i)
     
     def generate_id(self) -> str:
         self.id = hash(str(uuid4()))

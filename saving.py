@@ -8,7 +8,7 @@ class UsersData():
         tab = read_file(create_save_file("users.txt"))
         for row in tab:
             if len(row) > 3:
-                self.users_array.append(User(email=row[0], password=row[1], name=row[2], firstname=row[3]))
+                self.users_array.append(User(email=row[0], password=row[1], name=row[2], firstname=row[3], hash=False))
     
     def containsUser(self, user: User) -> bool:
         for users in self.users_array:
@@ -27,7 +27,7 @@ class UsersData():
     def login(self, email: str, password: str) -> bool:
         for users in self.users_array:
             if email == users.email:
-                if password == users.password:
+                if hash(password) == users.password:
                     return True
                 else:
                     return False
@@ -57,16 +57,20 @@ class QuestionsData():
         id = question.generate_id()
         while id == "" or self.contains_id(id):
             id = question.generate_id()
+        line_to_add = [question.id, question.question]
         valids_responses_indexes = str(question.valids_responses[0])
         for i in range(1, len(question.valids_responses)):
             valids_responses_indexes += ";" + str(question.valids_responses[i])
-        add_line_to_file('saves/questions.txt', [question.id, question.question, valids_responses_indexes, question.possibles_responses])
+        line_to_add.append(valids_responses_indexes)
+        for responses in question.possibles_responses:
+            line_to_add.append(responses)
+        add_line_to_file('saves/questions.txt', line_to_add)
         self.questions_array.append(question)
     
     def get_all_questions(self) -> list:
         return self.questions_array
     
-    def get_question_by_id(self) -> Question:
+    def get_question_by_id(self, id: str) -> Question:
         for questions in self.questions_array:
             if questions.id == id:
                 return questions
@@ -97,7 +101,11 @@ class QCMData():
         id = qcm.generate_id()
         while id == "" or self.contains_id(id):
             id = qcm.generate_id()
-        add_line_to_file('saves/qcm.txt', [qcm.id, qcm.name, qcm.questions])
+        line_to_add = [qcm.id, qcm.name]
+        for questions in qcm.questions:
+            self.questions_data.add_question(questions)
+            line_to_add.append(questions.question)
+        add_line_to_file('saves/qcm.txt', line_to_add)
         self.qcm_array.append(qcm)
     
     def get_all_qcm(self) -> list:
@@ -109,4 +117,4 @@ def init():
     global questions_data
     questions_data = QuestionsData()
     global qcm_data
-    qcm_data = QCMData()
+    qcm_data = QCMData(questions_data=questions_data)

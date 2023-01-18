@@ -8,7 +8,8 @@ global row_separator
 row_separator = "@__//2*"
 
 def hash(word: str) -> str:
-    return md5(word.encode("utf-8")).hexdigest()
+    result = md5(word.encode("utf-8")).hexdigest()
+    return result.replace(";", "P")
 
 def check_hash(word: str, hash: str) -> bool :
     return hash(word) == hash
