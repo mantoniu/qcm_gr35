@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Etiquettage des exercices</title>
+    <link rel="stylesheet" href="static\css\style-tag.css">
+    <script type="text/javascript" src="static\js\select-button.js"></script>
+  </head>
+  <body>
+    <h1>Bienvenue sur la page de sélection des étiquettes d'exercice QCM</h1>
+    <p>Ce site est destiné à la promotion 2022-2023 de la Licence2 informatique de la FdS. Il vous permet de réaliser des exercices de type QCM pour tester vos connaissances.</p>
+    <div class="card">
+      <div class="card-header">
+          Choisir un sujet
+      </div>
+      <div class="card-body">
+          <select name="quiz" class="form-control">
+              <option value="other">Ajouter un autre sujet...</option>
+              <option value="quiz1"> Arithmétique</option>
+              <option value="quiz2">Programmation orientée objet 01</option>
+              <option value="quiz3">Bases de données</option>
+              <option value="quiz4">Programmation web</option>
+              <option value="quiz5">Systèmes</option>
+              <option value="quiz6">Logique propositionnelle</option>
+              <option value="quiz7">Algorithmique</option>
+              <option value="quiz8">Programmation orientée objet 02</option>
+              <option value="quiz9">Projet de programmation</option>
+              <option value="quiz10">Modèles de calcul</option>
+              <option value="quiz11">IP Protocoles et communications</option>
+          </select>
+          <input type="submit" value="Valider" class="btn btn-primary">
+          <div id="selected-tag" style="display:none">
+          </div>
+      </div>
+   </div>
+  </body>
+</html>
