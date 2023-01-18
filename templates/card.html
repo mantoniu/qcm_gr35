@@ -11,6 +11,30 @@
     <script type="text/javascript" src="/static/js/script.js"></script>
 </head>    
 <body>
-    <button value="Ajouter card" onclick="new_card()"></button>
+    {% for question in questions_array %}
+    <div class='card' id ={{ question.id }}> 
+        <div class='header-card'> 
+            <textarea class='enonce' type='text' spellcheck='false' placeholder="Ecrire l'énoncé..." id={{ "enonce_"+ question.id }}></textarea> \
+        </div> 
+        <div class='body-card'> 
+            {% for i in range (0,len(question.possibles_responses)) %}
+            <div class='content-response' id={{ "responses_"+ question.id }}> 
+                <div class='response' id={{ "reponse"+ i +"_"+ question.id }}> 
+                    <div class='switch'> 
+                        <input type='checkbox' id={{ "switch"+ i +"_"+ card.id }}> 
+                        <label for={{ "switch"+ i +"_"+ card.id }}></label> 
+                    </div> 
+                    <p>question.possibles_responses[i]</p> 
+                    <i class='fas fa-trash'></i> 
+                </div> 
+            {% endfor %}
+            <div class='card-navbar'> 
+                <button type='submit' id={{ "submitA_"+ question.id }}>Aperçu</button> 
+                <div onclick='add_answer()' class='circle'><i class='fas fa-plus'></i></div> 
+                <button type='submit' id={{ "submitV_"+ question.id }}>Valider</button> 
+            </div> 
+        </div> 
+    </div>
+    {% endfor %}
 </body>
 </html>
