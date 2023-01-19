@@ -14,8 +14,8 @@ class Question():
         self.id = hash(str(uuid4()))
         return self.id
 
-    def get_attributes(self):
-        return {"question": self.question, "responses": self.possibles_responses}
+    def get_state(self) -> markdown:
+        return markdown(self.question)
 
 
 class QCM:
