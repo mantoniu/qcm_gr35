@@ -64,9 +64,9 @@ def register():
             else:
                   return render_template('index.html',html=html)
 
-q1 = Question(question="Combien ?", possibles_responses=["Onze", "Treize"], valids_reponses=[0])
-q2 = Question(question="Où?", possibles_responses=["Ici", "Là-bas", "Par là"], valids_reponses=[2, 3])
-qcm1 = QCM("QCM Test", [q1, q2])
+q1 = Question(question="Combien ?", possibles_responses=["Onze", "Treize"], valids_reponses=[0], user_email="kilian.dcs@gmail.com")
+q2 = Question(question="Où?", possibles_responses=["Ici", "Là-bas", "Par là"], valids_reponses=[2, 3], user_email="kilian.dcs@gmail.com")
+qcm1 = QCM("QCM Test", [q1, q2], user_email="kilian.dcs@gmail.com")
 saving.qcm_data.add_qcm(qcm1)
 
 if __name__ == '__main__':

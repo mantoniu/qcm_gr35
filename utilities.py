@@ -3,9 +3,9 @@ from hashlib import md5
 from os import mkdir, path
 
 global line_separator
-line_separator = "@__//1*"
+line_separator = "@__|||1S"
 global row_separator
-row_separator = "@__//2*"
+row_separator = "@__|||2S"
 
 def hash(word: str) -> str:
     result = md5(word.encode("utf-8")).hexdigest()

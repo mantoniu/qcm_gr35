@@ -1,0 +1,24 @@
+header {
+    background-color: #F2F2F2;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px #888888;
+  }
+  
+  header ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-evenly;
+  }
+  
+  header ul li {
+    margin-left: 10px;
+  }
+  
+  header ul li a {
+    color: #2F2F2F;
+    text-decoration: none;
+    font-weight: bold;
+  }

@@ -3,11 +3,12 @@ from uuid import uuid4
 from utilities import hash
 
 class Question():
-    def __init__(self, question: str, valids_reponses: list, possibles_responses: list, id: str = None) -> None:
+    def __init__(self, question: str, valids_reponses: list, possibles_responses: list, user_email: str, id: str = None) -> None:
         self.id = id
         self.question = question
         self.possibles_responses = possibles_responses
         self.valids_responses = valids_reponses
+        self.user_email = user_email
 
     def generate_id(self) -> str:
         self.id = hash(str(uuid4()))
@@ -18,10 +19,11 @@ class Question():
 
 
 class QCM:
-    def __init__(self, name: str, questions: list, id:str = None) -> None:
+    def __init__(self, name: str, questions: list, user_email: str, id:str = None) -> None:
         self.id = id
         self.name = name
         self.questions = questions
+        self.user_email = user_email
     
     def add_question(self, question: Question) -> None:
         self.questions.append(question)
