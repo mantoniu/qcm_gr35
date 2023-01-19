@@ -76,6 +76,13 @@ class QuestionsData():
             if questions.id == id:
                 return questions
         return None
+    
+    def get_question_from_user(self, email):
+        result = []
+        for questions in self.questions_array:
+            if questions.user_email == email:
+                result.append(questions)
+        return result
 
 class QCMData():
     def __init__(self, questions_data: QuestionsData) -> None:
@@ -111,6 +118,13 @@ class QCMData():
     
     def get_all_qcm(self) -> list:
         return self.qcm_array
+    
+    def get_question_from_user(self, email):
+        result = []
+        for qcm in self.qcm_array:
+            if qcm.user_email == email:
+                result.append(qcm)
+        return result
 
 def init():
     global users_data
