@@ -29,7 +29,7 @@ def index():
       if not('email' in session and 'password' in session):
             return render_template('index.html',html=html)
       else:
-            return render_template('card.html', qcm=saving.qcm_data.get_all_qcm())
+            return render_template('card.html', question_array=saving.qcm_data.get_question_from_user(session['email']))
 
 @app.route('/logout')
 def logout():
@@ -63,6 +63,23 @@ def register():
                   return redirect('/')
             else:
                   return render_template('index.html',html=html)
+
+@app.route('/newstate/',methods=['POST'])
+def newstate():
+      if 'enonce' in request.form:
+            response_list = []
+            good_answer = []
+            enonce = request.form['enonce']
+            for i in range (0,int(request.form['count'])+1):
+                  response_list.append(request.form['question'+str(i)])
+                  if "switch"+str(i) in request.form:
+                        good_answer.append(i)
+            question = Question(enonce,good_answer,response_list,session['email'])
+            saving.questions_data.add_question(question)
+      print(response_list,good_answer)
+      return redirect('/')
+      
+
 
 q1 = Question(question="Combien ?", possibles_responses=["Onze", "Treize"], valids_reponses=[0], user_email="kilian.dcs@gmail.com")
 q2 = Question(question="Où?", possibles_responses=["Ici", "Là-bas", "Par là"], valids_reponses=[2, 3], user_email="kilian.dcs@gmail.com")
