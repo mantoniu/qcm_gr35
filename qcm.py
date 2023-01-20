@@ -2,6 +2,8 @@ from markdown import markdown
 from uuid import uuid4
 from utilities import hash
 
+md_extensions = ['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code']
+
 class Question():
     def __init__(self, question: str, valids_reponses: list, possibles_responses: list, user_email: str, id: str = None) -> None:
         self.id = id
@@ -15,7 +17,7 @@ class Question():
         return self.id
 
     def get_state(self) -> markdown:
-        return markdown(self.question)
+        return markdown(self.question,extensions=md_extensions)
 
 
 class QCM:

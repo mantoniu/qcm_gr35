@@ -2,9 +2,9 @@ import globals
 import saving
 from flask import Flask,url_for,render_template,request,session,redirect
 from flaskext.markdown import Markdown
-import markdown as md
 from user import User
 from qcm import *
+import markdown as md
 
 # Init App
 app = Flask(__name__)
@@ -15,21 +15,58 @@ if __name__ == '__main__':
       saving.init()
 
 
+html = """
+# Title
+
+Some text.
+
+​~~~mermaid
+graph TB
+A --> B
+B --> C
+​~~~
+
+Some other text.
+
+​~~~mermaid
+graph TB
+D --> E
+E --> F
+​~~~
+"""
+
+
 text = """
 # Title
 
 Some text.
 
+​~~~mermaid
+graph TB
+A --> B
+B --> C
+​~~~
+
+Some other text.
+
+​~~~mermaid
+graph TB
+D --> E
+E --> F
+​~~~
 """
 
-html = md.markdown(text, extensions=globals.md_extensions)
+html = md.markdown(html, extensions=['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code'])
+text = md.markdown(text, extensions=['md_mermaid'])
+
+print(html,text)
 
 @app.route('/')
 def index():
       if not('email' in session and 'password' in session):
             return render_template('index.html',html=html)
       else:
-            return render_template('card.html', question_array=saving.qcm_data.get_question_from_user(session['email']))
+            return render_template('card.html', question_array=saving.qcm_data.get_question_from_user(session['email']),html=html)
 
 @app.route('/logout')
 def logout():
@@ -37,11 +74,11 @@ def logout():
       session.pop('password')
       return redirect('/')
 
+
 @app.route('/login',methods = ['POST'])
 def login():
       print("test1")
       if 'email' in request.form and 'password' in request.form:
-            print("test2")
             email = request.form['email']
             password = request.form['password']
             if saving.users_data.login(email, password):
@@ -76,9 +113,16 @@ def newstate():
                         good_answer.append(i)
             question = Question(enonce,good_answer,response_list,session['email'])
             saving.questions_data.add_question(question)
-      print(response_list,good_answer)
-      return redirect('/')
+            print(question.question)
+            print(html)
+            print(question.question==html)
+            print(md.markdown(html,extesions=['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code']))
+            print(md.markdown(question.question,extesions=['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code']))
+      return render_template('card.html',html = question.get_state())
+
       
+
+
 
 
 q1 = Question(question="Combien ?", possibles_responses=["Onze", "Treize"], valids_reponses=[0], user_email="kilian.dcs@gmail.com")

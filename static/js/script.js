@@ -32,7 +32,6 @@ function new_card(){
                                 <label for="switch0"></label> \
                             </div> \
                             <textarea name="question0" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea> \
-                            <button type="button" onclick="delete_answer(this)" class="trash-button"><i class="fas fa-trash"></i></button> \
                         </div> \
                         <div class="response"> \
                             <div class="switch"> \
@@ -40,7 +39,6 @@ function new_card(){
                                 <label for="switch1"></label> \
                             </div> \
                             <textarea name="question1" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea> \
-                            <button type="button" onclick="delete_answer(this)" class="trash-button"><i class="fas fa-trash"></i></button> \
                         </div> \
                 </div> \
             </div> \
