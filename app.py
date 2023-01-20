@@ -56,6 +56,9 @@ E --> F
 ​~~~
 """
 
+def is_logged():
+      return 'email' in session and 'password' in session and saving.users_data.login(session['email'])
+
 html = md.markdown(html, extensions=['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code'])
 text = md.markdown(text, extensions=['md_mermaid'])
 
@@ -100,6 +103,13 @@ def register():
                   return redirect('/')
             else:
                   return render_template('index.html',html=html)
+
+@app.route('/my_qcm')
+def my_qcm():
+      if is_logged():
+            return render_template('my_qcm.html')
+      else:
+            return redirect('/')
 
 @app.route('/newstate/',methods=['POST'])
 def newstate():
