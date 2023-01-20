@@ -1,3 +1,5 @@
+var count = 1;
+
 function inscription(){
     document.getElementById('connection').style.display ="none";
     document.getElementById("s'inscrire").style.display ="none";
@@ -12,52 +14,40 @@ function connection(){
     document.getElementById('seconnecter').style.display ="none";
 }; 
 
-var count = 3;
+$(document).ready(function(){
+    $("#new-question").submit(function(){
+		if ($('input:checkbox').filter(':checked').length < 1){
+            alert("Il faut cocher au moins une bonne réponse !");
+		    return false;
+		}
+        if($('input:checkbox').filter(':checked').length == count+1){
+            alert("Les réponses ne peuvent pas être toutes justes !");
+            return false;
+        }
+        let oneEmpty = false;
+        $('textarea').each(function() {
+            if($(this).val().trim() == '')
+                oneEmpty = true;
+        });
+        if(oneEmpty){
+            alert('Il faut remplir tous les champs !');
+            return false;
+        }
+        return true;
+        });
+});
+
 
 function new_card(){
     document.getElementById('button-add-card').style.display = "none";
-    html = ' \
-    <form method="POST" id="new-question" action="/newstate/" class="form-card"> \
-        <div class="card"> \
-            <div class="header-card"> \
-                <textarea name="enonce" type="text" spellcheck="false" placeholder="Ecrire l énoncé..." id="enonce"></textarea> \
-            </div> \
-            <div class="body-card"> \
-                <div class="content" id="content-response"> \
-                    <input id="count" type="hidden" name="count" value="1"> \
-                    <div class="list-response" id="list-response"> \
-                        <div class="response"> \
-                            <div class="switch"> \
-                                <input type="checkbox" name="switch0" id="switch0"> \
-                                <label for="switch0"></label> \
-                            </div> \
-                            <textarea name="question0" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea> \
-                        </div> \
-                        <div class="response"> \
-                            <div class="switch"> \
-                                <input type="checkbox" name="switch1" id="switch1"> \
-                                <label for="switch1"></label> \
-                            </div> \
-                            <textarea name="question1" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea> \
-                        </div> \
-                </div> \
-            </div> \
-                <div class="card-navbar"> \
-                    <button class="animation" type="submit" id="apercu">Aperçu</button> \
-                    <div onclick="add_answer()" class="circle animation"><i class="fas fa-plus"></i></div> \
-                    <button class="animation" type="submit" id="ajouter">Valider</button> \
-                </div> \
-            </div> \
-        </div> \
-    </form>';
-    $("body").append(html);
+    document.getElementById('new-question').style.display = "flex";
 }
 
 function delete_answer(object){
     $(object).parent().remove();
 }
 
-var count = 1;
+
 
 function add_answer(){
     count ++;
@@ -72,4 +62,45 @@ function add_answer(){
     </div> ';
     $('#count').val(count);
     $("#list-response").append(html);
+}
+
+function renderMermaid(){
+    mermaid.init(undefined,document.querySelectorAll(".mermaid"));
+}
+
+function renderMaths(){
+    renderMathInElement(document.body, {
+          delimiters: [
+              {left: '$$', right: '$$', display: false},
+              {left: '$', right: '$', display: false},
+          ],
+          throwOnError : true
+    });
+}
+
+
+function preview(){
+    if(document.getElementById('enonce').style.display != "none"){
+        if($("#enonce").val().trim() != ''){
+            document.getElementById('enonce').style.display = "none";
+            $.ajax({
+                data : { text : $('#enonce').val() },
+                type : 'POST', 
+                url : '/preview', 
+                success: function (data) { 
+                    html = "<div id='translation'>"+data+"</div>";
+                    console.log(html);
+                    $("#header").append(html);
+                    renderMermaid();
+                    renderMaths();
+                },
+                error: function (e) { console.log('Erreur') }
+            });
+        }
+        else alert("Enonce vide !");
+    }
+    else{
+        document.getElementById('enonce').style.display = "flex";
+        $('#translation').remove();
+    }
 }
