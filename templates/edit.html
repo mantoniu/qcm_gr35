@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Création d'énoncé</title>
-    <link rel="stylesheet" href="static/css/card/card-style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
@@ -19,6 +18,7 @@
     <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css">
+    <link rel="stylesheet" href="../../static/css/card/card-style.css">
 </head>    
 <body>
 <script>
@@ -29,7 +29,7 @@ $(function() {
 <form method="POST" id="new-statement" action="/newstate" class="form-card">
 
     <div class="info">
-        Nom : <input name="statement_name" id="statement_name" type="text">
+        Nom : <input name="statement_name" value="{{ statement.name }}"id="statement_name" type="text">
         <p>Choix des étiquettes : &nbsp;</p>
         <select class="chzn-select" data-placeholder="Etiquettes" multiple="true" name="etiquettes[]" style="width:200px;">
         <option value="AC">Java</option>
@@ -41,31 +41,24 @@ $(function() {
 
     <div class="card">  
         <div class="header-card" id="header">  
-            <textarea name="enonce" type="text" spellcheck="false" placeholder="Ecrire l énoncé..." id="enonce"></textarea>
+            <textarea name="enonce" type="text" spellcheck="false" placeholder="Ecrire l énoncé..." id="enonce">{{ statement.question }}</textarea>
         </div> 
         <div class="body-card">  
             <div class="content" id="content-response">  
                 <input id="count" type="hidden" name="count" value="1">  
                 <div class="list-response" id="list-response">  
+                    {% for i in range(0,statement.possibles_responses|length) %}
                     <div class="response">  
                         <div class="switch">  
-                            <label id="switch0" class="switch">
-                                <input type="checkbox" name="switch0" id="switch0">
+                            <label id="{{ "switch"+ i|string }}" class="switch">
+                                <input type="checkbox" name="{{ "switch"+ i|string }}" id="{{ "switch"+ i|string }}">
                                 <span class="slider round"></span>  
                             </label>  
                         </div>  
-                        <textarea name="statement0" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
+                        <textarea name="{{ "statement"+ i|string }}" type="text" placeholder="Ecrire une réponse..." class="textarea-response">{{ statement.possibles_responses[i] }}</textarea>  
                     </div>  
-                    <div class="response">  
-                        <div class="switch">  
-                            <label id="switch1" class="switch">
-                                <input type="checkbox" name="switch1" id="switch1">
-                                <span class="slider round"></span>  
-                            </label>  
-                        </div>  
-                        <textarea name="statement1" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
-                    </div>  
-            </div>  
+                    {% endfor %}
+                </div>  
         </div>  
             <div class="card-navbar">  
                 <button class="animation" type="button" onclick="preview()" id="apercu">Aperçu</button>  

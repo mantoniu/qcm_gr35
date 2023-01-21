@@ -92,24 +92,48 @@ def newstate():
             tags = []
       statement = Statement(name=name,question=statement,valids_reponses=good_answer,possibles_responses=response_list,user_email=session['email'],tags=tags)
       saving.statements_data.add_statement(statement)
-      return render_template('my_states.html',html = statement.get_state())
+      return redirect('/my_states')
+
+@app.route('/newqcm',methods=['POST'])
+def newqcm():
+      statements_list = []
+      for statement in saving.statements_data.get_statement_from_user(session['email']):
+            if statement.id in request.form:
+                  print(statement.id)
+                  statements_list.append(statement)
+      qcm = QCM(name=request.form['qcm_title'],statements=statements_list,user_email=session['email'])
+      return redirect('/my_qcm')
 
 @app.route('/create')
 def create():
       return render_template("create.html")
 
-@app.route('/statement/<id>')
-def statement(id):
-      return render_template("enonce.html",statement=saving.statements_data.get_statement_by_id(id)) ## ajouter get_statement_by_id
+@app.route('/statement/edit/<id>',methods=['GET'])
+def edit(id):
+      return render_template('edit.html',statement=saving.statements_data.get_statement_by_id(id))
+
+@app.route('/statement/<id>',methods=['POST','GET'])
+def statement(id): 
+      statement = saving.statements_data.get_statement_by_id(id)
+      no_switch = True
+      good_answer = []
+      bad_answer = []
+      for i in range (0,len(statement.possibles_responses)):
+            if "switch"+str(i) in request.form:
+                  no_switch = False
+                  if i in statement.valids_responses:
+                        good_answer.append(i)
+                  else:
+                        bad_answer.append(i)
+      return render_template("enonce.html",statement=statement)   
+      
+
 
 
 @app.route('/qcm/<id>')
 def qcm_id(id):
-      return render_template("states.html") ## ajouter get_qcm_by_id
+      return render_template("states.html") 
 
-@app.route('/result',methods=['POST'])
-def result():
-      print(request.form['switch1'])
 
 @app.route('/preview',methods=['POST','GET'])
 def preview():

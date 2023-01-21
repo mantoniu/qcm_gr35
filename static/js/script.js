@@ -1,9 +1,5 @@
 var count = 1;
 
-$(function() {
-    $(".chzn-select").chosen();
-});
-
 function inscription(){
     document.getElementById('connection').style.display ="none";
     document.getElementById("s'inscrire").style.display ="none";
@@ -19,6 +15,11 @@ function connection(){
 }; 
 
 $(document).ready(function(){
+    var form = document.getElementById("res");
+    function handleForm(event) { event.preventDefault(); } 
+    if(form){
+        form.addEventListener('submit', handleForm);
+    }
     $("#new-statement").submit(function(){
         if($('#statement_name').val()==""){
             alert('Vous devez saisir un nom !');
@@ -114,3 +115,8 @@ function preview(){
         $('#translation').remove();
     }
 }
+
+
+var form = document.getElementById("result-form");
+function handleForm(event) { event.preventDefault(); } 
+form.addEventListener('submit', handleForm);
