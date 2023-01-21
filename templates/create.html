@@ -21,12 +21,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css">
 </head>    
 <body>
-<form method="POST" id="new-question" action="/newstate" class="form-card">
+<form method="POST" id="new-statement" action="/newstate" class="form-card">
 
     <div class="info">
-        Nom : <input name="statement_name" type="text">
+        Nom : <input name="statement_name" id="statement_name" type="text">
         <p>Choix des étiquettes : &nbsp;</p>
-        <select class="chzn-select" data-placeholder="placeholder" multiple="true" name="faculty" style="width:200px;">
+        <select class="chzn-select" data-placeholder="Etiquettes" multiple="true" name="etiquettes" style="width:200px;">
         <option value="AC">Java</option>
         <option value="AD">Algo</option>
         <option value="AM">Prog c</option>
