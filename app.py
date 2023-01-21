@@ -57,7 +57,7 @@ E --> F
 """
 
 def is_logged():
-      return 'email' in session and 'password' in session and saving.users_data.login(session['email'])
+      return 'email' in session and 'password' in session and saving.users_data.login(session['email'], session['password'])
 
 html = md.markdown(html, extensions=['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code'])
 text = md.markdown(text, extensions=['md_mermaid'])
@@ -65,11 +65,11 @@ text = md.markdown(text, extensions=['md_mermaid'])
 print(html,text)
 
 @app.route('/')
-def index():
-      if not('email' in session and 'password' in session):
-            return render_template('index.html',html=html)
+def index(): 
+      if is_logged():
+            return render_template('card.html', question_array=saving.qcm_data.get_qcm_from_user(session['email']),html=html)
       else:
-            return render_template('card.html', question_array=saving.qcm_data.get_question_from_user(session['email']),html=html)
+            return render_template('index.html',html=html)
 
 @app.route('/logout')
 def logout():
@@ -80,12 +80,10 @@ def logout():
 
 @app.route('/login',methods = ['POST'])
 def login():
-      print("test1")
       if 'email' in request.form and 'password' in request.form:
             email = request.form['email']
             password = request.form['password']
             if saving.users_data.login(email, password):
-                  print("test3")
                   session['email'] = email
                   session['password'] = password
             return redirect('/')
@@ -107,7 +105,14 @@ def register():
 @app.route('/my_qcm')
 def my_qcm():
       if is_logged():
-            return render_template('my_qcm.html')
+            return render_template('my_qcm.html', my_qcm_array=saving.qcm_data.get_qcm_from_user(session['email']))
+      else:
+            return redirect('/')
+
+@app.route('/qcm')
+def qcm():
+      if is_logged():
+            return render_template('qcm.html', qcm_array=saving.qcm_data.get_all_qcm())
       else:
             return redirect('/')
 
@@ -135,10 +140,10 @@ def newstate():
 
 
 
-q1 = Question(question="Combien ?", possibles_responses=["Onze", "Treize"], valids_reponses=[0], user_email="kilian.dcs@gmail.com")
+'''q1 = Question(question="Combien ?", possibles_responses=["Onze", "Treize"], valids_reponses=[0], user_email="kilian.dcs@gmail.com")
 q2 = Question(question="Où?", possibles_responses=["Ici", "Là-bas", "Par là"], valids_reponses=[2, 3], user_email="kilian.dcs@gmail.com")
 qcm1 = QCM("QCM Test", [q1, q2], user_email="kilian.dcs@gmail.com")
-saving.qcm_data.add_qcm(qcm1)
+saving.qcm_data.add_qcm(qcm1)'''
 
 if __name__ == '__main__':
       app.run(debug=True)

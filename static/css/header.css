@@ -1,24 +1,43 @@
 header {
-    background-color: #F2F2F2;
+    background-color: rgba(242, 242, 242, 0.7);
+    opacity: 0.7;
+    
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0px 0px 5px #888888;
-  }
+}
+
+header a:hover {
+  color: rgba(0, 0, 0, 0.643);
+}
   
-  header ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: space-evenly;
-  }
-  
-  header ul li {
-    margin-left: 10px;
-  }
-  
-  header ul li a {
-    color: #2F2F2F;
-    text-decoration: none;
-    font-weight: bold;
-  }
+header ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+header ul li {
+  margin-left: 10px;
+}
+
+header ul li a {
+  color: #2F2F2F;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: url('images/site-background.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  font: inherit;
+  font-family: Euclid,sans-serif,Arial,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue;
+  font-size: 18px;
+  letter-spacing: -.63px;
+}

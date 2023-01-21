@@ -119,7 +119,7 @@ class QCMData():
     def get_all_qcm(self) -> list:
         return self.qcm_array
     
-    def get_question_from_user(self, email):
+    def get_qcm_from_user(self, email):
         result = []
         for qcm in self.qcm_array:
             if qcm.user_email == email:

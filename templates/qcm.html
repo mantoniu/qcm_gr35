@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="../static/css/header.css" >
-    <link rel="stylesheet" type="text/css" href="../static/css/my_qcm.css" >
+    <link rel="stylesheet" type="text/css" href="../static/css/qcm.css" >
     <link rel="stylesheet" type="text/css" href="../static/css/list/list.css" >
 </head>
 <body>
@@ -21,13 +21,10 @@
 </header>
 <div id="content">
     <ul>
-        {% for qcm in my_qcm_array %}
-            <li>{{ qcm.name }} <span class="cross">&#10006;</span></li>
+        {% for qcm in qcm_array %}
+            <li>{{ qcm.name }} </li>
         {% endfor %}
     </ul>
-    <div style="text-align:center">
-        <button id="add_button">Créer un QCM</button>
-    </div>
 </div>
 </body>
 </html>

@@ -21,6 +21,37 @@ def add_line_to_file(file_name: str, line: list) -> None:
             to_write += row_separator + line[i]
         file.write(to_write)
 
+def remove_line_to_file(file_name: str, line_to_remove: int) -> None:
+    with open(file_name,'r') as file:
+        entire_file = file.read()
+    with open(file_name, 'w') as file:
+        lines = entire_file.split(line_separator)
+        for i in range(len(lines)):
+            if i != line_to_remove:
+                add_line_to_file(file_name=file_name, line=lines[i].split(row_separator))
+
+def remove_lines_to_file(file_name: str, lines_to_remove: list) -> None:
+    with open(file_name,'r') as file:
+        entire_file = file.read()
+    with open(file_name, 'w') as file:
+        lines = entire_file.split(line_separator)
+        for i in range(len(lines)):
+            if not(i in lines_to_remove):
+                add_line_to_file(file_name=file_name, line=lines[i].split(row_separator))
+
+def remove_lines_which_contains(file_name: str, string: str) -> None:
+    lines_to_remove = []
+    with open(file_name,'r') as file:
+        entire_file = file.read()
+    with open(file_name, 'w') as file:
+        lines = entire_file.split(line_separator)
+        for i in range(lines):
+            rows = lines[i].split(row_separator)
+            for row in rows:
+                if row == string:
+                    lines_to_remove.append(i)
+    remove_lines_to_file(file_name=file_name, lines_to_remove=lines_to_remove)
+
 def read_file(file_name: str) -> list:
     tab = []
     with open(file_name,'r') as file:
