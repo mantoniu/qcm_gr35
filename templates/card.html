@@ -16,7 +16,7 @@
     <script type="text/javascript" src="/static/js/script.js"></script>
 </head>    
 <body>
-<form method="POST" id="new-question" action="/newstate" class="form-card">
+<form method="POST" id="new-statement" action="/newstate" class="form-card">
     <div class="card">  
         <div class="header-card" id="header">  
             <textarea name="enonce" type="text" spellcheck="false" placeholder="Ecrire l énoncé..." id="enonce"></textarea>
@@ -32,7 +32,7 @@
                                 <span class="slider round"></span>  
                             </label>  
                         </div>  
-                        <textarea name="question0" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
+                        <textarea name="statement0" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
                     </div>  
                     <div class="response">  
                         <div class="switch">  
@@ -41,7 +41,7 @@
                                 <span class="slider round"></span>  
                             </label>  
                         </div>  
-                        <textarea name="question1" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
+                        <textarea name="statement1" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
                     </div>  
             </div>  
         </div>  
@@ -55,34 +55,34 @@
 </form>
 
 
-    <!-- Bonton de création d'une question -->
+    <!-- Bouton de création d'un statement -->
 
     <button value="Ajouter card" onclick="new_card()" id="button-add-card">Ajouter une question</button>
 
-    <!--  Apparition des questions déjà enregistrées   -->
+    <!--  Apparition des statements déjà enregistrées   -->
 
 <!--
     Code pour faire apparaitre les énoncés
 
-    {% for question in question_array %}
-    <form action="/question" class="form-card">
-        <div class='card' id ={{ question.id }}> 
+    {% for statement in statement_array %}
+    <form action="/statement" class="form-card">
+        <div class='card' id ={{ statement.id }}> 
             <div class='header-card'> 
             </div> 
             <div class='body-card'> 
-                {% for i in range (0,question.possibles_responses|length) %}
-                <div class='content-response' id={{ "responses_"+ question.id }}> 
-                    <div class='response' id={{ "response"+ i|string +"_"+ question.id }}> 
+                {% for i in range (0,statement.possibles_responses|length) %}
+                <div class='content-response' id={{ "responses_"+ statement.id }}> 
+                    <div class='response' id={{ "response"+ i|string +"_"+ statement.id }}> 
                         <div class='switch'> 
-                            <input type='checkbox' id={{ "switch"+ i|string +"_"+ question.id }}> 
-                            <label for={{ "switch"+ i|string +"_"+ question.id }}></label> 
+                            <input type='checkbox' id={{ "switch"+ i|string +"_"+ statement.id }}> 
+                            <label for={{ "switch"+ i|string +"_"+ statement.id }}></label> 
                         </div> 
-                        <p> {{ question.possibles_responses[i] }}</p> 
+                        <p> {{ statement.possibles_responses[i] }}</p> 
                         <i class='fas fa-trash'></i> 
                     </div> 
                 {% endfor %}
                 <div class='card-navbar'> 
-                    <button type='submit' id={{ "submitV_"+ question.id }}>Valider</button> 
+                    <button type='submit' id={{ "submitV_"+ statement.id }}>Valider</button> 
                 </div> 
             </div> 
         </div>

@@ -23,7 +23,7 @@ def index():
       if is_logged():
             return render_template('home.html')
       else:
-            return render_template('index.html',html=html)
+            return render_template('index.html')
 
 @app.route('/logout')
 def logout():
@@ -54,7 +54,7 @@ def register():
                   session['password'] = password
                   return redirect('/')
             else:
-                  return render_template('index.html',html=html)
+                  return render_template('index.html')
 
 @app.route('/my_qcm')
 def my_qcm():
@@ -78,12 +78,12 @@ def newstate():
             enonce = request.form['enonce']
             enonce = enonce.replace("\r","")
             for i in range (0,int(request.form['count'])+1):
-                  response_list.append(request.form['question'+str(i)])
+                  response_list.append(request.form['statement'+str(i)])
                   if "switch"+str(i) in request.form:
                         good_answer.append(i)
-            question = Question(enonce,good_answer,response_list,session['email'])
-            saving.questions_data.add_question(question)
-      return render_template('card.html',html = question.get_state())
+            statement = Statement(enonce,good_answer,response_list,session['email'])
+            saving.statements_data.add_statement(statement)
+      return render_template('card.html',html = statement.get_state())
 
 
 @app.route('/create')
@@ -94,12 +94,6 @@ def create():
 @app.route('/preview',methods=['POST','GET'])
 def preview():
       return md.markdown(request.form['text'], extensions=md_extensions)
-
-
-q1 = Question(question="Combien ?", possibles_responses=["Onze", "Treize"], valids_reponses=[0], user_email="kilian.dcs@gmail.com")
-q2 = Question(question="Où?", possibles_responses=["Ici", "Là-bas", "Par là"], valids_reponses=[2, 3], user_email="kilian.dcs@gmail.com")
-qcm1 = QCM("QCM Test", [q1, q2], user_email="kilian.dcs@gmail.com")
-saving.qcm_data.add_qcm(qcm1)
 
 if __name__ == '__main__':
       app.run(debug=True)

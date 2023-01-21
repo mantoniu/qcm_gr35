@@ -33,7 +33,7 @@ header ul li a {
 html, body {
   margin: 0;
   height: 100%;
-  background: url('images/site-background.jpg');
+  background: url('../images/site-background.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   font: inherit;

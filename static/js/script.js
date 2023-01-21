@@ -15,7 +15,7 @@ function connection(){
 }; 
 
 $(document).ready(function(){
-    $("#new-question").submit(function(){
+    $("#new-statement").submit(function(){
 		if ($('input:checkbox').filter(':checked').length < 1){
             alert("Il faut cocher au moins une bonne réponse !");
 		    return false;
@@ -40,7 +40,7 @@ $(document).ready(function(){
 
 function new_card(){
     document.getElementById('button-add-card').style.display = "none";
-    document.getElementById('new-question').style.display = "flex";
+    document.getElementById('new-statement').style.display = "flex";
 }
 
 function delete_answer(object){
@@ -59,7 +59,7 @@ function add_answer(){
                 <span class="slider round"></span> \
             </label>  \
         </div> \
-        <textarea name="question'+count+'" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea> \
+        <textarea name="statement'+count+'" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea> \
         <button type="button" onclick="delete_answer(this)" class="trash-button"><i class="fas fa-trash"></i></button>  \
     </div> ';
     $('#count').val(count);

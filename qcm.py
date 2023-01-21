@@ -4,8 +4,8 @@ from utilities import hash
 
 md_extensions = ['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code']
 
-class Question():
-    def __init__(self, question: str, valids_reponses: list, possibles_responses: list, user_email: str, id: str = None) -> None:
+class Statement():
+    def __init__(self, name: str, question: str, valids_reponses: list, possibles_responses: list, user_email: str, id: str = None) -> None:
         self.id = id
         self.question = question
         self.possibles_responses = possibles_responses
@@ -21,19 +21,19 @@ class Question():
 
 
 class QCM:
-    def __init__(self, name: str, questions: list, user_email: str, id:str = None) -> None:
+    def __init__(self, name: str, statements: list, user_email: str, id:str = None) -> None:
         self.id = id
         self.name = name
-        self.questions = questions
+        self.statements = statements
         self.user_email = user_email
     
-    def add_question(self, question: Question) -> None:
-        self.questions.append(question)
+    def add_statement(self, statement: Statement) -> None:
+        self.statements.append(statement)
     
-    def remove_question(self, question: Question) -> None:
-        for i in range(len(self.questions)):
-            if self.questions[i].id == question.id:
-                self.questions.pop(i)
+    def remove_statement(self, statement: Statement) -> None:
+        for i in range(len(self.statements)):
+            if self.statements[i].id == statement.id:
+                self.statements.pop(i)
     
     def generate_id(self) -> str:
         self.id = hash(str(uuid4()))

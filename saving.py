@@ -1,6 +1,6 @@
 from utilities import *
 from user import User
-from qcm import QCM, Question
+from qcm import QCM, Statement
 
 class UsersData():
     def __init__(self) -> None:
@@ -33,68 +33,68 @@ class UsersData():
                     return False
         return False
 
-class QuestionsData():
+class StatementsData():
     def __init__(self) -> None:
-        self.questions_array = []
-        tab = read_file(create_save_file("questions.txt"))
+        self.statements_array = []
+        tab = read_file(create_save_file("statements.txt"))
         for row in tab:
             if len(row) > 4:
                 possibles_responses = []
                 for i in range(4, len(row)):
                     possibles_responses.append(row[i])
-                self.questions_array.append(Question(id=row[0], question=row[1], valids_reponses=list(map(int, row[2].split(";"))), user_email=row[3], possibles_responses=possibles_responses))
+                self.statements_array.append(Statement(id=row[0], question=row[1], valids_reponses=list(map(int, row[2].split(";"))), user_email=row[3], possibles_responses=possibles_responses))
     
     def contains_id(self, id: str):
-        for questions in self.questions_array:
-            if questions.id == id:
+        for statements in self.statements_array:
+            if statements.id == id:
                 return True
         return False
 
-    def contains_question(self, question: Question) -> bool:
-        return self.contains_id(question.id)
+    def contains_statement(self, statement: Statement) -> bool:
+        return self.contains_id(statement.id)
 
-    def add_question(self, question: Question) -> None:
-        id = question.generate_id()
+    def add_statement(self, statement: Statement) -> None:
+        id = statement.generate_id()
         while id == "" or self.contains_id(id):
-            id = question.generate_id()
-        line_to_add = [question.id, question.question]
-        valids_responses_indexes = str(question.valids_responses[0])
-        for i in range(1, len(question.valids_responses)):
-            valids_responses_indexes += ";" + str(question.valids_responses[i])
+            id = statement.generate_id()
+        line_to_add = [statement.id, statement.question]
+        valids_responses_indexes = str(statement.valids_responses[0])
+        for i in range(1, len(statement.valids_responses)):
+            valids_responses_indexes += ";" + str(statement.valids_responses[i])
         line_to_add.append(valids_responses_indexes)
-        line_to_add.append(question.user_email)
-        for responses in question.possibles_responses:
+        line_to_add.append(statement.user_email)
+        for responses in statement.possibles_responses:
             line_to_add.append(responses)
-        add_line_to_file('saves/questions.txt', line_to_add)
-        self.questions_array.append(question)
+        add_line_to_file('saves/statement.txt', line_to_add)
+        self.statements_array.append(statement)
     
-    def get_all_questions(self) -> list:
-        return self.questions_array
+    def get_all_statements(self) -> list:
+        return self.statements_array
     
-    def get_question_by_id(self, id: str) -> Question:
-        for questions in self.questions_array:
-            if questions.id == id:
-                return questions
+    def get_statement_by_id(self, id: str) -> Statement:
+        for statements in self.statements_array:
+            if statements.id == id:
+                return statements
         return None
     
-    def get_question_from_user(self, email):
+    def get_statement_from_user(self, email):
         result = []
-        for questions in self.questions_array:
-            if questions.user_email == email:
-                result.append(questions)
+        for statements in self.statements_array:
+            if statements.user_email == email:
+                result.append(statements)
         return result
 
 class QCMData():
-    def __init__(self, questions_data: QuestionsData) -> None:
-        self.questions_data = questions_data
+    def __init__(self, statements_data: StatementsData) -> None:
+        self.statements_data = statements_data
         self.qcm_array = []
         tab = read_file(create_save_file("qcm.txt"))
         for row in tab:
             if len(row) > 3:
-                questions = []
+                statements = []
                 for i in range(3, len(row)):
-                    questions.append(self.questions_data.get_question_by_id(row[i]))
-                self.qcm_array.append(QCM(id=row[0], name=row[1], user_email=row[2], questions=questions))
+                    statements.append(self.statements_data.get_statement_by_id(row[i]))
+                self.qcm_array.append(QCM(id=row[0], name=row[1], user_email=row[2], statements=statements))
     
     def contains_id(self, id: str):
         for qcm in self.qcm_array:
@@ -110,9 +110,9 @@ class QCMData():
         while id == "" or self.contains_id(id):
             id = qcm.generate_id()
         line_to_add = [qcm.id, qcm.name, qcm.user_email]
-        for questions in qcm.questions:
-            self.questions_data.add_question(questions)
-            line_to_add.append(questions.question)
+        for statements in qcm.statements: # Attention à ça
+            self.statements_data.add_statement(statements)
+            line_to_add.append(statements.question)
         add_line_to_file('saves/qcm.txt', line_to_add)
         self.qcm_array.append(qcm)
     
@@ -129,7 +129,7 @@ class QCMData():
 def init():
     global users_data
     users_data = UsersData()
-    global questions_data
-    questions_data = QuestionsData()
+    global statements_data
+    statements_data = StatementsData()
     global qcm_data
-    qcm_data = QCMData(questions_data=questions_data)
+    qcm_data = QCMData(statements_data=statements_data)
