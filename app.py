@@ -16,12 +16,12 @@ if __name__ == '__main__':
 
 
 def is_logged():
-      return 'email' in session and 'password' in session and saving.users_data.login(session['email'])
+      return 'email' in session and 'password' in session and saving.users_data.login(session['email'], session['password'])
 
 @app.route('/')
 def index():
       if is_logged():
-            return render_template('card.html', question_array=saving.qcm_data.get_qcm_from_user(session['email']),html=html)
+            return render_template('home.html')
       else:
             return render_template('index.html',html=html)
 
