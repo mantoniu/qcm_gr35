@@ -107,6 +107,10 @@ def statement(id):
 def qcm_id(id):
       return render_template("states.html") ## ajouter get_qcm_by_id
 
+@app.route('/result',methods=['POST'])
+def result():
+      print(request.form['switch1'])
+
 @app.route('/preview',methods=['POST','GET'])
 def preview():
       return md.markdown(request.form['text'], extensions=md_extensions)
