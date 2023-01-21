@@ -69,7 +69,11 @@ def index():
       if is_logged():
             return render_template('card.html', question_array=saving.qcm_data.get_qcm_from_user(session['email']),html=html)
       else:
+<<<<<<< Updated upstream
             return render_template('index.html',html=html)
+=======
+            return render_template('card.html', question_array=saving.qcm_data.get_question_from_user(session['email']))
+>>>>>>> Stashed changes
 
 @app.route('/logout')
 def logout():
