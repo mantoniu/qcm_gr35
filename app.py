@@ -96,10 +96,5 @@ def preview():
       return md.markdown(request.form['text'], extensions=md_extensions)
 
 
-q1 = Question(question="Combien ?", possibles_responses=["Onze", "Treize"], valids_reponses=[0], user_email="kilian.dcs@gmail.com")
-q2 = Question(question="Où?", possibles_responses=["Ici", "Là-bas", "Par là"], valids_reponses=[2, 3], user_email="kilian.dcs@gmail.com")
-qcm1 = QCM("QCM Test", [q1, q2], user_email="kilian.dcs@gmail.com")
-saving.qcm_data.add_qcm(qcm1)
-
 if __name__ == '__main__':
       app.run(debug=True)
