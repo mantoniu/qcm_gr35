@@ -80,6 +80,7 @@ def newstate():
       if 'enonce' in request.form:
             response_list = []
             good_answer = []
+            nom = request.form['statement_name']
             enonce = request.form['enonce']
             enonce = enonce.replace("\r","")
             for i in range (0,int(request.form['count'])+1):
@@ -88,7 +89,7 @@ def newstate():
                         good_answer.append(i)
             statement = Statement(enonce,good_answer,response_list,session['email'])
             saving.statements_data.add_statement(statement)
-      return render_template('card.html',html = statement.get_state())
+      return render_template('create.html',html = statement.get_state())
 
 @app.route('/create')
 def create():
