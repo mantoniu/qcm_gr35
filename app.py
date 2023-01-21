@@ -15,65 +15,15 @@ if __name__ == '__main__':
       saving.init()
 
 
-html = """
-# Title
-
-Some text.
-
-​~~~mermaid
-graph TB
-A --> B
-B --> C
-​~~~
-
-Some other text.
-
-​~~~mermaid
-graph TB
-D --> E
-E --> F
-​~~~
-"""
-
-
-text = """
-# Title
-
-Some text.
-
-​~~~mermaid
-graph TB
-A --> B
-B --> C
-​~~~
-
-Some other text.
-
-​~~~mermaid
-graph TB
-D --> E
-E --> F
-​~~~
-"""
-
 def is_logged():
-      return 'email' in session and 'password' in session and saving.users_data.login(session['email'], session['password'])
-
-html = md.markdown(html, extensions=['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code'])
-text = md.markdown(text, extensions=['md_mermaid'])
-
-print(html,text)
+      return 'email' in session and 'password' in session and saving.users_data.login(session['email'])
 
 @app.route('/')
-def index(): 
+def index():
       if is_logged():
             return render_template('card.html', question_array=saving.qcm_data.get_qcm_from_user(session['email']),html=html)
       else:
-<<<<<<< Updated upstream
             return render_template('index.html',html=html)
-=======
-            return render_template('card.html', question_array=saving.qcm_data.get_question_from_user(session['email']))
->>>>>>> Stashed changes
 
 @app.route('/logout')
 def logout():
@@ -120,23 +70,19 @@ def qcm():
       else:
             return redirect('/')
 
-@app.route('/newstate/',methods=['POST'])
+@app.route('/newstate',methods=['POST'])
 def newstate():
       if 'enonce' in request.form:
             response_list = []
             good_answer = []
             enonce = request.form['enonce']
+            enonce = enonce.replace("\r","")
             for i in range (0,int(request.form['count'])+1):
                   response_list.append(request.form['question'+str(i)])
                   if "switch"+str(i) in request.form:
                         good_answer.append(i)
             question = Question(enonce,good_answer,response_list,session['email'])
             saving.questions_data.add_question(question)
-            print(question.question)
-            print(html)
-            print(question.question==html)
-            print(md.markdown(html,extesions=['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code']))
-            print(md.markdown(question.question,extesions=['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code']))
       return render_template('card.html',html = question.get_state())
 
 
@@ -145,13 +91,15 @@ def create():
       return render_template("card.html")
 
 
+@app.route('/preview',methods=['POST','GET'])
+def preview():
+      return md.markdown(request.form['text'], extensions=md_extensions)
 
 
-
-'''q1 = Question(question="Combien ?", possibles_responses=["Onze", "Treize"], valids_reponses=[0], user_email="kilian.dcs@gmail.com")
+q1 = Question(question="Combien ?", possibles_responses=["Onze", "Treize"], valids_reponses=[0], user_email="kilian.dcs@gmail.com")
 q2 = Question(question="Où?", possibles_responses=["Ici", "Là-bas", "Par là"], valids_reponses=[2, 3], user_email="kilian.dcs@gmail.com")
 qcm1 = QCM("QCM Test", [q1, q2], user_email="kilian.dcs@gmail.com")
-saving.qcm_data.add_qcm(qcm1)'''
+saving.qcm_data.add_qcm(qcm1)
 
 if __name__ == '__main__':
       app.run(debug=True)
