@@ -1,7 +1,7 @@
 pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #cece6c; padding-left: 5px; padding-right: 5px; }
 span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 .codehilite .hll { background-color: #ffffcc }
 .codehilite { background: #f8f8f8; }
@@ -157,18 +157,24 @@ body{
   align-items: center;
   height: 80%;
   border-radius: 20px 20px 0 0;
-  overflow-y: scroll;
+  overflow-y: auto;
   background:rgb(198, 224, 202);
 }
 #content-response::-webkit-scrollbar {
-  width: 0;
-  background-color: transparent;
+  width: 0.2em;
+  background-color: #F5F5F5;
 }
  
 /* masquer la tête de défilement */
 #content-response::-webkit-scrollbar-thumb {
-  background-color: transparent;
+  background-color: #706a6a;
 }
+
+#content-response::-webkit-scrollbar-thumb:hover {
+  background-color: #555555;
+}
+
+
 .response{
   border-radius: 15px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
@@ -222,8 +228,10 @@ body{
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  max-width: 60px;
+  max-height: 34px;
+  width: 60%;
+  height: 34%;
 }
 
 .switch input {
@@ -262,7 +270,7 @@ input:checked + label {
   background-color: #2196F3;
 }
 
-input:focus + label {
+input:focus + textlabel {
   box-shadow: 0 0 1px #2196F3;
 }
 
@@ -294,8 +302,6 @@ input:checked + label:before {
   width: 60%;
   height:40%;
   background: rgb(243, 243, 243);
-  backdrop-filter: blur(6.4px);
-  -webkit-backdrop-filter: blur(6.4px);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 .textarea-response:focus{
@@ -359,10 +365,30 @@ input:checked + label:before {
 }
 
 .form-card{
-  display: flex;
+  display: none;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
+}
+
+#translation{
+  width: 90%;
+  height: 90%;
+  overflow: auto;
+}
+
+
+#translation::-webkit-scrollbar {
+    width: 0.2em;
+    background-color: #F5F5F5;
+}
+
+#translation::-webkit-scrollbar-thumb {
+  background-color: #706a6a;
+}
+
+#translation::-webkit-scrollbar-thumb:hover {
+  background-color: #555555;
 }
