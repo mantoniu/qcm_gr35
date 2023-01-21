@@ -80,8 +80,8 @@ def newstate():
       response_list = []
       good_answer = []
       name = request.form['statement_name']
-      statemenetiquettest = request.form['enonce']
-      statement = enonce.replace("\r","")
+      statement = request.form['enonce']
+      statement = statement.replace("\r","")
       for i in range (0,int(request.form['count'])+1):
             response_list.append(request.form['statement'+str(i)])
             if "switch"+str(i) in request.form:
@@ -97,6 +97,15 @@ def newstate():
 @app.route('/create')
 def create():
       return render_template("create.html")
+
+@app.route('/statement/<id>')
+def statement(id):
+      return render_template("enonce.html") ## ajouter get_statement_by_id
+
+
+@app.route('/qcm/<id>')
+def qcm_id(id):
+      return render_template("states.html") ## ajouter get_qcm_by_id
 
 @app.route('/preview',methods=['POST','GET'])
 def preview():

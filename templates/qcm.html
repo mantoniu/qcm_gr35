@@ -22,7 +22,7 @@
 <div id="content">
     <ul>
         {% for qcm in qcm_array %}
-            <li>{{ qcm.name }} </li>
+        <li><a href="{{ "qcm/" + qcm.id }}">{{ qcm.name }}</a><span class="cross">&#10006;</span></li>
         {% endfor %}
     </ul>
 </div>
