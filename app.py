@@ -14,7 +14,6 @@ if __name__ == '__main__':
       globals.init() 
       saving.init()
 
-
 def is_logged():
       return 'email' in session and 'password' in session and saving.users_data.login(session['email'], session['password'])
 
@@ -30,7 +29,6 @@ def logout():
       session.pop('email')
       session.pop('password')
       return redirect('/')
-
 
 @app.route('/login',methods = ['POST'])
 def login():
@@ -85,11 +83,9 @@ def newstate():
             saving.statements_data.add_statement(statement)
       return render_template('card.html',html = statement.get_state())
 
-
 @app.route('/create')
 def create():
       return render_template("card.html")
-
 
 @app.route('/preview',methods=['POST','GET'])
 def preview():
