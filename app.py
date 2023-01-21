@@ -135,7 +135,11 @@ def newstate():
             print(md.markdown(question.question,extesions=['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code']))
       return render_template('card.html',html = question.get_state())
 
-      
+
+@app.route('/create')
+def create():
+      return render_template("card.html")
+
 
 
 
