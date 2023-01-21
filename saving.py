@@ -38,11 +38,11 @@ class StatementsData():
         self.statements_array = []
         tab = read_file(create_save_file("statements.txt"))
         for row in tab:
-            if len(row) > 4:
+            if len(row) > 6:
                 possibles_responses = []
-                for i in range(4, len(row)):
+                for i in range(6, len(row)):
                     possibles_responses.append(row[i])
-                self.statements_array.append(Statement(id=row[0], question=row[1], valids_reponses=list(map(int, row[2].split(";"))), user_email=row[3], possibles_responses=possibles_responses))
+                self.statements_array.append(Statement(id=row[0], name=row[1], question=row[2], valids_reponses=list(map(int, row[3].split(";"))), user_email=row[4], tags=list(map(str, row[5].split(";"))), possibles_responses=possibles_responses))
     
     def contains_id(self, id: str):
         for statements in self.statements_array:
@@ -57,15 +57,23 @@ class StatementsData():
         id = statement.generate_id()
         while id == "" or self.contains_id(id):
             id = statement.generate_id()
-        line_to_add = [statement.id, statement.question]
-        valids_responses_indexes = str(statement.valids_responses[0])
-        for i in range(1, len(statement.valids_responses)):
-            valids_responses_indexes += ";" + str(statement.valids_responses[i])
+        line_to_add = [statement.id, statement.name, statement.question]
+        valids_responses_indexes = []
+        if len(valids_responses_indexes) > 0:
+            valids_responses_indexes.append(str(statement.valids_responses[0]))
+            for i in range(1, len(statement.valids_responses)):
+                valids_responses_indexes += ";" + str(statement.valids_responses[i])
         line_to_add.append(valids_responses_indexes)
         line_to_add.append(statement.user_email)
+        tags = []
+        if len(tags) > 0:
+            tags.append(str(statement.tags[0]))
+            for i in range(1, len(statement.tags)):
+                tags += ";" + str(statement.valids_responses[i])
+        line_to_add.append(tags)
         for responses in statement.possibles_responses:
             line_to_add.append(responses)
-        add_line_to_file('saves/statement.txt', line_to_add)
+        add_line_to_file('saves/statements.txt', line_to_add)
         self.statements_array.append(statement)
     
     def get_all_statements(self) -> list:
@@ -77,7 +85,7 @@ class StatementsData():
                 return statements
         return None
     
-    def get_statement_from_user(self, email):
+    def get_statement_from_user(self, email) -> list:
         result = []
         for statements in self.statements_array:
             if statements.user_email == email:
@@ -119,12 +127,18 @@ class QCMData():
     def get_all_qcm(self) -> list:
         return self.qcm_array
     
-    def get_qcm_from_user(self, email):
+    def get_qcm_from_user(self, email: str) -> list:
         result = []
         for qcm in self.qcm_array:
             if qcm.user_email == email:
                 result.append(qcm)
         return result
+    
+    def get_qcm_by_id(self, id: str) -> QCM:
+        for qcm in self.qcm_array:
+            if qcm.id == id:
+                return qcm
+        return None
 
 def init():
     global users_data
