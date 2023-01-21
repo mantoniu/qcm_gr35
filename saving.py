@@ -59,17 +59,17 @@ class StatementsData():
             id = statement.generate_id()
         line_to_add = [statement.id, statement.name, statement.question]
         valids_responses_indexes = ""
-        if len(valids_responses_indexes) > 0:
+        if len(statement.valids_responses) > 0:
             valids_responses_indexes += str(statement.valids_responses[0])
             for i in range(1, len(statement.valids_responses)):
                 valids_responses_indexes += ";" + str(statement.valids_responses[i])
         line_to_add.append(valids_responses_indexes)
         line_to_add.append(statement.user_email)
         tags = ""
-        if len(tags) > 0:
+        if len(statement.tags) > 0:
             tags += str(statement.tags[0])
             for i in range(1, len(statement.tags)):
-                tags += ";" + str(statement.valids_responses[i])
+                tags += ";" + str(statement.tags[i])
         line_to_add.append(tags)
         for responses in statement.possibles_responses:
             line_to_add.append(responses)

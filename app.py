@@ -90,7 +90,7 @@ def newstate():
             tags = request.form['etiquettes']
       else:
             tags = []
-      statement = Statement(name,tags,statement,good_answer,response_list,session['email'])
+      statement = Statement(name=name,question=statement,valids_reponses=good_answer,possibles_responses=response_list,user_email=session['email'],tags=tags)
       saving.statements_data.add_statement(statement)
       return render_template('my_states.html',html = statement.get_state())
 
