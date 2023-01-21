@@ -100,7 +100,7 @@ def create():
 
 @app.route('/statement/<id>')
 def statement(id):
-      return render_template("enonce.html") ## ajouter get_statement_by_id
+      return render_template("enonce.html",statement=saving.statements_data.get_statement_by_id(id)) ## ajouter get_statement_by_id
 
 
 @app.route('/qcm/<id>')
