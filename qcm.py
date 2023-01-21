@@ -5,8 +5,9 @@ from utilities import hash
 md_extensions = ['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code']
 
 class Statement():
-    def __init__(self, name: str, question: str, valids_reponses: list, possibles_responses: list, user_email: str, id: str = None) -> None:
+    def __init__(self, name: str, tags : str, question: str, valids_reponses: list, possibles_responses: list, user_email: str, id: str = None) -> None:
         self.id = id
+        self.tags = tags
         self.question = question
         self.possibles_responses = possibles_responses
         self.valids_responses = valids_reponses

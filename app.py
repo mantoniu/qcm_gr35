@@ -79,18 +79,18 @@ def qcm():
 def newstate():
       response_list = []
       good_answer = []
-      nom = request.form['statement_name']
-      enonce = request.form['enonce']
-      enonce = enonce.replace("\r","")
+      name = request.form['statement_name']
+      statemenetiquettest = request.form['enonce']
+      statement = enonce.replace("\r","")
       for i in range (0,int(request.form['count'])+1):
             response_list.append(request.form['statement'+str(i)])
             if "switch"+str(i) in request.form:
                   good_answer.append(i)
       if 'etiquettes' in request.form:
-            etiquettes = request.form['etiquettes']
+            tags = request.form['etiquettes']
       else:
-            etiquettes = []
-      statement = Statement(nom,enonce,good_answer,response_list,session['email'])
+            tags = []
+      statement = Statement(name,tags,statement,good_answer,response_list,session['email'])
       saving.statements_data.add_statement(statement)
       return render_template('my_states.html',html = statement.get_state())
 
