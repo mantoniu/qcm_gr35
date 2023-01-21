@@ -84,6 +84,7 @@ body{
   padding: 0;
 }
 .card{
+  margin-left: 30%;
   z-index: 2;
   border: 20px solid white;
   display: flex;
@@ -378,7 +379,7 @@ input:checked + .slider:before {
 }
 
 .form-card{
-  display: none;
+  display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -404,4 +405,9 @@ input:checked + .slider:before {
 
 #translation::-webkit-scrollbar-thumb:hover {
   background-color: #555555;
+}
+
+.info{
+  float: left;
+  width: 10%;
 }

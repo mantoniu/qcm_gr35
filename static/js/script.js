@@ -1,5 +1,9 @@
 var count = 1;
 
+$(function() {
+    $(".chzn-select").chosen();
+});
+
 function inscription(){
     document.getElementById('connection').style.display ="none";
     document.getElementById("s'inscrire").style.display ="none";
@@ -16,6 +20,10 @@ function connection(){
 
 $(document).ready(function(){
     $("#new-statement").submit(function(){
+        if($('#statement_name').val()==""){
+            alert('Vous devez saisir un nom !');
+            return false;
+        }
 		if ($('input:checkbox').filter(':checked').length < 1){
             alert("Il faut cocher au moins une bonne réponse !");
 		    return false;

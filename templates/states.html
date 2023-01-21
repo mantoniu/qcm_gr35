@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="../static/css/utilities/header.css" >
-    <link rel="stylesheet" type="text/css" href="../static/css/qcm.css" >
-    <link rel="stylesheet" type="text/css" href="../static/css/utilities/list.css" >
+    <link rel="stylesheet" type="text/css" href="../static/css/my_qcm.css" >
+    <link rel="stylesheet" type="text/css" href="../static/css/list/list.css" >
 </head>
 <body>
 <header>
@@ -21,8 +21,8 @@
 </header>
 <div id="content">
     <ul>
-        {% for qcm in qcm_array %}
-        <li><a href="{{ "qcm/" + qcm.id }}">{{ qcm.name }}</a><span class="cross">&#10006;</span></li>
+        {% for statement in my_states_array %}
+            <li><a href="{{ "statement/" + statement.id }}">{{ statement.name }}</a><span class="cross">&#10006;</span></li>
         {% endfor %}
     </ul>
 </div>

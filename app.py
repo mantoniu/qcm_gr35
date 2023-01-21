@@ -61,6 +61,13 @@ def my_qcm():
       else:
             return redirect('/')
 
+@app.route('/my_states')
+def my_states():
+      if is_logged():
+            return render_template('my_states.html', my_states_array=saving.statements_data.get_statement_from_user(session['email']))
+      else:
+            return redirect('/')
+
 @app.route('/qcm')
 def qcm():
       if is_logged():
@@ -70,22 +77,35 @@ def qcm():
 
 @app.route('/newstate',methods=['POST'])
 def newstate():
-      if 'enonce' in request.form:
-            response_list = []
-            good_answer = []
-            enonce = request.form['enonce']
-            enonce = enonce.replace("\r","")
-            for i in range (0,int(request.form['count'])+1):
-                  response_list.append(request.form['statement'+str(i)])
-                  if "switch"+str(i) in request.form:
-                        good_answer.append(i)
-            statement = Statement(enonce,good_answer,response_list,session['email'])
-            saving.statements_data.add_statement(statement)
-      return render_template('card.html',html = statement.get_state())
+      response_list = []
+      good_answer = []
+      name = request.form['statement_name']
+      statement = request.form['enonce']
+      statement = statement.replace("\r","")
+      for i in range (0,int(request.form['count'])+1):
+            response_list.append(request.form['statement'+str(i)])
+            if "switch"+str(i) in request.form:
+                  good_answer.append(i)
+      if 'etiquettes' in request.form:
+            tags = request.form['etiquettes']
+      else:
+            tags = []
+      statement = Statement(name,tags,statement,good_answer,response_list,session['email'])
+      saving.statements_data.add_statement(statement)
+      return render_template('my_states.html',html = statement.get_state())
 
 @app.route('/create')
 def create():
-      return render_template("card.html")
+      return render_template("create.html")
+
+@app.route('/statement/<id>')
+def statement(id):
+      return render_template("enonce.html") ## ajouter get_statement_by_id
+
+
+@app.route('/qcm/<id>')
+def qcm_id(id):
+      return render_template("states.html") ## ajouter get_qcm_by_id
 
 @app.route('/preview',methods=['POST','GET'])
 def preview():
