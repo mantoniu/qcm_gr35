@@ -1,5 +1,9 @@
 var count = 1;
 
+$(function() {
+    $(".chzn-select").chosen();
+});
+
 function inscription(){
     document.getElementById('connection').style.display ="none";
     document.getElementById("s'inscrire").style.display ="none";

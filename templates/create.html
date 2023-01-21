@@ -14,9 +14,30 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/script.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+    <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css">
 </head>    
 <body>
+<<<<<<< Updated upstream:templates/card.html
 <form method="POST" id="new-statement" action="/newstate" class="form-card">
+=======
+<form method="POST" id="new-question" action="/newstate" class="form-card">
+
+    <div class="info">
+        Nom : <input name="statement_name" type="text">
+        <p>Choix des étiquettes : &nbsp;</p>
+        <select class="chzn-select" data-placeholder="placeholder" multiple="true" name="faculty" style="width:200px;">
+        <option value="AC">Java</option>
+        <option value="AD">Algo</option>
+        <option value="AM">Prog c</option>
+        </select>
+    </div>
+
+
+>>>>>>> Stashed changes:templates/create.html
     <div class="card">  
         <div class="header-card" id="header">  
             <textarea name="enonce" type="text" spellcheck="false" placeholder="Ecrire l énoncé..." id="enonce"></textarea>
@@ -53,6 +74,7 @@
         </div>  
     </div> 
 </form>
+<<<<<<< Updated upstream:templates/card.html
 
 
     <!-- Bouton de création d'un statement -->
@@ -89,5 +111,7 @@
     </form>
     {% endfor %}
 -->
+=======
+>>>>>>> Stashed changes:templates/create.html
 </body>
 </html>

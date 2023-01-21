@@ -61,6 +61,13 @@ def my_qcm():
       else:
             return redirect('/')
 
+@app.route('/my_states')
+def my_states():
+      if is_logged():
+            return render_template('my_states.html', my_qcm_array=saving.qcm_data.get_qcm_from_user(session['email']))
+      else:
+            return redirect('/')
+
 @app.route('/qcm')
 def qcm():
       if is_logged():
@@ -85,7 +92,7 @@ def newstate():
 
 @app.route('/create')
 def create():
-      return render_template("card.html")
+      return render_template("create.html")
 
 @app.route('/preview',methods=['POST','GET'])
 def preview():
