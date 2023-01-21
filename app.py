@@ -23,7 +23,7 @@ def index():
       if is_logged():
             return render_template('home.html')
       else:
-            return render_template('index.html',html=html)
+            return render_template('index.html')
 
 @app.route('/logout')
 def logout():
@@ -54,7 +54,7 @@ def register():
                   session['password'] = password
                   return redirect('/')
             else:
-                  return render_template('index.html',html=html)
+                  return render_template('index.html')
 
 @app.route('/my_qcm')
 def my_qcm():
