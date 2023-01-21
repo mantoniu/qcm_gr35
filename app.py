@@ -14,7 +14,6 @@ if __name__ == '__main__':
       globals.init() 
       saving.init()
 
-
 html = """
 # Title
 
@@ -67,7 +66,7 @@ print(html,text)
 @app.route('/')
 def index(): 
       if is_logged():
-            return render_template('card.html', question_array=saving.qcm_data.get_qcm_from_user(session['email']),html=html)
+            return render_template('home.html', question_array=saving.qcm_data.get_qcm_from_user(session['email']),html=html)
       else:
             return render_template('index.html',html=html)
 
@@ -116,7 +115,7 @@ def qcm():
       else:
             return redirect('/')
 
-@app.route('/newstate/',methods=['POST'])
+@app.route('/newstate',methods=['POST'])
 def newstate():
       if 'enonce' in request.form:
             response_list = []
@@ -134,7 +133,6 @@ def newstate():
             print(md.markdown(html,extesions=['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code']))
             print(md.markdown(question.question,extesions=['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code']))
       return render_template('card.html',html = question.get_state())
-
       
 
 

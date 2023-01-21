@@ -8,6 +8,7 @@ global row_separator
 row_separator = "@__|||2S"
 
 def hash(word: str) -> str:
+    word = "Kilian" + word
     result = md5(word.encode("utf-8")).hexdigest()
     return result.replace(";", "P")
 
@@ -45,7 +46,7 @@ def remove_lines_which_contains(file_name: str, string: str) -> None:
         entire_file = file.read()
     with open(file_name, 'w') as file:
         lines = entire_file.split(line_separator)
-        for i in range(lines):
+        for i in range(len(lines)):
             rows = lines[i].split(row_separator)
             for row in rows:
                 if row == string:
