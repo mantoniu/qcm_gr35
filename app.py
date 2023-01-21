@@ -64,7 +64,7 @@ def my_qcm():
 @app.route('/my_states')
 def my_states():
       if is_logged():
-            return render_template('my_states.html', my_qcm_array=saving.qcm_data.get_qcm_from_user(session['email']))
+            return render_template('my_states.html', my_states_array=saving.statements_data.get_statement_from_user(session['email']))
       else:
             return redirect('/')
 

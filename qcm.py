@@ -6,6 +6,7 @@ md_extensions = ['md_mermaid','markdown.extensions.attr_list','markdown.extensio
 
 class Statement():
     def __init__(self, name: str, tags : str, question: str, valids_reponses: list, possibles_responses: list, user_email: str, id: str = None) -> None:
+        self.name = name
         self.id = id
         self.tags = tags
         self.question = question
