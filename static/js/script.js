@@ -54,8 +54,10 @@ function add_answer(){
     html = ' \
     <div class="response"> \
         <div class="switch"> \
-            <input type="checkbox" id="switch'+count+'" name="switch'+count+'"> \
-            <label for="switch'+count+'"></label> \
+            <label id="switch'+count+'" class="switch"> \
+                <input type="checkbox" name="switch'+count+'" id="switch'+count+'"> \
+                <span class="slider round"></span> \
+            </label>  \
         </div> \
         <textarea name="question'+count+'" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea> \
         <button type="button" onclick="delete_answer(this)" class="trash-button"><i class="fas fa-trash"></i></button>  \

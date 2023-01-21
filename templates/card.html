@@ -16,39 +16,43 @@
     <script type="text/javascript" src="/static/js/script.js"></script>
 </head>    
 <body>
-    <form method="POST" id="new-question" action="/newstate" class="form-card">
-        <div class="card">  
-            <div class="header-card" id="header">  
-                <textarea name="enonce" type="text" spellcheck="false" placeholder="Ecrire l énoncé..." id="enonce"></textarea>
-            </div> 
-            <div class="body-card">  
-                <div class="content" id="content-response">  
-                    <input id="count" type="hidden" name="count" value="1">  
-                    <div class="list-response" id="list-response">  
-                        <div class="response">  
-                            <div class="switch">  
-                                <input type="checkbox" name="switch0" id="switch0">  
-                                <label for="switch0"></label>  
-                            </div>  
-                            <textarea name="question0" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
-                        </div>  
-                        <div class="response">  
-                            <div class="switch">  
-                                <input type="checkbox" name="switch1" id="switch1">  
-                                <label for="switch1"></label>  
-                            </div>  
-                            <textarea name="question1" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
-                        </div>  
-                </div>  
-            </div>  
-                <div class="card-navbar">  
-                    <button class="animation" type="button" onclick="preview()" id="apercu">Aperçu</button>  
-                    <div onclick="add_answer()" class="circle animation"><i class="fas fa-plus"></i></div>  
-                    <button class="animation" type="submit" id="ajouter">Valider</button>  
-                </div>  
-            </div>  
+<form method="POST" id="new-question" action="/newstate" class="form-card">
+    <div class="card">  
+        <div class="header-card" id="header">  
+            <textarea name="enonce" type="text" spellcheck="false" placeholder="Ecrire l énoncé..." id="enonce"></textarea>
         </div> 
-    </form>
+        <div class="body-card">  
+            <div class="content" id="content-response">  
+                <input id="count" type="hidden" name="count" value="1">  
+                <div class="list-response" id="list-response">  
+                    <div class="response">  
+                        <div class="switch">  
+                            <label id="switch0" class="switch">
+                                <input type="checkbox" name="switch0" id="switch0">
+                                <span class="slider round"></span>  
+                            </label>  
+                        </div>  
+                        <textarea name="question0" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
+                    </div>  
+                    <div class="response">  
+                        <div class="switch">  
+                            <label id="switch1" class="switch">
+                                <input type="checkbox" name="switch1" id="switch1">
+                                <span class="slider round"></span>  
+                            </label>  
+                        </div>  
+                        <textarea name="question1" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
+                    </div>  
+            </div>  
+        </div>  
+            <div class="card-navbar">  
+                <button class="animation" type="button" onclick="preview()" id="apercu">Aperçu</button>  
+                <div onclick="add_answer()" class="circle animation"><i class="fas fa-plus"></i></div>  
+                <button class="animation" type="submit" id="ajouter">Valider</button>  
+            </div>  
+        </div>  
+    </div> 
+</form>
 
 
     <!-- Bonton de création d'une question -->
