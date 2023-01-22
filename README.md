@@ -10,6 +10,7 @@ Pour lancer l'application, il faut préalablement installer différents modules 
 
 Ensuite il faut utiliser : python3 app.py pour lancer le serveur
 
+
 Description du format de sauvegarde des énoncés :
 
 
@@ -46,7 +47,7 @@ HTML :
     - qcm.html
     - tag.html
 
-Python :
+PYTHON :
     - app.py (serveur Flask)
     - globals.py (variables globales)
     - qcm.py (classe QCM et Statement)
@@ -54,8 +55,9 @@ Python :
     - user.py (classe User)
     - utilities.py 
 
-Txt :
+TXT :
     - requirements.txt pour faire fonctionner le module md-mermaid
+
 
 Webographie :
 
@@ -65,5 +67,4 @@ Webographie :
     - Jquery chosen : https://harvesthq.github.io/chosen/
 
 Bugs connus :
-
     - 
