@@ -102,6 +102,7 @@ def newqcm():
                   print(statement.id)
                   statements_list.append(statement)
       qcm = QCM(name=request.form['qcm_title'],statements=statements_list,user_email=session['email'])
+      saving.qcm_data.add_qcm(qcm)
       return redirect('/my_qcm')
 
 @app.route('/create')
