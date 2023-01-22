@@ -51,7 +51,11 @@ $(function() {
                     <div class="response">  
                         <div class="switch">  
                             <label id="{{ "switch"+ i|string }}" class="switch">
+                                {% if i in statement.valids_responses %}
+                                <input type="checkbox" checked="checked"  name="{{ "switch"+ i|string }}" id="{{ "switch"+ i|string }}">
+                                {% else %}
                                 <input type="checkbox" name="{{ "switch"+ i|string }}" id="{{ "switch"+ i|string }}">
+                                {% endif %}
                                 <span class="slider round"></span>  
                             </label>  
                         </div>  
