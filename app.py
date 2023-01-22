@@ -71,7 +71,7 @@ def my_states():
 @app.route('/qcm')
 def qcm():
       if is_logged():
-            return render_template('qcm.html', qcm_array=saving.qcm_data.get_all_qcm())
+            return render_template('qcm_list.html', qcm_array=saving.qcm_data.get_all_qcm())
       else:
             return redirect('/')
 
@@ -86,8 +86,8 @@ def newstate():
             response_list.append(request.form['statement'+str(i)])
             if "switch"+str(i) in request.form:
                   good_answer.append(i)
-      if 'etiquettes' in request.form:
-            tags = request.form['etiquettes']
+      if request.form.getlist('etiquettes') != None:
+            tags = request.form.getlist('etiquettes')
       else:
             tags = []
       statement = Statement(name=name,question=statement,valids_reponses=good_answer,possibles_responses=response_list,user_email=session['email'],tags=tags)
@@ -99,7 +99,6 @@ def newqcm():
       statements_list = []
       for statement in saving.statements_data.get_statement_from_user(session['email']):
             if statement.id in request.form:
-                  print(statement.id)
                   statements_list.append(statement)
       qcm = QCM(name=request.form['qcm_title'],statements=statements_list,user_email=session['email'])
       saving.qcm_data.add_qcm(qcm)
@@ -116,12 +115,10 @@ def edit(id):
 @app.route('/statement/<id>',methods=['POST','GET'])
 def statement(id): 
       statement = saving.statements_data.get_statement_by_id(id)
-      no_switch = True
       good_answer = []
       bad_answer = []
       for i in range (0,len(statement.possibles_responses)):
             if "switch"+str(i) in request.form:
-                  no_switch = False
                   if i in statement.valids_responses:
                         good_answer.append(i)
                   else:
@@ -129,16 +126,18 @@ def statement(id):
       return render_template("enonce.html",statement=statement)   
       
 
-
-
 @app.route('/qcm/<id>')
 def qcm_id(id):
-      return render_template("states.html") 
+      return render_template("qcm.html",qcm=saving.qcm_data.get_qcm_by_id(id)) 
 
 
 @app.route('/preview',methods=['POST','GET'])
 def preview():
       return md.markdown(request.form['text'], extensions=md_extensions)
+
+@app.route('/newtag',methods=['POST'])
+def newtag():
+      tag_name = session['']
 
 if __name__ == '__main__':
       app.run(debug=True)

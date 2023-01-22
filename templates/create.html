@@ -17,27 +17,27 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
     <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
     <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js"></script>
+    <script type="text/javascript" src="/static/js/chosen.jquery.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css">
 </head>    
 <body>
 <script>
 $(function() {
-    $(".chzn-select").chosen();
+    $(".chzn-select").chosen(
+        {no_results_text:"Pas d'étiquette trouvée. Appuyez sur entrée pour ajouter "}
+    );
 });
 </script>
 <form method="POST" id="new-statement" action="/newstate" class="form-card">
 
-    <div class="info">
+    <div class="info" id="info">
         Nom : <input name="statement_name" id="statement_name" type="text">
         <p>Choix des étiquettes : &nbsp;</p>
-        <select class="chzn-select" data-placeholder="Etiquettes" multiple="true" name="etiquettes[]" style="width:200px;">
-        <option value="AC">Java</option>
-        <option value="AD">Algo</option>
-        <option value="AM">Prog c</option>
+        <select class="chzn-select" id="select-tags" data-placeholder="Etiquettes" multiple="true" name="etiquettes" style="width:200px;">
+        <option selected="selected">Java</option>
         </select>
     </div>
-
+    
 
     <div class="card">  
         <div class="header-card" id="header">  
@@ -75,5 +75,6 @@ $(function() {
         </div>  
     </div> 
 </form>
+
 </body>
 </html>
