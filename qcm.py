@@ -7,13 +7,16 @@ md_extensions = ['md_mermaid','markdown.extensions.attr_list','markdown.extensio
 
 class Statement():
     def __init__(self, name: str, question: str, valids_reponses: list, possibles_responses: list, user_email: str, id: str = None, tags: list = []) -> None:
-        self.id = id
         self.name = name
         self.question = question
         self.possibles_responses = possibles_responses
         self.valids_responses = valids_reponses
         self.user_email = user_email
         self.tags = tags
+        if id == None:
+            self.generate_id()
+        else:
+            self.id = id
 
     def generate_id(self) -> str:
         self.id = hash(str(uuid4()))
@@ -31,9 +34,6 @@ class Statement():
         self.tags = new_statement.tags
     
     def get_registering_line(self) -> list:
-        id = self.generate_id()
-        while id == "" or file_contains("saves/statements.txt", id):
-            id = self.generate_id()
         line_to_add = [self.id, self.name, self.question]
         valids_responses_indexes = ""
         if len(self.valids_responses) > 0:
@@ -55,10 +55,13 @@ class Statement():
 
 class QCM:
     def __init__(self, name: str, statements: list, user_email: str, id:str = None) -> None:
-        self.id = id
         self.name = name
         self.statements = statements
         self.user_email = user_email
+        if id == None:
+            self.generate_id()
+        else:
+            self.id = id
     
     def add_statement(self, statement: Statement) -> None:
         self.statements.append(statement)
@@ -73,9 +76,6 @@ class QCM:
         return self.id
     
     def get_registering_line(self):
-        id = self.generate_id()
-        while id == "" or file_contains("saves/qcm.txt", id):
-            id = self.generate_id()
         line_to_add = [self.id, self.name, self.user_email]
         for statement in self.statements:
             line_to_add.append(statement.id)

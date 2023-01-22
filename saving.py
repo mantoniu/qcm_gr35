@@ -76,15 +76,15 @@ class StatementsData():
 
     def add_statement(self, statement: Statement) -> None:
         add_line_to_file(self.save_file, statement.get_registering_line())
-        print("registering : " + str(statement.get_registering_line()))
         self.statements_array.append(statement)
     
-    def remove_statement_with_id_in_file(self, id: str) -> None:
-        remove_lines_which_contains(self.save_file, id)
+    def remove_statement_by_id(self, id: str) -> None:
+        self.statements_array.remove(self.get_statement_by_id(id))
+        remove_lines_which_contains(self.save_file, string=id)
     
     def remove_statement(self, statement: Statement) -> None:
         self.statements_array.remove(statement)
-        self.remove_statement_with_id_in_file(id=statement.id)
+        remove_lines_which_contains(self.save_file, string=statement.id)
     
     def get_all_statements(self) -> list:
         return self.statements_array
@@ -106,6 +106,25 @@ class StatementsData():
         statement = self.get_statement_by_id(id)
         statement.set(new_statement=new_statement)
         set_lines_which_contains(self.save_file, id, statement.get_registering_line())
+    
+    def get_statements_with_any_tag(self, tags) -> list:
+        statements_with_tag = []
+        for statement in self.statements_array:
+            for tag in tags:
+                if statement not in statements_with_tag and tag in statement.tags:
+                    statements_with_tag.append(statement)
+        return statements_with_tag
+    
+    def get_statements_with_all_tag(self, tags) -> list:
+        statements_with_tag = []
+        for statement in self.statements_array:
+            all_tags = True
+            for tag in tags:
+                if tag not in statement.tags:
+                    all_tags = False
+            if all_tags:
+                statements_with_tag.append(statement)
+        return statements_with_tag
 
 class QCMData():
     def __init__(self, statements_data: StatementsData) -> None:
