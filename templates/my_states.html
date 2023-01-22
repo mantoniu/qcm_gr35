@@ -38,7 +38,7 @@
     <ul>
         {% for statement in my_states_array %}
             <li><input name="{{ statement.id }}" type="checkbox" id="{{ statement.id }}">
-            <label for="{{ statement.id }}"><a href="{{ "statement/" + statement.id }}">{{ statement.name }}</a><a href="{{ "/delete" + statement.id|string }}"></a><span class="cross">&#10006;</span></a></label></li>
+            <label for="{{ statement.id }}"><a href="{{ "statement/" + statement.id }}">{{ statement.name }}</a><a href="{{ "statement/delete/" + statement.id|string }}"><button type="button">Supprimer</button></a></label></li>
         {% endfor %}
     </ul>
     Titre du QCM : <input type="text" name="qcm_title" id="qcm_title"><br/><br/>

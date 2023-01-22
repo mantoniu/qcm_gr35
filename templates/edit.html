@@ -18,12 +18,14 @@
     <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
     <script type="text/javascript" src="/static/js/chosen.jquery.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css">
-    <link rel="stylesheet" href="../static/css/card/card-style.css">
+    <link rel="stylesheet" href="../../static/css/card/card-style.css">
 </head>    
 <body>
 <script>
 $(function() {
-    $(".chzn-select").chosen();
+    $(".chzn-select").chosen(
+        {no_results_text:"Pas d'étiquette trouvée. Appuyez sur entrée pour ajouter "}
+    );
 });
 </script>
 <form method="POST" id="new-statement" action="{{ "/set/" + statement.id|string }}" class="form-card">
