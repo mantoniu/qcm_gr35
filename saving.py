@@ -76,6 +76,7 @@ class StatementsData():
 
     def add_statement(self, statement: Statement) -> None:
         add_line_to_file(self.save_file, statement.get_registering_line())
+        print("registering : " + str(statement.get_registering_line()))
         self.statements_array.append(statement)
     
     def remove_statement_with_id_in_file(self, id: str) -> None:

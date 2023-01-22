@@ -77,3 +77,6 @@ class QCM:
         while id == "" or file_contains("saves/qcm.txt", id):
             id = self.generate_id()
         line_to_add = [self.id, self.name, self.user_email]
+        for statement in self.statements:
+            line_to_add.append(statement.id)
+        return line_to_add
