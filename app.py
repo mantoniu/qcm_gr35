@@ -5,6 +5,7 @@ from flaskext.markdown import Markdown
 from user import User
 from qcm import *
 import markdown as md
+from utilities import read_file
 
 # Init App
 app = Flask(__name__)
@@ -159,6 +160,11 @@ def edit_statement(id):
       statement = statement_values()
       saving.statements_data.set_statement(id,statement)
       return redirect('/my_states')
+
+#saving.statements_data.add_statement(Statement("statement1", "quel ?", [0, 1], ["rep1", "rep2"], "eee@gmail.com", "id-randint", ["aa","bb"]))
+print(read_file("saves/statements.txt"))
+#saving.statements_data.set_statement("id-randint", Statement("statement1-edit", "quel ?", [0, 1], ["rep1", "rep2"], "eee@gmail.com", "id-randint", ["aa","bb"]))
+print(read_file("saves/statements.txt"))
 
 if __name__ == '__main__':
       app.run(debug=True)
