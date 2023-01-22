@@ -5,7 +5,7 @@ from qcm import QCM, Statement
 class UsersData():
     def __init__(self) -> None:
         self.users_array = []
-        tab = read_file(create_save_file("users.txt"))
+        tab = read_file(create_save_file("saves/users.txt"))
         for row in tab:
             if len(row) > 4:
                 self.users_array.append(User(email=row[0], password=row[1], name=row[2], firstname=row[3], tags_array=list(map(str, row[4].split(";"))), do_hash=False))
@@ -55,7 +55,7 @@ class UsersData():
 class StatementsData():
     def __init__(self) -> None:
         self.statements_array = []
-        tab = read_file(create_save_file("statements.txt"))
+        tab = read_file(create_save_file("saves/statements.txt"))
         for row in tab:
             if len(row) > 6:
                 possibles_responses = []
@@ -102,13 +102,13 @@ class StatementsData():
     def set_statement(self, id: str, new_statement: Statement) -> None:
         statement = self.get_statement_by_id(id)
         statement.set(new_statement=new_statement)
-        set_lines_which_contains("saves/statement.txt", id, statement.get_registering_line())
+        set_lines_which_contains("saves/statements.txt", id, statement.get_registering_line())
 
 class QCMData():
     def __init__(self, statements_data: StatementsData) -> None:
         self.statements_data = statements_data
         self.qcm_array = []
-        tab = read_file(create_save_file("qcm.txt"))
+        tab = read_file(create_save_file("saves/qcm.txt"))
         for row in tab:
             if len(row) > 3:
                 statements = []
