@@ -168,6 +168,14 @@ class QCMData():
                 return qcm
         return None
 
+    def remove_qcm_by_id(self, id: str) -> None:
+        self.qcm_array.remove(self.get_qcm_by_id(id))
+        remove_lines_which_contains(self.save_file, string=id)
+    
+    def remove_statement(self, qcm: QCM) -> None:
+        self.qcm_array.remove(qcm)
+        remove_lines_which_contains(self.save_file, string=qcm.id)
+
 def init():
     global users_data
     users_data = UsersData()
