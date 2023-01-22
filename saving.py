@@ -4,8 +4,9 @@ from qcm import QCM, Statement
 
 class UsersData():
     def __init__(self) -> None:
+        self.save_file = create_save_file("users.txt")
         self.users_array = []
-        tab = read_file(create_save_file("saves/users.txt"))
+        tab = read_file(self.save_file)
         for row in tab:
             if len(row) > 4:
                 self.users_array.append(User(email=row[0], password=row[1], name=row[2], firstname=row[3], tags_array=list(map(str, row[4].split(";"))), do_hash=False))
@@ -21,7 +22,7 @@ class UsersData():
 
     def add_user(self, user: User) -> bool:
         if not(self.contains_user(user)):
-            add_line_to_file('saves/users.txt', user.get_registering_line())
+            add_line_to_file(self.save_file, user.get_registering_line())
             self.users_array.append(user)
             return True
         else:
@@ -30,7 +31,7 @@ class UsersData():
     def add_tag_to_user_by_email(self, email: str, tag:str) -> bool:
         user = self.get_user_by_email(email)
         if user != None and user.add_tag(tag):
-            set_lines_which_contains("saves/users.txt", email, user.get_registering_line())
+            set_lines_which_contains(self.save_file, email, user.get_registering_line())
             return True
         else:
             return False
@@ -38,7 +39,7 @@ class UsersData():
     def remove_tag_to_user_by_email(self, email: str, tag: str) -> bool:
         user = self.get_user_by_email(email)
         if user != None and user.remove_tag(tag):
-            set_lines_which_contains("saves/users.txt", email, user.get_registering_line())
+            set_lines_which_contains(self.save_file, email, user.get_registering_line())
             return True
         else:
             return False
@@ -54,8 +55,9 @@ class UsersData():
 
 class StatementsData():
     def __init__(self) -> None:
+        self.save_file = create_save_file("statements.txt")
         self.statements_array = []
-        tab = read_file(create_save_file("saves/statements.txt"))
+        tab = read_file(self.save_file)
         for row in tab:
             if len(row) > 6:
                 possibles_responses = []
@@ -73,11 +75,11 @@ class StatementsData():
         return self.contains_id(statement.id)
 
     def add_statement(self, statement: Statement) -> None:
-        add_line_to_file('saves/statements.txt', statement.get_registering_line())
+        add_line_to_file(self.save_file, statement.get_registering_line())
         self.statements_array.append(statement)
     
     def remove_statement_with_id_in_file(self, id: str) -> None:
-        remove_lines_which_contains("saves/statements.txt", id)
+        remove_lines_which_contains(self.save_file, id)
     
     def remove_statement(self, statement: Statement) -> None:
         self.statements_array.remove(statement)
@@ -102,13 +104,14 @@ class StatementsData():
     def set_statement(self, id: str, new_statement: Statement) -> None:
         statement = self.get_statement_by_id(id)
         statement.set(new_statement=new_statement)
-        set_lines_which_contains("saves/statements.txt", id, statement.get_registering_line())
+        set_lines_which_contains(self.save_file, id, statement.get_registering_line())
 
 class QCMData():
     def __init__(self, statements_data: StatementsData) -> None:
+        self.save_file = create_save_file("saves/qcm.txt")
         self.statements_data = statements_data
         self.qcm_array = []
-        tab = read_file(create_save_file("saves/qcm.txt"))
+        tab = read_file(self.save_file)
         for row in tab:
             if len(row) > 3:
                 statements = []
@@ -126,7 +129,7 @@ class QCMData():
         return self.contains_id(qcm.id)
 
     def add_qcm(self, qcm: QCM) -> None:
-        add_line_to_file('saves/qcm.txt', qcm.get_registering_line())
+        add_line_to_file(self.save_file, qcm.get_registering_line())
         self.qcm_array.append(qcm)
     
     def get_all_qcm(self) -> list:
