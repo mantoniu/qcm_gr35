@@ -5,6 +5,7 @@ from flaskext.markdown import Markdown
 from user import User
 from qcm import *
 import markdown as md
+from utilities import read_file
 
 # Initialisation
 app = Flask(__name__)

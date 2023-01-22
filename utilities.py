@@ -70,7 +70,7 @@ def set_lines_to_file(file_name: str, indexes: int, line: list) -> None:
             if i in indexes:
                 add_line_to_file(file_name=file_name, line=line)
             else:
-                add_line_to_file(file_name=file_name, line=lines[i])
+                add_line_to_file(file_name=file_name, line=lines[i].split(row_separator))
 
 def set_lines_which_contains(file_name: str, string: str, line: list) -> None:
     lines_to_set = []
