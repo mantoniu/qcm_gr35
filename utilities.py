@@ -15,6 +15,11 @@ def hash(word: str) -> str:
 def check_hash(word: str, hash: str) -> bool :
     return hash(word) == hash
 
+def file_contains(file_name: str, string: str):
+    with open(file_name,'r') as file:
+        entire_file = file.read()
+    return string in entire_file
+
 def add_line_to_file(file_name: str, line: list) -> None:
     with open(file_name,'a') as file:
         if stat(file_name).st_size > 0:

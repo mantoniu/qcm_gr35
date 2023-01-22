@@ -1,7 +1,7 @@
 from __future__ import annotations
 from markdown import markdown
 from uuid import uuid4
-from utilities import hash
+from utilities import hash, file_contains
 
 md_extensions = ['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code']
 
@@ -32,7 +32,7 @@ class Statement():
     
     def get_registering_line(self) -> list:
         id = self.generate_id()
-        while id == "" or self.contains_id(id):
+        while id == "" or file_contains("saves/statements.txt", id):
             id = self.generate_id()
         line_to_add = [self.id, self.name, self.question]
         valids_responses_indexes = ""
@@ -74,6 +74,6 @@ class QCM:
     
     def get_registering_line(self):
         id = self.generate_id()
-        while id == "" or self.contains_id(id):
+        while id == "" or file_contains("qcm.txt", id):
             id = self.generate_id()
         line_to_add = [self.id, self.name, self.user_email]
