@@ -9,6 +9,11 @@
     <link rel="stylesheet" type="text/css" href="../static/css/my_qcm.css" >
     <link rel="stylesheet" type="text/css" href="../static/css/list/list.css" >
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+    <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css">
 </head>
 <body>
 <header>
@@ -20,12 +25,20 @@
       <li><a href="/logout">Déconnexion</a></li>
     </ul>
 </header>
+<form method="POST" action="/my_states">
+    <select class="chzn-select" id="select-tags" data-placeholder="Etiquettes" multiple="true" name="etiquettes" style="width:200px;">
+        {% for tag in tags %}
+        <option>{{ tag }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Valider">
+</form>
 <div id="content">
     <form method="POST" action="/newqcm" id="newqcm">
     <ul>
         {% for statement in my_states_array %}
             <li><input name="{{ statement.id }}" type="checkbox" id="{{ statement.id }}">
-            <label for="{{ statement.id }}"><a href="{{ "statement/" + statement.id }}">{{ statement.name }}</a><span class="cross">&#10006;</span></label></li>
+            <label for="{{ statement.id }}"><a href="{{ "statement/" + statement.id }}">{{ statement.name }}</a><a href="{{ "/delete" + statement.id|string }}"></a><span class="cross">&#10006;</span></a></label></li>
         {% endfor %}
     </ul>
     Titre du QCM : <input type="text" name="qcm_title" id="qcm_title"><br/><br/>
@@ -38,6 +51,13 @@
 </div>
 <script>
 
+
+$(function() {
+    $(".chzn-select").chosen(
+        {no_results_text:"Pas d'étiquette trouvée au nom de "}
+    );
+});
+    
 $(document).ready(function(){
     $("#newqcm").submit(function(){
         if($('#qcm_title').val()==""){

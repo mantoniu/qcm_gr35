@@ -24,7 +24,7 @@ def statement_values():
             response_list.append(request.form['statement'+str(i)])
             if "switch"+str(i) in request.form:
                   good_answer.append(i)
-      if request.form.getlist('etiquettes') != None:
+      if request.form.getlist('etiquettes'):
             tags = request.form.getlist('etiquettes')
       else:
             tags = []
@@ -78,10 +78,20 @@ def my_qcm():
       else:
             return redirect('/')
 
-@app.route('/my_states')
+@app.route('/my_states',methods=['POST','GET'])
 def my_states():
       if is_logged():
-            return render_template('my_states.html', my_states_array=saving.statements_data.get_statement_from_user(session['email']))
+            if request.form.getlist('etiquettes'):
+                  tags = request.form.getlist('etiquettes')
+                  statement_array = saving.statements_data.get_all_statements()
+                  countains_tag = []
+                  for statement in statement_array:
+                        for tag in statement.tags:
+                              if tag in tags:
+                                    countains_tag.append(statement)
+                  return render_template('my_states.html', my_states_array=countains_tag,tags=(saving.users_data.get_user_by_email(session['email'])).tags_array)
+            else :
+                  return render_template('my_states.html', my_states_array=saving.statements_data.get_statement_from_user(session['email']),tags=(saving.users_data.get_user_by_email(session['email'])).tags_array)
       else:
             return redirect('/')
 
