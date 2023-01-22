@@ -31,5 +31,7 @@ class User():
             tags_str = self.tags_array[0]
             for i in range(1, len(self.tags_array)):
                 tags_str += ";" + self.tags_array[i]
-        result.append(tags_str)
+            result.append(tags_str)
+        else:
+            result.append("")
         return result
