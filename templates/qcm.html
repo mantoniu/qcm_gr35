@@ -20,5 +20,35 @@
     </ul>
 </header>
 <h1> {{ qcm.name }}</h1>
+{% for statement in qcm.statements %}
+<div class="card"> 
+    <div class="header-card" id="header">   
+        <div class="translation" id="translation">  
+            {{ statement.get_state()|safe }}
+        </div> 
+    </div>  
+    <div class="body-card">  
+        <div class="content" id="content-response">  
+            <input id="count" type="hidden" name="count" value="1">  
+            <div class="list-response" id="list-response">  
+                {% for i in range (0,statement.possibles_responses|length) %}
+                <div class="response">  
+                    <div class="switch">  
+                        <label id="{{ "switch" + i|string }}" class="switch">
+                            <input type="checkbox" name="{{ "switch" + i|string }}" id="{{ "switch" + i|string }}">
+                            <span class="slider round"></span>  
+                        </label>  
+                    </div>  
+                    <p class="textarea-response"> {{ statement.possibles_responses[i] }}</p>
+                </div>
+                {% endfor %}
+        </div>  
+    </div>  
+        <div class="card-navbar">  
+            <button class="animation" type="submit" id="ajouter">Valider</button>  
+        </div>  
+    </div>  
+</div> 
+{% endfor %}
 </body>
 </html>
