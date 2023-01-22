@@ -88,7 +88,7 @@ def my_states():
                   countains_tag = []
                   for statement in statement_array:
                         for tag in statement.tags:
-                              if tag in tags:
+                              if tag in tags and statement not in countains_tag:
                                     countains_tag.append(statement)
                   return render_template('my_states.html', my_states_array=countains_tag,tags=(saving.users_data.get_user_by_email(session['email'])).tags_array)
             else :
