@@ -74,6 +74,6 @@ class QCM:
     
     def get_registering_line(self):
         id = self.generate_id()
-        while id == "" or file_contains("qcm.txt", id):
+        while id == "" or file_contains("saves/qcm.txt", id):
             id = self.generate_id()
         line_to_add = [self.id, self.name, self.user_email]
