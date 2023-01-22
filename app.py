@@ -161,6 +161,16 @@ def edit_statement(id):
       saving.statements_data.set_statement(id,statement)
       return redirect('/my_states')
 
+@app.route('/statement/delete/<id>')
+def delete_statement(id):
+      saving.statements_data.remove_statement_by_id(id)
+      return redirect('/my_states')
+
+@app.route('/qcm/delete/<id>')
+def delete_qcm(id):
+      saving.qcm_data.remove_qcm_by_id(id)
+      return redirect('/qcm')
+
 #saving.statements_data.add_statement(Statement("statement1", "quel ?", [0, 1], ["rep1", "rep2"], "eee@gmail.com", "id-randint", ["aa","bb"]))
 print(read_file("saves/statements.txt"))
 #saving.statements_data.set_statement("id-randint", Statement("statement1-edit", "quel ?", [0, 1], ["rep1", "rep2"], "eee@gmail.com", "id-randint", ["aa","bb"]))
