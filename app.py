@@ -160,5 +160,15 @@ def edit_statement(id):
       saving.statements_data.set_statement(id,statement)
       return redirect('/my_states')
 
+@app.route('/statement/delete/<id>')
+def delete_statement(id):
+      saving.statements_data.remove_statement_by_id(id)
+      return redirect('/my_states')
+
+@app.route('/qcm/delete/<id>')
+def delete_qcm(id):
+      saving.qcm_data.remove_qcm_by_id(id)
+      return redirect('/qcm')
+
 if __name__ == '__main__':
       app.run(debug=True)
