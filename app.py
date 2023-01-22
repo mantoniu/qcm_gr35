@@ -47,7 +47,7 @@ def register():
             password = request.form['password']
             name = request.form['name']
             firstname = request.form['firstname']
-            if saving.users_data.addUser(User(email, password, name, firstname)):
+            if saving.users_data.add_user(User(email, password, name, firstname)):
                   session['email'] = email
                   session['password'] = password
                   return redirect('/')
