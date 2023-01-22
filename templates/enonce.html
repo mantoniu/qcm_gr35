@@ -21,7 +21,7 @@
             margin-left: 0px;
         }
     </style>
-    <form method="POST" id="res" action="/res" class="form-card">
+    <form method="POST" id="res" action="/" class="form-card">
         <div class="card"> 
             <div class="header-card" id="header">   
                 <div class="translation" id="translation">  
@@ -36,7 +36,11 @@
                         <div class="response">  
                             <div class="switch">  
                                 <label id="{{ "switch" + i|string }}" class="switch">
+                                    {% if i in statement.valids_responses %}
+                                    <input checked="checked" type="checkbox" name="{{ "switch" + i|string }}" id="{{ "switch" + i|string }}">
+                                    {% else %}
                                     <input type="checkbox" name="{{ "switch" + i|string }}" id="{{ "switch" + i|string }}">
+                                    {% endif %}
                                     <span class="slider round"></span>  
                                 </label>  
                             </div>  

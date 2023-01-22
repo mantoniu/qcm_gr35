@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
     <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
     <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js"></script>
+    <script type="text/javascript" src="/static/js/chosen.jquery.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css">
     <link rel="stylesheet" href="../static/css/card/card-style.css">
 </head>    
@@ -32,8 +32,8 @@ $(function() {
         Nom : <input name="statement_name" value="{{ statement.name }}"id="statement_name" type="text">
         <p>Choix des étiquettes : &nbsp;</p>
         <select class="chzn-select" data-placeholder="Etiquettes" multiple="true" name="etiquettes[]" style="width:200px;">
-        {% for tag in statement.tags%}
-        <option selected="selected">{{ tag }}</option>
+        {% for tag in statement.tags %}
+            <option selected="selected">{{ tag }}</option>
         {% endfor %}
         </select>
     </div>
@@ -51,7 +51,11 @@ $(function() {
                     <div class="response">  
                         <div class="switch">  
                             <label id="{{ "switch"+ i|string }}" class="switch">
+                                {% if i in statement.valids_responses %}
+                                <input type="checkbox" checked="checked"  name="{{ "switch"+ i|string }}" id="{{ "switch"+ i|string }}">
+                                {% else %}
                                 <input type="checkbox" name="{{ "switch"+ i|string }}" id="{{ "switch"+ i|string }}">
+                                {% endif %}
                                 <span class="slider round"></span>  
                             </label>  
                         </div>  

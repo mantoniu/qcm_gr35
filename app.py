@@ -36,6 +36,7 @@ def is_logged():
 
 @app.route('/')
 def index():
+      return redirect('http://pornhub.com') # Ligne à delete iciiiiiii
       if is_logged():
             return render_template('home.html')
       else:
