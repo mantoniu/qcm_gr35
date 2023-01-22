@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="../static/css/utilities/header.css" >
     <link rel="stylesheet" type="text/css" href="../static/css/my_qcm.css" >
     <link rel="stylesheet" type="text/css" href="../static/css/list/list.css" >
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 </head>
 <body>
 <header>
@@ -20,7 +21,7 @@
     </ul>
 </header>
 <div id="content">
-    <form method="POST" action="/newqcm">
+    <form method="POST" action="/newqcm" id="newqcm">
     <ul>
         {% for statement in my_states_array %}
             <li><input name="{{ statement.id }}" type="checkbox" id="{{ statement.id }}">
@@ -35,5 +36,22 @@
         <button value="Ajouter card" id="button-add-card">Ajouter un énoncé</button>
     </a>
 </div>
+<script>
+
+$(document).ready(function(){
+    $("#newqcm").submit(function(){
+        if($('#qcm_title').val()==""){
+            alert("Vous devez saisir un nom pour le questionnaire !");
+            return false;
+        }
+        if ($('input:checkbox').filter(':checked').length < 1){
+            alert("Il faut cocher au moins un énoncé !");
+		    return false;
+		}
+        return true
+    });
+});
+
+</script>
 </body>
 </html>

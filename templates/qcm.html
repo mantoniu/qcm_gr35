@@ -19,12 +19,6 @@
       <li><a href="/logout">Déconnexion</a></li>
     </ul>
 </header>
-<div id="content">
-    <ul>
-        {% for qcm in qcm_array %}
-        <li><a href="{{ "qcm/" + qcm.id }}">{{ qcm.name }}</a><span class="cross">&#10006;</span></li>
-        {% endfor %}
-    </ul>
-</div>
+<h1> {{ qcm.name }}</h1>
 </body>
 </html>

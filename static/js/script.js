@@ -14,12 +14,15 @@ function connection(){
     document.getElementById('seconnecter').style.display ="none";
 }; 
 
+function addOption(){
+    console.log('test')
+    html = "Nom de l'étiquette : <input type='text' name='tag_name'>";
+    $('#info').append(html);
+    $('#select-tags').append('<option value="foo">Bar</option>');
+    $('#select-tags').trigger("chosen:updated");
+}
+
 $(document).ready(function(){
-    var form = document.getElementById("res");
-    function handleForm(event) { event.preventDefault(); } 
-    if(form){
-        form.addEventListener('submit', handleForm);
-    }
     $("#new-statement").submit(function(){
         if($('#statement_name').val()==""){
             alert('Vous devez saisir un nom !');
@@ -115,8 +118,3 @@ function preview(){
         $('#translation').remove();
     }
 }
-
-
-var form = document.getElementById("result-form");
-function handleForm(event) { event.preventDefault(); } 
-form.addEventListener('submit', handleForm);
