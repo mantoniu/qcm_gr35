@@ -108,7 +108,7 @@ class StatementsData():
 
 class QCMData():
     def __init__(self, statements_data: StatementsData) -> None:
-        self.save_file = create_save_file("saves/qcm.txt")
+        self.save_file = create_save_file("qcm.txt")
         self.statements_data = statements_data
         self.qcm_array = []
         tab = read_file(self.save_file)
