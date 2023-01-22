@@ -26,15 +26,15 @@ $(function() {
     $(".chzn-select").chosen();
 });
 </script>
-<form method="POST" id="new-statement" action="/newstate" class="form-card">
+<form method="POST" id="new-statement" action="{{ "/set/" + statement.id|string }}" class="form-card">
 
     <div class="info">
         Nom : <input name="statement_name" value="{{ statement.name }}"id="statement_name" type="text">
         <p>Choix des étiquettes : &nbsp;</p>
         <select class="chzn-select" data-placeholder="Etiquettes" multiple="true" name="etiquettes[]" style="width:200px;">
-        <option value="AC">Java</option>
-        <option value="AD">Algo</option>
-        <option value="AM">Prog c</option>
+        {% for tag in statement.tags%}
+        <option selected="selected">{{ tag }}</option>
+        {% endfor %}
         </select>
     </div>
 

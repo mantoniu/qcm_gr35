@@ -34,7 +34,9 @@ $(function() {
         Nom : <input name="statement_name" id="statement_name" type="text">
         <p>Choix des étiquettes : &nbsp;</p>
         <select class="chzn-select" id="select-tags" data-placeholder="Etiquettes" multiple="true" name="etiquettes" style="width:200px;">
-        <option selected="selected">Java</option>
+        {% for tag in tags %}
+        <option>{{ tag }}</option>
+        {% endfor %}
         </select>
     </div>
     

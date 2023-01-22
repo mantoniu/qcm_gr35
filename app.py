@@ -14,6 +14,23 @@ if __name__ == '__main__':
       globals.init() 
       saving.init()
 
+def statement_values():
+      response_list = []
+      good_answer = []
+      name = request.form['statement_name']
+      statement = request.form['enonce']
+      statement = statement.replace("\r","")
+      for i in range (0,int(request.form['count'])+1):
+            response_list.append(request.form['statement'+str(i)])
+            if "switch"+str(i) in request.form:
+                  good_answer.append(i)
+      if request.form.getlist('etiquettes') != None:
+            tags = request.form.getlist('etiquettes')
+      else:
+            tags = []
+      return Statement(name=name,question=statement,valids_reponses=good_answer,possibles_responses=response_list,user_email=session['email'],tags=tags)
+
+
 def is_logged():
       return 'email' in session and 'password' in session and saving.users_data.login(session['email'], session['password'])
 
@@ -77,20 +94,7 @@ def qcm():
 
 @app.route('/newstate',methods=['POST'])
 def newstate():
-      response_list = []
-      good_answer = []
-      name = request.form['statement_name']
-      statement = request.form['enonce']
-      statement = statement.replace("\r","")
-      for i in range (0,int(request.form['count'])+1):
-            response_list.append(request.form['statement'+str(i)])
-            if "switch"+str(i) in request.form:
-                  good_answer.append(i)
-      if request.form.getlist('etiquettes') != None:
-            tags = request.form.getlist('etiquettes')
-      else:
-            tags = []
-      statement = Statement(name=name,question=statement,valids_reponses=good_answer,possibles_responses=response_list,user_email=session['email'],tags=tags)
+      statement = statement_values()
       saving.statements_data.add_statement(statement)
       return redirect('/my_states')
 
@@ -106,7 +110,7 @@ def newqcm():
 
 @app.route('/create')
 def create():
-      return render_template("create.html")
+      return render_template("create.html",tags=(saving.users_data.get_user_by_email(session['email'])).tags_array)
 
 @app.route('/statement/edit/<id>',methods=['GET'])
 def edit(id):
@@ -137,7 +141,14 @@ def preview():
 
 @app.route('/newtag',methods=['POST'])
 def newtag():
-      tag_name = session['']
+      saving.users_data.add_tag_to_user_by_email(session['email'],request.form['tag'])
+      return {"success":True}
+
+@app.route('/set/<id>',methods=['POST'])
+def edit_statement(id):
+      statement = statement_values()
+      saving.statements_data.set_statement(id,statement)
+      return redirect('/my_states')
 
 if __name__ == '__main__':
       app.run(debug=True)
