@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="../static/css/utilities/header.css" >
-    <link rel="stylesheet" type="text/css" href="../static/css/qcm.css" >
     <link rel="stylesheet" type="text/css" href="../static/css/utilities/list.css" >
     <link rel="stylesheet" href="/static/css/card/card-style.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/style-global.css"></link>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
@@ -19,6 +19,19 @@
     <script type="text/javascript" src="/static/js/script.js"></script>
 </head>
 <body>
+    <style>
+        .list-card {
+            margin-top: 5%;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: column;
+            align-content: space-around;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 <header>
     <ul>
       <li><a href="/">Accueil</a></li>
@@ -28,7 +41,8 @@
       <li><a href="/logout">Déconnexion</a></li>
     </ul>
 </header>
-<h1> {{ qcm.name }}</h1>
+
+<div class="list-card">
 {% for statement in qcm.statements %}
 <div class="card"> 
     <div class="header-card" id="header">   
@@ -58,6 +72,8 @@
         </div>  
     </div>  
 </div> 
-{% endfor %}
+
+{% endfor %}</div>
+<center><h1> {{ qcm.name }}</h1></center>
 </body>
 </html>

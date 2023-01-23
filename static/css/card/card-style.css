@@ -72,19 +72,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .codehilite .vi { color: #19177C } /* Name.Variable.Instance */
 .codehilite .vm { color: #19177C } /* Name.Variable.Magic */
 .codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
-
-
-body{
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-}
 .card{
-  margin-left: 30%;
   z-index: 2;
   border: 20px solid white;
   display: flex;
@@ -411,3 +399,15 @@ input:checked + .slider:before {
   float: left;
   width: 10%;
 }
+.list-response {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  }
+  
+  .response {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+  }
