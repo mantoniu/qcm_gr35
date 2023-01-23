@@ -162,7 +162,7 @@ def qcm_id(id):
 # Renvoi la conversion html du markdown 
 @app.route('/preview',methods=['POST','GET'])
 def preview():
-      return md.markdown(request.form['text'], extensions=md_extensions)
+      return md.markdown("\n"+request.form['text'], extensions=md_extensions)
 
 # Creation d'un tag
 @app.route('/newtag',methods=['POST'])

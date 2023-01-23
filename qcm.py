@@ -23,7 +23,7 @@ class Statement():
         return self.id
 
     def get_state(self) -> markdown:
-        return markdown(self.question,extensions=md_extensions)
+        return markdown("\n"+self.question,extensions=md_extensions)
     
     def set(self, new_statement: Statement):
         self.name = new_statement.name
