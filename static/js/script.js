@@ -55,7 +55,18 @@ function new_card(){
     document.getElementById('new-statement').style.display = "flex";
 }
 
+
 function delete_answer(object){
+    console.log($(object).attr("id"));
+    for(let i=$(object).attr("id");i<=count;i++){
+        $("#switch"+i).attr("id", "switch"+ (i-1).toString());
+        $("#input"+i).attr("name", "switch"+ (i-1).toString());
+        $("#input"+i).attr("id", "input"+ (i-1).toString());
+        $("#"+i).attr("id",(i-1).toString())
+        $("#text"+i).attr("name","statement"+(i-1).toString())
+        $("#text"+i).attr("id", "text"+(i-1).toString())
+    }
+    count --;
     $(object).parent().remove();
 }
 
@@ -67,12 +78,12 @@ function add_answer(){
     <div class="response"> \
         <div class="switch"> \
             <label id="switch'+count+'" class="switch"> \
-                <input type="checkbox" name="switch'+count+'" id="switch'+count+'"> \
+                <input id="input'+count+'" type="checkbox" name="switch'+count+'"> \
                 <span class="slider round"></span> \
             </label>  \
         </div> \
-        <textarea name="statement'+count+'" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea> \
-        <button type="button" onclick="delete_answer(this)" class="trash-button"><i class="fas fa-trash"></i></button>  \
+        <textarea id="text'+count+'" name="statement'+count+'" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea> \
+        <button id='+count+' type="button" onclick="delete_answer(this)" class="trash-button"><i class="fas fa-trash"></i></button>  \
     </div> ';
     $('#count').val(count);
     $("#list-response").append(html);

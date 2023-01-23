@@ -23,8 +23,10 @@ def statement_values():
       statement = request.form['enonce']
       statement = statement.replace("\r","")
       for i in range (0,int(request.form['count'])+1):
-            response_list.append(request.form['statement'+str(i)])
+            if 'statement'+str(i) in request.form:
+                  response_list.append(request.form['statement'+str(i)])
             if "switch"+str(i) in request.form:
+                  print(i)
                   good_answer.append(i)
       if request.form.getlist('etiquettes'):
             tags = request.form.getlist('etiquettes')
