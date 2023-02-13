@@ -1,6 +1,7 @@
 import csv
 from hashlib import md5
 from os import mkdir, path, stat
+import pickle
 
 global line_separator
 line_separator = "@__|||1S"
@@ -102,3 +103,11 @@ def create_save_file(file_name: str) -> str:
     except:
         pass
     return "saves/" + file_name
+
+def read_csv(file_name: str) -> None:
+    tab = []
+    with open(file_name, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=csv_delimiter)
+        for row in reader:
+            tab.append(row)
+    return tab
