@@ -7,6 +7,8 @@
     <title>Accueil</title>
     <link rel="stylesheet" type="text/css" href="../static/css/index/styles.css" />
     <link rel="stylesheet" type="text/css" href="../static/css/utilities/header.css"></link>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script type="text/javascript" src="../static/js/student/home.js"></script>
 </head>
 <body>
 <header>
@@ -17,11 +19,11 @@
         </ul>
 </header>
 <div class="column">
-    <div class="card" id="connection">
-            <form action="home" method="POST" class="form">
+    <div class="card" id="join">
+            <form name="join-form" class="form" id="join">
                 <p style="font-size: 2em;margin: 0;height:10%;">Rejoindre un questionnaire</p>
-                <input type="text" name="identifiant" placeholder="Identifiant" oninput="this.value=this.value.toLowerCase()" required="required">
-                <input type="submit" name="submit" value="Rejoindre">
+                <input type="text" pattern=".{8,8}" maxlength="8" id="id" placeholder="Identifiant" title="8 caractères alphanumériques par exemple : YnAxIA8z" oninput="this.value=this.value.toLowerCase()" required="required">
+                <input type="submit" value="Rejoindre">
             </form>
         </div>
     </div>

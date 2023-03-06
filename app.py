@@ -68,6 +68,12 @@ def student_home():
 def student_account():
       return render_template('/student/myaccount.html')
 
+@app.route('/student/join/',methods = ['POST'])
+def student_join():
+      id = request.form['id']
+      ## Vérifier si id dans les statements
+      ## Ajouter l'élève dedans
+
 # Route qui gère la déconnexion
 @app.route('/logout')
 def logout():
