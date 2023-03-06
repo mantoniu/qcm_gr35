@@ -29,10 +29,10 @@
 <button id="add-student">Ajouter des étudiants</button>
 <div id="myModal" class="modal">
   <div class="modal-content">
-    <form>
+    <form action="/receive_csv" method="POST" enctype=multipart/form-data>
       <span class="close">&times;</span>
       <label class="form-label" for="customFile">Ajouter votre fichier csv ici : </label>
-      <input type="file" class="form-control" id="customFile" accept=".csv"/>
+      <input type="file" name="file" class="form-control" id="customFile" accept=".csv"/>
       <input id="submitnews" type="submit" value="Valider">
     </form>  
   </div>

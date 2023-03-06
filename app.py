@@ -1,6 +1,6 @@
 import globals
 import saving
-from flask import Flask,url_for,render_template,request,session,redirect
+from flask import flash,Flask,url_for,render_template,request,session,redirect
 from flaskext.markdown import Markdown
 from user import Student, Teacher
 from qcm import *
@@ -8,19 +8,25 @@ import markdown as md
 from utilities import read_file
 from flask_session import Session
 from flask_socketio import SocketIO, join_room, leave_room, emit
+from werkzeug.utils import secure_filename
+import os
 
 # Initialisation
 app = Flask(__name__)
-app.debug = True
+UPLOAD_FOLDER = 'static/files'
 app.secret_key = 'AHJBHG236RT6YT4GYH2BN__r372UYFG2EIU2YG'
 app.config['SECRET_TYPE'] = 'secret'
 app.config['SESSION_TYPE'] = 'filesystem'
+ALLOWED_EXTENSIONS = {'csv'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-Session(app)
-socketio = SocketIO(app, manage_session=False,logger=True, engineio_logger=True)
 
 globals.init() 
 saving.init()
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Fonction qui récupère les information d'un énoncé dans un formulaire
 def statement_values():
@@ -68,12 +74,17 @@ def student_home():
 def student_account():
       return render_template('/student/myaccount.html')
 
+@app.route('/student/question/<id>')
+def joined_statement(id):
+      return render_template("/student/statement.html")
+
+
 @app.route('/student/join/',methods = ['POST'])
 def student_join():
       id = request.form['id']
+      not_found = False
       ## Vérifier si id dans les statements
-      ## Ajouter l'élève dedans
-      return {"success":False}
+      return {"not_found":not_found}
 
 # Route qui gère la déconnexion
 @app.route('/logout')
@@ -221,10 +232,24 @@ def delete_qcm(id):
       saving.qcm_data.remove_qcm_by_id(id)
       return redirect('/qcm')
 
-@socketio.on('connect')
-def connect():
-      print("Utilisateur connecté")
+# Upload File
+
+@app.route('/receive_csv',methods=['GET','POST'])
+def upload_file():   
+      if request.method == 'POST':
+            if 'file' not in request.files:
+                  flash('No file part')
+                  return redirect(request.url)
+            file = request.files['file']
+            if file.filename == '':
+                  flash('No selected file')
+                  return redirect(request.url)
+            if file and allowed_file(file.filename):
+                  filename = secure_filename(file.filename)
+                  file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                  return redirect(url_for('upload_file', name=filename))
+      return redirect('/')
 
 
 if __name__ == '__main__':
-      socketio.run(app)
+      app.run(debug=True)

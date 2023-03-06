@@ -20,7 +20,7 @@
 </header>
 <div class="column">
     <div class="card" id="join">
-            <form name="join-form" class="form" id="join">
+            <form name="join-form" class="form" id="join" onsubmit="event.preventDefault();">
                 <p style="font-size: 2em;margin: 0;height:10%;">Rejoindre un questionnaire</p>
                 <input type="text" pattern=".{8,8}" maxlength="8" id="id" placeholder="Identifiant" title="8 caractères alphanumériques par exemple : YnAxIA8z" oninput="this.value=this.value.toLowerCase()" required="required">
                 <input type="submit" value="Rejoindre">
