@@ -2,7 +2,7 @@ import globals
 import saving
 from flask import Flask,url_for,render_template,request,session,redirect
 from flaskext.markdown import Markdown
-from user import User
+from user import Student, Teacher
 from qcm import *
 import markdown as md
 from utilities import read_file
@@ -46,7 +46,7 @@ def statement_values():
 
 # Fonction qui vérifie si l'utilisateur est connecté
 def is_logged():
-      return 'email' in session and 'password' in session and saving.users_data.login(session['email'], session['password'])
+      return 'email' in session and 'password' in session and (saving.teachers_data.login(session['email'], session['password']) or saving.students_data.login(session['email'], session['password']))
 
 # Renvoie sur la route "/" des fichiers html
 @app.route('/')
@@ -88,7 +88,7 @@ def login():
       if 'email' in request.form and 'password' in request.form:
             email = request.form['email']
             password = request.form['password']
-            if saving.users_data.login(email, password):
+            if saving.teachers_data.login(email, password):
                   session['email'] = email
                   session['password'] = password
             return redirect('/')
@@ -101,7 +101,7 @@ def register():
             password = request.form['password']
             name = request.form['name']
             firstname = request.form['firstname']
-            if saving.users_data.add_user(User(email, password, name, firstname)):
+            if saving.teachers_data.add_user(Teacher(email, password, name, firstname)):
                   session['email'] = email
                   session['password'] = password
                   return redirect('/')
@@ -129,9 +129,9 @@ def my_states():
                         for tag in statement.tags:
                               if tag in tags and statement not in countains_tag:
                                     countains_tag.append(statement)
-                  return render_template('/teacher/my_states.html', my_states_array=countains_tag,tags=(saving.users_data.get_user_by_email(session['email'])).tags_array)
+                  return render_template('/teacher/my_states.html', my_states_array=countains_tag,tags=(saving.teachers_data.get_user_by_email(session['email'])).tags_array)
             else :
-                  return render_template('/teacher/my_states.html', my_states_array=saving.statements_data.get_statement_from_user(session['email']),tags=(saving.users_data.get_user_by_email(session['email'])).tags_array)
+                  return render_template('/teacher/my_states.html', my_states_array=saving.statements_data.get_statement_from_user(session['email']),tags=(saving.teachers_data.get_user_by_email(session['email'])).tags_array)
       else:
             return redirect('/')
 
@@ -165,7 +165,7 @@ def newqcm():
 # Creation d'un nouvel énoncé (formulaire)
 @app.route('/create')
 def create():
-      return render_template("/teacher/create.html",tags=(saving.users_data.get_user_by_email(session['email'])).tags_array)
+      return render_template("/teacher/create.html",tags=(saving.teachers_data.get_user_by_email(session['email'])).tags_array)
 
 # Edition énoncé
 @app.route('/statement/edit/<id>',methods=['GET'])
@@ -199,7 +199,7 @@ def preview():
 # Creation d'un tag
 @app.route('/newtag',methods=['POST'])
 def newtag():
-      saving.users_data.add_tag_to_user_by_email(session['email'],request.form['tag'])
+      saving.teachers_data.add_tag_to_user_by_email(session['email'],request.form['tag'])
       return {"success":True}
 
 # Edition formulaire (submit formulaire)
