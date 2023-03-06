@@ -74,15 +74,6 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
 
 
-body{
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-}
 .card{
   margin-left: 30%;
   z-index: 2;

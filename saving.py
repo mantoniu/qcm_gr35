@@ -130,6 +130,12 @@ class StatementsData():
                 return True
         return False
 
+    def contains_name(name:str) -> bool:
+        for statement in self.statement_array:
+            if statement.name == name:
+                return True
+        return False
+
     def contains_statement(self, statement: Statement) -> bool:
         return self.contains_id(statement.id)
 

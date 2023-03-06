@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/index/styles.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/utilities/header.css"></link>
+</head>
+<body>
+<header>
+        <ul>
+          <li><a href="/student/home">Accueil</a></li>
+          <li><a href="/student/myaccount">Mon compte</a></li>
+          <li><a href="/student/logout">Déconnexion</a></li>
+        </ul>
+</header>
+<div class="column">
+    <div class="card" id="connection">
+            <form action="home" method="POST" class="form">
+                <p style="font-size: 2em;margin: 0;height:10%;">Rejoindre un questionnaire</p>
+                <input type="text" name="identifiant" placeholder="Identifiant" oninput="this.value=this.value.toLowerCase()" required="required">
+                <input type="submit" name="submit" value="Rejoindre">
+            </form>
+        </div>
+    </div>
+</body>
+</html>

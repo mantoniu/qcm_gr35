@@ -6,33 +6,43 @@ from user import User
 from qcm import *
 import markdown as md
 from utilities import read_file
+from flask_session import Session
+from flask_socketio import SocketIO, join_room, leave_room, emit
 
 # Initialisation
 app = Flask(__name__)
+app.debug = True
 app.secret_key = 'AHJBHG236RT6YT4GYH2BN__r372UYFG2EIU2YG'
-Markdown(app)
-if __name__ == '__main__':
-      globals.init() 
-      saving.init()
+app.config['SECRET_TYPE'] = 'secret'
+app.config['SESSION_TYPE'] = 'filesystem'
+
+Session(app)
+socketio = SocketIO(app, manage_session=False,logger=True, engineio_logger=True)
+
+globals.init() 
+saving.init()
 
 # Fonction qui récupère les information d'un énoncé dans un formulaire
 def statement_values():
-      response_list = []
-      good_answer = []
+      possibles_responses = []
+      valids_reponses = []
       name = request.form['statement_name']
-      statement = request.form['enonce']
-      statement = statement.replace("\r","")
-      for i in range (0,int(request.form['count'])+1):
-            if 'statement'+str(i) in request.form:
-                  response_list.append(request.form['statement'+str(i)])
-            if "switch"+str(i) in request.form:
-                  print(i)
-                  good_answer.append(i)
+      question = request.form['enonce']
+      question = question.replace("\r","")    
+      tags = []  
       if request.form.getlist('etiquettes'):
             tags = request.form.getlist('etiquettes')
+      if "decimal" not in request.form :
+            for i in range (0,int(request.form['count'])+1):
+                  if 'statement'+str(i) in request.form:
+                        possibles_responses.append(request.form['statement'+str(i)])
+                  if "switch"+str(i) in request.form:
+                        valids_reponses.append(i)
       else:
-            tags = []
-      return Statement(name=name,question=statement,valids_reponses=good_answer,possibles_responses=response_list,user_email=session['email'],tags=tags)
+            possibles_responses.append(request.form['statement'])
+            valids_reponses.append(0)
+            
+      return  Statement(name=name, question=question, valids_reponses=valids_reponses, possibles_responses=possibles_responses, user_email=session['email'])
 
 # Fonction qui vérifie si l'utilisateur est connecté
 def is_logged():
@@ -42,9 +52,21 @@ def is_logged():
 @app.route('/')
 def index():
       if is_logged():
-            return render_template('home.html')
+            return render_template('/teacher/home.html')
       else:
-            return render_template('index.html')
+            return render_template('/teacher/index.html')
+
+@app.route('/student/login')
+def student_login():
+      return render_template('/student/login.html')
+
+@app.route('/student/home',methods = ['GET','POST'])
+def student_home():
+      return render_template('/student/home.html')
+
+@app.route('/student/myaccount')
+def student_account():
+      return render_template('/student/myaccount.html')
 
 # Route qui gère la déconnexion
 @app.route('/logout')
@@ -77,13 +99,13 @@ def register():
                   session['password'] = password
                   return redirect('/')
             else:
-                  return render_template('index.html')
+                  return render_template('/teacher/index.html')
 
 # Permet de renvoyer la liste des qcm et donc l'affichage de ceux-ci dans my_qcm.html
 @app.route('/my_qcm')
 def my_qcm():
       if is_logged():
-            return render_template('my_qcm.html', my_qcm_array=saving.qcm_data.get_qcm_from_user(session['email']))
+            return render_template('/teacher/my_qcm.html', my_qcm_array=saving.qcm_data.get_qcm_from_user(session['email']))
       else:
             return redirect('/')
 
@@ -100,9 +122,9 @@ def my_states():
                         for tag in statement.tags:
                               if tag in tags and statement not in countains_tag:
                                     countains_tag.append(statement)
-                  return render_template('my_states.html', my_states_array=countains_tag,tags=(saving.users_data.get_user_by_email(session['email'])).tags_array)
+                  return render_template('/teacher/my_states.html', my_states_array=countains_tag,tags=(saving.users_data.get_user_by_email(session['email'])).tags_array)
             else :
-                  return render_template('my_states.html', my_states_array=saving.statements_data.get_statement_from_user(session['email']),tags=(saving.users_data.get_user_by_email(session['email'])).tags_array)
+                  return render_template('/teacher/my_states.html', my_states_array=saving.statements_data.get_statement_from_user(session['email']),tags=(saving.users_data.get_user_by_email(session['email'])).tags_array)
       else:
             return redirect('/')
 
@@ -110,7 +132,7 @@ def my_states():
 @app.route('/qcm')
 def qcm():
       if is_logged():
-            return render_template('qcm_list.html', qcm_array=saving.qcm_data.get_all_qcm())
+            return render_template('/teacher/qcm_list.html', qcm_array=saving.qcm_data.get_all_qcm())
       else:
             return redirect('/')
 
@@ -118,6 +140,7 @@ def qcm():
 @app.route('/newstate',methods=['POST'])
 def newstate():
       statement = statement_values()
+      print(statement.decimal)
       saving.statements_data.add_statement(statement)
       return redirect('/my_states')
 
@@ -135,12 +158,12 @@ def newqcm():
 # Creation d'un nouvel énoncé (formulaire)
 @app.route('/create')
 def create():
-      return render_template("create.html",tags=(saving.users_data.get_user_by_email(session['email'])).tags_array)
+      return render_template("/teacher/create.html",tags=(saving.users_data.get_user_by_email(session['email'])).tags_array)
 
 # Edition énoncé
 @app.route('/statement/edit/<id>',methods=['GET'])
 def edit(id):
-      return render_template('edit.html',statement=saving.statements_data.get_statement_by_id(id))
+      return render_template('/teacher/edit.html',statement=saving.statements_data.get_statement_by_id(id))
 
 # Renvoi de l'affichage de l'énoncé correspondant
 @app.route('/statement/<id>',methods=['POST','GET'])
@@ -154,12 +177,12 @@ def statement(id):
                         good_answer.append(i)
                   else:
                         bad_answer.append(i)
-      return render_template("enonce.html",statement=statement)   
+      return render_template("/teacher/enonce.html",statement=statement)   
       
 # Renvoi de l'affichage du qcm correspondant
 @app.route('/qcm/<id>')
 def qcm_id(id):
-      return render_template("qcm.html",qcm=saving.qcm_data.get_qcm_by_id(id)) 
+      return render_template("/teacher/qcm.html",qcm=saving.qcm_data.get_qcm_by_id(id)) 
 
 # Renvoi la conversion html du markdown 
 @app.route('/preview',methods=['POST','GET'])
@@ -191,5 +214,10 @@ def delete_qcm(id):
       saving.qcm_data.remove_qcm_by_id(id)
       return redirect('/qcm')
 
+@socketio.on('connect')
+def connect():
+      print("Utilisateur connecté")
+
+
 if __name__ == '__main__':
-      app.run(debug=True)
+      socketio.run(app)
