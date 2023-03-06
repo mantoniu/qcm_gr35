@@ -7,6 +7,8 @@ global line_separator
 line_separator = "@__|||1S"
 global row_separator
 row_separator = "@__|||2S"
+global csv_delimiter
+csv_delimiter = ";"
 
 def hash(word: str) -> str:
     word = "Kilian" + word

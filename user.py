@@ -1,7 +1,7 @@
 from utilities import *
 
-class User():
-    def __init__(self, email:str, password:str, name:str, firstname:str, tags_array: list = [], do_hash:bool = True) -> None: #firstname = prénom
+class Teacher():
+    def __init__(self, email:str, password:str, name:str, firstname:str, tags_array: list = [], do_hash:bool = True) -> None:
         self.email = email
         if do_hash:
             self.password = hash(password)
@@ -34,4 +34,19 @@ class User():
             result.append(tags_str)
         else:
             result.append("")
+        return result
+    
+class Student():
+    def __init__(self, email:str, password:str, student_number: str, name:str, firstname:str, do_hash:bool = True) -> None:
+        self.email = email
+        if do_hash:
+            self.password = hash(password)
+        else:
+            self.password = password
+        self.student_number = student_number
+        self.name = name
+        self.firstname = firstname
+    
+    def get_registering_line(self) -> list:
+        result = [self.email, self.password, self.student_number, self.name, self.firstname]
         return result
