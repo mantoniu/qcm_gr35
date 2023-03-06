@@ -73,6 +73,7 @@ def student_join():
       id = request.form['id']
       ## Vérifier si id dans les statements
       ## Ajouter l'élève dedans
+      return {"success":False}
 
 # Route qui gère la déconnexion
 @app.route('/logout')

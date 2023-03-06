@@ -5,12 +5,11 @@ $(document).ready(function(){
             type : 'POST', 
             url : '/student/join', 
             success: function (data) { 
-
+                if(!data){
+                    alert("Aucun questionnaire n'a été trouvé !");
+                } 
             },
             error: function (e) { console.log('Erreur') }
           }); 
-        if($('#id').val()=="88888888"){
-            alert("fueqzrngirng");
-        }
     });
 });
