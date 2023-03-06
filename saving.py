@@ -1,26 +1,26 @@
 from utilities import *
-from user import User
+from user import Student, Teacher
 from qcm import QCM, Statement
 
-class UsersData():
+class TeachersData():
     def __init__(self) -> None:
-        self.save_file = create_save_file("users.txt")
+        self.save_file = create_save_file("teachers.txt")
         self.users_array = []
         tab = read_file(self.save_file)
         for row in tab:
             if len(row) > 4:
-                self.users_array.append(User(email=row[0], password=row[1], name=row[2], firstname=row[3], tags_array=list(map(str, row[4].split(";"))), do_hash=False))
+                self.users_array.append(Teacher(email=row[0], password=row[1], name=row[2], firstname=row[3], tags_array=list(map(str, row[4].split(";"))), do_hash=False))
     
-    def get_user_by_email(self, email) -> User:
+    def get_user_by_email(self, email) -> Teacher:
         for users in self.users_array:
             if email == users.email:
                 return users
         return None
     
-    def contains_user(self, user: User) -> bool:
+    def contains_user(self, user: Teacher) -> bool:
         return self.get_user_by_email(user.email) != None
 
-    def add_user(self, user: User) -> bool:
+    def add_user(self, user: Teacher) -> bool:
         if not(self.contains_user(user)):
             add_line_to_file(self.save_file, user.get_registering_line())
             self.users_array.append(user)
@@ -52,6 +52,65 @@ class UsersData():
                 else:
                     return False
         return False
+    
+
+class StudentsData():
+    def __init__(self) -> None:
+        self.save_file = create_save_file("students.txt")
+        self.users_array = []
+        tab = read_file(self.save_file)
+        for row in tab:
+            if len(row) > 4:
+                self.users_array.append(Student(email=row[0], password=row[1], student_number=row[2], name=row[3], firstname=row[4], do_hash=False))
+    
+    def get_user_by_email(self, email: str) -> Student:
+        for users in self.users_array:
+            if email == users.email:
+                return users
+        return None
+    
+    def get_user_by_student_number(self, student_number: str) -> Student:
+        for users in self.users_array:
+            if student_number == users.student_number:
+                return users
+        return None
+    
+    def contains_user(self, user: Student) -> bool:
+        return self.get_user_by_student_number(user.student_number) != None
+
+    def add_user(self, user: Student) -> bool:
+        if not(self.contains_user(user)):
+            add_line_to_file(self.save_file, user.get_registering_line())
+            self.users_array.append(user)
+            return True
+        else:
+            return False
+    
+    def login(self, email: str, password: str) -> bool:
+        for users in self.users_array:
+            if email == users.email:
+                if hash(password) == users.password:
+                    return True
+                else:
+                    return False
+        return False
+    
+    def create_accounts_from_tab(self, tab: list) -> bool:
+        new_students = []
+        total_success = True
+        for lines in tab:
+            if len(lines) == 3:
+                email = lines[1] + "." + lines[0] + "@etu.umontpellier.fr"
+                new_students.append(Student(email=email, password=lines[2], student_number=lines[2], name=lines[0], firstname=lines[1], do_hash=False))
+            else:
+                total_success = False
+        for students in new_students:
+            if not(self.contains_user(students)):
+                self.add_user(students)
+            else:
+                total_success = False
+        return total_success
+
 
 class StatementsData():
     def __init__(self) -> None:
@@ -177,8 +236,10 @@ class QCMData():
         remove_lines_which_contains(self.save_file, string=qcm.id)
 
 def init():
-    global users_data
-    users_data = UsersData()
+    global teachers_data
+    teachers_data = TeachersData()
+    global students_data
+    students_data = StudentsData()
     global statements_data
     statements_data = StatementsData()
     global qcm_data

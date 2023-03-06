@@ -19,7 +19,7 @@ class Statement():
             self.id = id
 
     def generate_id(self) -> str:
-        self.id = hash(str(uuid4()))
+        self.id = hash(str(uuid4()))[:8]
         return self.id
 
     def get_state(self) -> markdown:
@@ -59,7 +59,7 @@ class QCM:
         self.statements = statements
         self.user_email = user_email
         if id == None:
-            self.generate_id()
+            self.generate_id()[:8]
         else:
             self.id = id
     
