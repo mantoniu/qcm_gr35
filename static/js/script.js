@@ -22,7 +22,25 @@ function addOption(){
     $('#select-tags').trigger("chosen:updated");
 }
 
+var decimal = false;
+
 $(document).ready(function(){
+    let decimal;
+    $("#decimal").change(function(){
+        if(this.checked){
+            decimal = true;
+            $("#add_answer").css("display","none");
+            $("#list-response").css("display","none");
+            $("#decimal-response").css("display","flex");
+        }
+        else{
+            decimal = false;
+            $("#add_answer").css("display","flex");
+            $("#list-response").css("display","flex");
+            $("#decimal-response").css("display","none");
+        }
+    });
+
     $("#new-statement").submit(function(){
         if($('#statement_name').val()==""){
             alert('Vous devez saisir un nom !');
@@ -32,20 +50,23 @@ $(document).ready(function(){
             alert("Il faut cocher au moins une bonne réponse !");
 		    return false;
 		}
-        if($('input:checkbox').filter(':checked').length == count+1){
-            alert("Les réponses ne peuvent pas être toutes justes !");
-            return false;
-        }
         let oneEmpty = false;
         $('textarea').each(function() {
-            if($(this).val().trim() == '')
+            if($(this).val().trim() == '' && $(this).attr("id")!="decimal-response")
                 oneEmpty = true;
         });
-        if(oneEmpty){
-            alert('Il faut remplir tous les champs !');
-            return false;
+        if(!decimal){
+            if(oneEmpty){
+                alert('Il faut remplir tous les champs !');
+                return false;
+            }
         }
-        return true;
+        else{
+            if(document.getElementById('decimal-response').value == ''){
+                alert('Veuillez remplir le champ de réponse !');
+                return false;
+            }
+        }
         });
 });
 
@@ -129,3 +150,4 @@ function preview(){
         $('#translation').remove();
     }
 }
+

@@ -19,8 +19,20 @@
     <script type="text/javascript" src="/static/js/chosen.jquery.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css">
     <link rel="stylesheet" href="../../static/css/card/card-style.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/utilities/header.css" >
 </head>    
 <body>
+
+<header>
+        <ul>
+          <li><a href="/">Accueil</a></li>
+          <li><a href="/my_qcm">Mes QCM</a></li>
+          <li><a href="/my_states">Mes énoncés</a></li>
+          <li><a href="/qcm">Liste des QCM</a></li>
+          <li><a href="/logout">Déconnexion</a></li>
+        </ul>
+</header>
+
 <script>
 $(function() {
     $(".chzn-select").chosen(
@@ -31,6 +43,12 @@ $(function() {
 <form method="POST" id="new-statement" action="{{ "/set/" + statement.id|string }}" class="form-card">
 
     <div class="info">
+        {% if statement.decimal %}
+        <input type="checkbox" id="decimal" name="decimal" checked="checked">
+        {% else %}
+        <input type="checkbox" id="decimal" name="decimal">
+        {% endif %}
+        <label for="decimal">Decimal</label>
         Nom : <input name="statement_name" value="{{ statement.name }}"id="statement_name" type="text">
         <p>Choix des étiquettes : &nbsp;</p>
         <select class="chzn-select" data-placeholder="Etiquettes" multiple="true" name="etiquettes[]" style="width:200px;">
@@ -48,7 +66,32 @@ $(function() {
         <div class="body-card">  
             <div class="content" id="content-response">  
                 <input id="count" type="hidden" name="count" value="1">  
+                {% if statement.decimal %}
+                <input step="0.01" type="number" id="decimal-response" name="statement" type="text" placeholder="Ecrire une réponse..." class="textarea-response" value="{{ statement.possibles_responses[0] }}">
+                <div class="list-response" id="list-response" style="display: none;">  
+                    <div class="response">  
+                        <div class="switch">  
+                            <label id="switch0" class="switch">
+                                <input type="checkbox" name="switch0" id="switch0">
+                                <span class="slider round"></span>  
+                            </label>  
+                        </div>  
+                        <textarea name="statement0" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
+                    </div>  
+                    <div class="response">  
+                        <div class="switch">  
+                            <label id="switch1" class="switch">
+                                <input type="checkbox" name="switch1" id="switch1">
+                                <span class="slider round"></span>  
+                            </label>  
+                        </div>  
+                        <textarea name="statement1" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
+                    </div>  
+                </div>  
+                {% else %}
+                <input step="0.01" type="number" id="decimal-response" name="statement" type="text" placeholder="Ecrire une réponse..." class="textarea-response" style="display: none;"></textarea>  
                 <div class="list-response" id="list-response">  
+                    
                     {% for i in range(0,statement.possibles_responses|length) %}
                     <div class="response">  
                         <div class="switch">  
@@ -65,10 +108,15 @@ $(function() {
                     </div>  
                     {% endfor %}
                 </div>  
+                {% endif %}
         </div>  
             <div class="card-navbar">  
                 <button class="animation" type="button" onclick="preview()" id="apercu">Aperçu</button>  
-                <div onclick="add_answer()" class="circle animation"><i class="fas fa-plus"></i></div>  
+                {% if statement.decimal %}
+                <div id="add_answer" onclick="add_answer()" class="circle animation" style="display: none;"><i class="fas fa-plus"></i></div>  
+                {% else %}
+                <div id="add_answer" onclick="add_answer()" class="circle animation"><i class="fas fa-plus"></i></div>  
+                {% endif %}
                 <button class="animation" type="submit" id="ajouter">Valider</button>  
             </div>  
         </div>  
