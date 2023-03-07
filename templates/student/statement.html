@@ -6,6 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statement</title>
     <link rel="stylesheet" type="text/css" href="../../static/css/utilities/header.css"></link>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+    <script>
+        socket = io();
+        socket.connect('http://127.0.0.1:5000/',{})
+        socket.emit('')
+        socket.on('connect',()=>{
+          socket.send('a');
+        });
+        socket.on('test',(test)=>{
+          console.log(test);
+        })
+    </script>
 </head>
 <body>
 <header>
@@ -15,5 +27,42 @@
           <li><a href="/student/logout">Déconnexion</a></li>
         </ul>
 </header>   
+
+<div class="card"> 
+  <div class="header-card" id="header">   
+      <div class="translation" id="translation">  
+                  {{ statement.get_state()|safe }}
+      </div> 
+  </div>  
+  <div class="body-card">  
+      <div class="content" id="content-response">  
+          <input id="count" type="hidden" name="count" value="1">  
+          <div class="list-response" id="list-response"> 
+          {% if statement.decimal %} 
+          <p class="textarea-response"> {{ statement.possibles_responses[0] }}</p>
+          {% else %}  
+              {% for i in range (0,statement.possibles_responses|length) %}
+                  <div class="response">
+                      <div class="switch">  
+                          <label id="{{ "switch" + i|string }}" class="switch">
+                              {% if i in statement.valids_responses %}
+                              <input checked="checked" type="checkbox" name="{{ "switch" + i|string }}" id="{{ "switch" + i|string }}">
+                              {% else %}
+                              <input type="checkbox" name="{{ "switch" + i|string }}" id="{{ "switch" + i|string }}">
+                              {% endif %}
+                              <span class="slider round"></span>  
+                          </label>  
+                      </div>  
+                      <p class="textarea-response"> {{ statement.possibles_responses[i] }}</p>
+                  </div>
+              {% endfor %}
+          {% endif %}
+      </div>  
+          </div>  
+          <div class="card-navbar">  
+              <a href="{{ "edit/" + statement.id|string }}" style="display: contents;"><button class="animation" type="submit" id="ajouter">Editer l'énoncé</button></a>
+          </div>  
+  </div>  
+</div> 
 </body>
 </html>

@@ -11,8 +11,11 @@ from flask_socketio import SocketIO, join_room, leave_room, emit
 from werkzeug.utils import secure_filename
 import os
 
+
 # Initialisation
 app = Flask(__name__)
+app.debug = True
+socket = SocketIO(app)
 UPLOAD_FOLDER = 'static/files'
 app.secret_key = 'AHJBHG236RT6YT4GYH2BN__r372UYFG2EIU2YG'
 app.config['SECRET_TYPE'] = 'secret'
@@ -232,8 +235,7 @@ def delete_qcm(id):
       saving.qcm_data.remove_qcm_by_id(id)
       return redirect('/qcm')
 
-# Upload File
-
+# Upload fichier csv étudiant
 @app.route('/receive_csv',methods=['GET','POST'])
 def upload_file():   
       if request.method == 'POST':
@@ -248,8 +250,22 @@ def upload_file():
                   filename = secure_filename(file.filename)
                   file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                   return redirect(url_for('upload_file', name=filename))
+      saving.students_data.create_accounts_from_tab(read_csv("/static/files/csv"))
       return redirect('/')
+
+@socket.on('message')
+def test(msg):
+      print(msg)
+      socket.emit('test',['test'])
+
+@socket.on('connect')
+def connection():
+      print("Connected")
+
+@socket.on('disconnect')
+def connection():
+      print("Disconnected")
 
 
 if __name__ == '__main__':
-      app.run(debug=True)
+      socket.run(app)
