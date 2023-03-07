@@ -92,14 +92,13 @@ def student_account():
 
 @app.route('/student/question/<id>')
 def joined_statement(id):
-      return render_template("/student/statement.html")
+      return render_template("/student/statement.html",statement=saving.statements_data.get_statement_by_id(id))
 
 
 @app.route('/student/join/',methods = ['POST'])
 def student_join():
       id = request.form['id']
-      not_found = False
-      ## Vérifier si id dans les statements
+      not_found = id not in projected_statements
       return {"not_found":not_found}
 
 # Changement de mot de passe
@@ -247,7 +246,7 @@ def statement(id):
                         good_answer.append(i)
                   else:
                         bad_answer.append(i)
-      return render_template("/teacher/enonce.html",statement=statement)   
+      return render_template("/teacher/enonce.html",statement=statement,projected=id in projected_statements)   
       
 # Renvoi de l'affichage du qcm correspondant
 @app.route('/qcm/<id>')
@@ -318,12 +317,14 @@ def connection():
 
 @socket.on('project')
 def project(id):
-      projected_statements.append(id)
+      if id not in projected_statements:
+            projected_statements.append(id)
       print(projected_statements)
 
 @socket.on('stop')
 def stop(id):
-      projected_statements.remove(id)
+      if id in projected_statements:
+            projected_statements.remove(id)
       print(projected_statements)
 
 if __name__ == '__main__':
