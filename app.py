@@ -65,13 +65,12 @@ def index():
       else:
             return render_template('/teacher/index.html')
 
-@app.route('/student/login')
-def student_login():
-      return render_template('/student/login.html')
-
-@app.route('/student/home',methods = ['GET','POST'])
+@app.route('/student',methods = ['GET','POST'])
 def student_home():
-      return render_template('/student/home.html')
+      if is_logged():
+            return render_template('/student/home.html')
+      else:
+            return render_template('/student/login.html')
 
 @app.route('/student/myaccount')
 def student_account():
@@ -92,9 +91,19 @@ def student_join():
 # Route qui gère la déconnexion
 @app.route('/logout')
 def logout():
-      session.pop('email')
-      session.pop('password')
+      if session['type']=="teacher":
+            session.pop('email')
+            session.pop('password')
       return redirect('/')
+
+# Route qui gère la déconnexion
+@app.route('/student/logout')
+def sudent_logout():
+      if session['type']=="student":
+            session.pop('email')
+            session.pop('password')
+      return redirect('/student')
+
 
 # Route qui gère la connexion
 @app.route('/login',methods = ['POST'])
@@ -105,6 +114,19 @@ def login():
             if saving.teachers_data.login(email, password):
                   session['email'] = email
                   session['password'] = password
+                  session['role'] = "teacher"
+            return redirect('/')
+
+# Route qui gère la connexion
+@app.route('/student/login',methods = ['POST'])
+def student_login():
+      if 'email' in request.form and 'password' in request.form:
+            email = request.form['email']
+            password = request.form['password']
+            if saving.students_data.login(email, password):
+                  session['email'] = email
+                  session['password'] = password
+                  session['role'] = "student"
             return redirect('/')
 
 # Route qui gère l'inscription
