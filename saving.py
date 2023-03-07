@@ -88,9 +88,7 @@ class StudentsData():
     
     def login(self, email: str, password: str) -> bool:
         for users in self.users_array:
-            print(email + " == " + users.email + " ? " + str(email == users.email))
             if email == users.email:
-                print(password + " == " + users.password + " ? " + str(password == users.password))
                 if hash(password) == users.password:
                     return True
                 else:
@@ -103,7 +101,7 @@ class StudentsData():
         for lines in tab:
             if len(lines) == 3:
                 email = lines[1] + "." + lines[0] + "@etu.umontpellier.fr"
-                new_students.append(Student(email=email, password=lines[2], student_number=lines[2], name=lines[0], firstname=lines[1], do_hash=False))
+                new_students.append(Student(email=email, password=lines[2], student_number=lines[2], name=lines[0], firstname=lines[1], do_hash=True))
             else:
                 total_success = False
         for students in new_students:
