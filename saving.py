@@ -97,7 +97,10 @@ class StudentsData():
                 else:
                     return False
         return False
-    
+
+    def update_user_data(self, user: Student):
+        set_lines_which_contains(self.save_file, user.email, user.get_registering_line())
+
     def create_accounts_from_tab(self, tab: list) -> bool:
         new_students = []
         total_success = True

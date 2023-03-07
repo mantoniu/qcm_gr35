@@ -12,6 +12,12 @@ from werkzeug.utils import secure_filename
 import os
 
 
+# Liste des questions projetées
+
+global projected_statements
+projected_statements = []
+
+
 # Initialisation
 app = Flask(__name__)
 app.debug = True
@@ -54,24 +60,29 @@ def statement_values():
       return  Statement(name=name, question=question, valids_reponses=valids_reponses, possibles_responses=possibles_responses, user_email=session['email'])
 
 # Fonction qui vérifie si l'utilisateur est connecté
-def is_logged():
-      return 'email' in session and 'password' in session and (saving.teachers_data.login(session['email'], session['password']) or saving.students_data.login(session['email'], session['password']))
+def is_logged(role:str) -> bool:
+      if 'role' in session and 'email' in session and 'password' in session and role==session['role']:
+            if session['role']=="teacher":
+                  print("\n t \n",saving.teachers_data.login(session['email'], session['password']))
+                  return saving.teachers_data.login(session['email'], session['password'])
+            else:
+                  print("\n s \n",saving.students_data.login(session['email'], session['password']))
+                  return saving.students_data.login(session['email'], session['password'])
+      return False
 
 # Renvoie sur la route "/" des fichiers html
 @app.route('/')
 def index():
-      if is_logged():
+      if is_logged("teacher"):
             return render_template('/teacher/home.html')
       else: 
             return render_template('/teacher/index.html')
 
 @app.route('/student',methods = ['GET','POST'])
 def student_home():
-      print(is_logged())
-      if is_logged():
+      if is_logged("student"):
             return render_template('/student/home.html')
       else:
-            print(" AJA DJNDjd")
             return render_template('/student/login.html')
 
 @app.route('/student/myaccount')
@@ -96,7 +107,9 @@ def student_join():
 @app.route('/student/newpassword',methods=['POST'])
 def change_password():
       if 'actual_password' in request.form and 'new_password' in request.form:
-            if saving.students_data.get_user_by_email(session['email']).change_password(request.form['actual_password'], request.form['new_password']):
+            user = saving.students_data.get_user_by_email(session['email'])
+            if user.change_password(request.form['actual_password'], request.form['new_password']):
+                  saving.students_data.update_user_data(user)
                   session['password'] = request.form['new_password']
             return redirect('/student')
 
@@ -112,7 +125,6 @@ def logout():
 # Route qui gère la déconnexion
 @app.route('/student/logout')
 def sudent_logout():
-      print("AUBDUHADUADU")
       if session['role']=="student":
             session.pop('email')
             session.pop('password')
@@ -162,7 +174,7 @@ def register():
 # Permet de renvoyer la liste des qcm et donc l'affichage de ceux-ci dans my_qcm.html
 @app.route('/my_qcm')
 def my_qcm():
-      if is_logged():
+      if is_logged("teacher"):
             return render_template('/teacher/my_qcm.html', my_qcm_array=saving.qcm_data.get_qcm_from_user(session['email']))
       else:
             return redirect('/')
@@ -171,7 +183,7 @@ def my_qcm():
 # et si des tags ont été rentrés d'afficher seulement les énoncés correspondant
 @app.route('/my_states',methods=['POST','GET'])
 def my_states():
-      if is_logged():
+      if is_logged("teacher"):
             if request.form.getlist('etiquettes'):
                   tags = request.form.getlist('etiquettes')
                   statement_array = saving.statements_data.get_all_statements()
@@ -189,7 +201,7 @@ def my_states():
 # Renvoi les informations d'un qcm pour l'afficher
 @app.route('/qcm')
 def qcm():
-      if is_logged():
+      if is_logged("teacher"):
             return render_template('/teacher/qcm_list.html', qcm_array=saving.qcm_data.get_all_qcm())
       else:
             return redirect('/')
@@ -304,6 +316,15 @@ def connection():
 def connection():
       print("Disconnected")
 
+@socket.on('project')
+def project(id):
+      projected_statements.append(id)
+      print(projected_statements)
+
+@socket.on('stop')
+def stop(id):
+      projected_statements.remove(id)
+      print(projected_statements)
 
 if __name__ == '__main__':
       socket.run(app)
