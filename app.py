@@ -62,19 +62,22 @@ def is_logged():
 def index():
       if is_logged():
             return render_template('/teacher/home.html')
-      else:
+      else: 
             return render_template('/teacher/index.html')
 
 @app.route('/student',methods = ['GET','POST'])
 def student_home():
+      print(is_logged())
       if is_logged():
             return render_template('/student/home.html')
       else:
+            print(" AJA DJNDjd")
             return render_template('/student/login.html')
 
 @app.route('/student/myaccount')
 def student_account():
-      return render_template('/student/myaccount.html')
+      user = saving.students_data.get_user_by_email(session['email'])
+      return render_template('/student/myaccount.html',user=user)
 
 @app.route('/student/question/<id>')
 def joined_statement(id):
@@ -88,20 +91,32 @@ def student_join():
       ## Vérifier si id dans les statements
       return {"not_found":not_found}
 
+# Changement de mot de passe
+
+@app.route('/student/newpassword',methods=['POST'])
+def change_password():
+      if 'actual_password' in request.form and 'new_password' in request.form:
+            if saving.students_data.get_user_by_email(session['email']).change_password(request.form['actual_password'], request.form['new_password']):
+                  session['password'] = request.form['new_password']
+            return redirect('/student')
+
 # Route qui gère la déconnexion
 @app.route('/logout')
 def logout():
-      if session['type']=="teacher":
+      if session['role']=="teacher":
             session.pop('email')
             session.pop('password')
+            session.pop('role')
       return redirect('/')
 
 # Route qui gère la déconnexion
 @app.route('/student/logout')
 def sudent_logout():
-      if session['type']=="student":
+      print("AUBDUHADUADU")
+      if session['role']=="student":
             session.pop('email')
             session.pop('password')
+            session.pop('role')
       return redirect('/student')
 
 
@@ -115,7 +130,7 @@ def login():
                   session['email'] = email
                   session['password'] = password
                   session['role'] = "teacher"
-            return redirect('/')
+      return redirect('/')
 
 # Route qui gère la connexion
 @app.route('/student/login',methods = ['POST'])
@@ -127,7 +142,7 @@ def student_login():
                   session['email'] = email
                   session['password'] = password
                   session['role'] = "student"
-            return redirect('/')
+      return redirect('/student')
 
 # Route qui gère l'inscription
 @app.route('/register', methods=['POST'])
@@ -288,6 +303,7 @@ def connection():
 @socket.on('disconnect')
 def connection():
       print("Disconnected")
+
 
 if __name__ == '__main__':
       socket.run(app)
