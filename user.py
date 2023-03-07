@@ -2,7 +2,7 @@ from utilities import *
 
 class Teacher():
     def __init__(self, email:str, password:str, name:str, firstname:str, tags_array: list = [], do_hash:bool = True) -> None:
-        self.email = email
+        self.email = email.lower()
         if do_hash:
             self.password = hash(password)
         else:
@@ -38,7 +38,7 @@ class Teacher():
     
 class Student():
     def __init__(self, email:str, password:str, student_number: str, name:str, firstname:str, do_hash:bool = True) -> None:
-        self.email = email
+        self.email = email.lower()
         if do_hash:
             self.password = hash(password)
         else:
