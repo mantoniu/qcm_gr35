@@ -110,6 +110,9 @@ class StudentsData():
             else:
                 total_success = False
         return total_success
+    
+    def create_accounts_from_csv(self, csv_file_name: str) -> bool:
+        return self.create_accounts_from_tab(read_csv(csv_file_name))
 
 
 class StatementsData():

@@ -250,7 +250,8 @@ def upload_file():
                   filename = secure_filename(file.filename)
                   file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                   return redirect(url_for('upload_file', name=filename))
-      saving.students_data.create_accounts_from_tab(read_csv("/static/files/csv"))
+      saving.students_data.create_accounts_from_csv("static/files/" + filename)
+      os.remove("static/files/" + filename)
       return redirect('/')
 
 @socket.on('message')
@@ -265,7 +266,6 @@ def connection():
 @socket.on('disconnect')
 def connection():
       print("Disconnected")
-
 
 if __name__ == '__main__':
       socket.run(app)
