@@ -19,6 +19,9 @@ class TeachersData():
     
     def contains_user(self, user: Teacher) -> bool:
         return self.get_user_by_email(user.email) != None
+    
+    def update_user_data(self, user: Teacher):
+        set_lines_which_contains(self.save_file, user.email, user.get_registering_line())
 
     def add_user(self, user: Teacher) -> bool:
         if not(self.contains_user(user)):
