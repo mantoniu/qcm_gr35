@@ -47,6 +47,13 @@ class Student():
         self.name = name
         self.firstname = firstname
     
+    def change_password(self, old_password, new_password) -> bool:
+        if self.password == hash(old_password):
+            self.password = hash(new_password)
+            return True
+        else:
+            return False
+    
     def get_registering_line(self) -> list:
         result = [self.email, self.password, self.student_number, self.name, self.firstname]
         return result
