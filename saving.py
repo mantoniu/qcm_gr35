@@ -88,9 +88,9 @@ class StudentsData():
     
     def login(self, email: str, password: str) -> bool:
         for users in self.users_array:
-            print(email + " == " + users.email + " ? " + email == users.email)
+            print(email + " == " + users.email + " ? " + str(email == users.email))
             if email == users.email:
-                print(password + " == " + users.password + " ? " + password == users.password)
+                print(password + " == " + users.password + " ? " + str(password == users.password))
                 if hash(password) == users.password:
                     return True
                 else:
