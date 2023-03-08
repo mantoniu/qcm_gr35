@@ -14,9 +14,14 @@ import os
 
 # Liste des questions projetées
 
-global projected_statements
+global projected_statements,count,students,owner
 projected_statements = []
 
+# A mettre dans un objet
+
+count = 0
+students = []
+owner = 0
 
 # Initialisation
 app = Flask(__name__)
@@ -92,7 +97,15 @@ def student_account():
 
 @app.route('/student/question/<id>')
 def joined_statement(id):
-      return render_template("/student/statement.html",statement=saving.statements_data.get_statement_by_id(id))
+      global count
+      if is_logged("student"):
+            if id in projected_statements:
+                  student = saving.students_data.get_user_by_email(session['email'])
+                  if student not in students:
+                        count +=1    
+                        socket.emit('count',count,to=owner)
+                  return render_template("/student/statement.html",statement=saving.statements_data.get_statement_by_id(id))
+      return redirect('/student')
 
 
 @app.route('/student/join/',methods = ['POST'])
@@ -307,19 +320,16 @@ def test(msg):
       print(msg)
       socket.emit('test',['test'])
 
-@socket.on('connect')
-def connection():
-      print("Connected")
-
 @socket.on('disconnect')
 def connection():
       print("Disconnected")
 
 @socket.on('project')
-def project(id):
+def project(id,owner):
       if id not in projected_statements:
             projected_statements.append(id)
-      print(projected_statements)
+            owner = owner
+      print(projected_statements,owner)
 
 @socket.on('stop')
 def stop(id):

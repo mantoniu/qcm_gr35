@@ -84,6 +84,7 @@
             </div>  
     </div>  
 </div> 
+<p id ='student_count'>Nombre d'étudiants : </p>
 <script>
 
 function correction(){
@@ -98,9 +99,10 @@ function correction(){
 }
 
 function projection(id){
+    owner = socket.id
     $('#project').html("Stopper la projection");
     $('#project').attr('onclick','stop("{{ statement.id }}")')
-    socket.emit('project',id)
+    socket.emit('project',id,owner)
 }
 
 function stop(id){
@@ -109,6 +111,10 @@ function stop(id){
     socket.emit('stop',id);
 }
 
+socket.on('count',(count)=>{
+    console.log(count)
+    $('#student_count').text("Nombre d'étudiants : "+count)
+})
 
 </script>
 </body>
