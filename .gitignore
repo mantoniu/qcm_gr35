@@ -2,3 +2,5 @@
 *.pyc
 saves/statements.txt
 saves/students.txt
+saves/qcm.txt
+saves/teachers.txt
