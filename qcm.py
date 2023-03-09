@@ -2,6 +2,7 @@ from __future__ import annotations
 from markdown import markdown
 from uuid import uuid4
 from utilities import hash, file_contains
+from user import Student, Teacher
 
 md_extensions = ['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code']
 
@@ -27,7 +28,7 @@ class Statement():
     def get_state(self) -> markdown:
         return markdown("\n"+self.question,extensions=md_extensions)
     
-    def set(self, new_statement: Statement):
+    def set(self, new_statement: Statement) -> None:
         self.name = new_statement.name
         self.question = new_statement.question
         self.possibles_responses = new_statement.possibles_responses
@@ -78,8 +79,51 @@ class QCM:
         self.id = hash(str(uuid4()))
         return self.id
     
-    def get_registering_line(self):
+    def get_registering_line(self) -> list:
         line_to_add = [self.id, self.name, self.user_email]
         for statement in self.statements:
             line_to_add.append(statement.id)
         return line_to_add
+
+class LiveQCM():
+    def __init__(self, owner: Teacher, statements: list) -> None:
+        self.owner = owner
+        self.statements = statements
+        self.statements_len = len(statements)
+        self.connected_sockets_ids = {}
+        self.statement_index = 0
+
+    def end(self) -> None:
+        '''anregistré den 1 fichié'''
+        pass
+
+    def next_question(self) -> bool:
+        self.question_index = self.question_index + 1
+        if self.question_index >= self.statements_len:
+            self.end()
+            return True
+        return False
+
+    def get_students(self) -> list:
+        return self.connected_sockets_ids.values()
+    
+    def get_students_count(self) -> int:
+        return len(self.connected_sockets_ids)
+    
+    def student_join(self, student: Student, socket_id: str) -> bool:
+        if not(student in self.get_students()):
+            self.connected_sockets_ids[socket_id] = student
+            return True
+        else:
+            return False
+
+    def student_leave(self, student: Student) -> str:
+        if student in self.get_students():
+            for keys in self.connected_sockets_ids:
+                if self.connected_sockets_ids[keys] == student:
+                    self.connected_sockets_ids.pop(keys)
+                    return keys
+            return None
+        else:
+            return None
+    
