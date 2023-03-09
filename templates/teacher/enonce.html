@@ -41,7 +41,6 @@
 </style>
 
 
-
 <div class="card" id="card" value="{{ statement.id }}"> 
     <div class="header-card" id="header">   
         <div class="translation" id="translation">  
@@ -69,9 +68,13 @@
                         </div>  
                         <p class="textarea-response"> {{ statement.possibles_responses[i] }}</p>
                     </div>
+                    <progress class="progress_bar" id="{{ "progress" + i|string }}" value="1" max="10"></progress>
                 {% endfor %}
             {% endif %}
-        </div>  
+            
+        </div>
+            <p id ='student_count'>Connectés : 0</p>
+            <p id ='response_count'>Réponses : 0</p>  
             </div>  
             <div class="card-navbar">  
                 <a href="{{ "edit/" + statement.id|string }}" style="display: contents;"><button class="animation" type="submit" id="ajouter">Editer l'énoncé</button></a> 
@@ -84,7 +87,6 @@
             </div>  
     </div>  
 </div> 
-<p id ='student_count'>Nombre d'étudiants : </p>
 <script>
 
 function correction(){
@@ -111,9 +113,16 @@ function stop(id){
     socket.emit('stop',id);
 }
 
+socket.on('reponse',(reponse,response_count)=>{
+    $('#progress'+reponse_number).val(response_count);
+})
+
+
+
 socket.on('count',(count)=>{
     console.log(count)
-    $('#student_count').text("Nombre d'étudiants : "+count)
+    $('#student_count').text("Nombre d'étudiants : "+count);
+    $('.progress_bar').attr('max',count);
 })
 
 </script>

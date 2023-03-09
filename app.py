@@ -97,11 +97,12 @@ def student_account():
 
 @app.route('/student/question/<id>')
 def joined_statement(id):
-      global count
+      global count,students
       if is_logged("student"):
             if id in projected_statements:
                   student = saving.students_data.get_user_by_email(session['email'])
                   if student not in students:
+                        students.append(student)
                         count +=1    
                         socket.emit('count',count,to=owner)
                   return render_template("/student/statement.html",statement=saving.statements_data.get_statement_by_id(id))
@@ -222,7 +223,6 @@ def qcm():
 @app.route('/newstate',methods=['POST'])
 def newstate():
       statement = statement_values()
-      print(statement.decimal)
       saving.statements_data.add_statement(statement)
       return redirect('/my_states')
 
@@ -310,9 +310,9 @@ def upload_file():
             if file and allowed_file(file.filename):
                   filename = secure_filename(file.filename)
                   file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                  saving.students_data.create_accounts_from_csv("static/files/" + filename)
+                  os.remove("static/files/" + filename)
                   return redirect(url_for('upload_file', name=filename))
-      saving.students_data.create_accounts_from_csv("static/files/" + filename)
-      os.remove("static/files/" + filename)
       return redirect('/')
 
 @socket.on('message')
@@ -320,9 +320,18 @@ def test(msg):
       print(msg)
       socket.emit('test',['test'])
 
+@socket.on('kilian')
+def kilian():
+      print("PNJJJJ \n")
+
+
 @socket.on('disconnect')
-def connection():
-      print("Disconnected")
+def disconnection():
+      print("ID déco",request.sid)
+
+@socket.on('disconnected')
+def disco(id):
+      print(" AHBUIADUAIHU \n ANINFIZFIUB",id,"\n")
 
 @socket.on('project')
 def project(id,owner):
