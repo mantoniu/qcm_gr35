@@ -78,12 +78,6 @@ def is_logged(role:str) -> bool:
                   return saving.students_data.login(session['email'], session['password'])
       return False
 
-def is_projected(statement : Statement) -> bool:
-      for liveqcm in projected_qcm:
-            for statements in liveqcm.statements:
-                  if statement == statements:
-                        return True
-      return False
 
 # Renvoie sur la route "/" des fichiers html
 @app.route('/')
