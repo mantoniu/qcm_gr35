@@ -14,8 +14,11 @@ import os
 
 # Liste des questions projetées
 
-global projected_statements,count,students,owner
-projected_statements = []
+global projected_qcm,count,students,owner
+
+projected_qcm = []
+projected_qcmid = []
+
 
 # A mettre dans un objet
 
@@ -75,6 +78,13 @@ def is_logged(role:str) -> bool:
                   return saving.students_data.login(session['email'], session['password'])
       return False
 
+def is_projected(statement : Statement) -> bool:
+      for liveqcm in projected_qcm:
+            for statements in liveqcm.statements:
+                  if statement == statements:
+                        return True
+      return False
+
 # Renvoie sur la route "/" des fichiers html
 @app.route('/')
 def index():
@@ -99,10 +109,10 @@ def student_account():
 def joined_statement(id):
       global count,students
       if is_logged("student"):
-            if id in projected_statements:
+            if id in projected_qcmid:
                   student = saving.students_data.get_user_by_email(session['email'])
                   if student not in students:
-                        students.append(student)
+                        student_join(statement_id)
                         count +=1    
                         socket.emit('count',count,to=owner)
                   return render_template("/student/statement.html",statement=saving.statements_data.get_statement_by_id(id))
@@ -112,7 +122,7 @@ def joined_statement(id):
 @app.route('/student/join/',methods = ['POST'])
 def student_join():
       id = request.form['id']
-      not_found = id not in projected_statements
+      not_found = id not in projected_qcm
       return {"not_found":not_found}
 
 # Changement de mot de passe
@@ -259,7 +269,7 @@ def statement(id):
                         good_answer.append(i)
                   else:
                         bad_answer.append(i)
-      return render_template("/teacher/enonce.html",statement=statement,projected=id in projected_statements)   
+      return render_template("/teacher/enonce.html",statement=statement)   
       
 # Renvoi de l'affichage du qcm correspondant
 @app.route('/qcm/<id>')
@@ -331,20 +341,35 @@ def disconnection():
 
 @socket.on('disconnected')
 def disco(id):
+      # Si prof déconnecté fermer tous ses liveqcm
       print(" AHBUIADUAIHU \n ANINFIZFIUB",id,"\n")
 
 @socket.on('project')
-def project(id,owner):
-      if id not in projected_statements:
-            projected_statements.append(id)
-            owner = owner
-      print(projected_statements,owner)
+def project(id,owner_sid):
+      owner = saving.teachers_data.get_user_by_email(session['email'])
+      liveqcm = None
+      # Question simple
+      if saving.statements_data.contains_id(id):
+            statements = [saving.statements_data.get_statement_by_id(id)]
+      elif saving.qcm_data.contains_id(id):
+            statements = saving.qcm_data.get_qcm_by_id(id).statements
+      else:
+            pass
+
+      liveqcm = LiveQCM(owner, owner_sid, statements)
+
+      if liveqcm not in projected_qcm:
+            projected_qcm.append(liveqcm)
+            projected_qcmid.append(liveqcm.id)
+            socket.emit('project',liveqcm.id)
+      print(projected_qcm,owner)
 
 @socket.on('stop')
 def stop(id):
-      if id in projected_statements:
-            projected_statements.remove(id)
-      print(projected_statements)
+      if id in projected_qcmid:
+            ## Suprimer le qcm correspondant à l'id
+            projected_qcm.remove(id)
+      print(projected_qcm)
 
 if __name__ == '__main__':
       socket.run(app)

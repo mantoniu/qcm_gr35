@@ -40,7 +40,7 @@
     }
 </style>
 
-
+<h1 id ='liveqcm_id'></h1>  
 <div class="card" id="card" value="{{ statement.id }}"> 
     <div class="header-card" id="header">   
         <div class="translation" id="translation">  
@@ -113,10 +113,13 @@ function stop(id){
     socket.emit('stop',id);
 }
 
-socket.on('reponse',(reponse,response_count)=>{
+socket.on('response',(reponse,response_count)=>{
     $('#progress'+reponse_number).val(response_count);
 })
 
+socket.on('project',(liveqcmid)=>{
+    $('#liveqcm_id').text("Identifiant du questionnaire : "+liveqcmid);
+})
 
 
 socket.on('count',(count)=>{

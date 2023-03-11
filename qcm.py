@@ -56,6 +56,17 @@ class Statement():
             line_to_add.append(responses)
         return line_to_add
 
+    def is_projected(self, liveqcms : list) -> bool:
+      for liveqcm in liveqcms:
+            for statements in liveqcm.statements:
+                  if self == statements:
+                        return True
+      return False
+
+
+    def __eq__(self, stmt: Statement) -> bool:
+        return self.id == stmt.id
+
 
 class QCM:
     def __init__(self, name: str, statements: list, user_email: str, id:str = None) -> None:
@@ -85,16 +96,34 @@ class QCM:
             line_to_add.append(statement.id)
         return line_to_add
 
+    def is_projected(self, liveqcms : list) -> bool:
+      for liveqcm in liveqcms:
+            if liveqcm.statements == self.statements:
+                return True
+      return False
+
+
+## Ajouter sauvegarde
+
 class LiveQCM():
-    def __init__(self, owner: Teacher, statements: list) -> None:
+    def __init__(self, owner: Teacher, owner_sid: str, statements: list,id: str = None) -> None:
         self.owner = owner
+        self.owner_sid = owner_sid
         self.statements = statements
         self.statements_len = len(statements)
         self.connected_sockets_ids = {}
         self.statement_index = 0
+        if id == None:
+            self.generate_id()
+        else:
+            self.id = id
+
+    def generate_id(self) -> str:
+        self.id = hash(str(uuid4()))[:8]
+        return self.id
 
     def end(self) -> None:
-        '''anregistré den 1 fichié'''
+        ### Enregistrer 
         pass
 
     def next_question(self) -> bool:
@@ -126,4 +155,6 @@ class LiveQCM():
             return None
         else:
             return None
-    
+
+    def __eq__(self, other_liveqcm : LiveQCM) -> bool:
+        return self.statements == other_liveqcm.statements
