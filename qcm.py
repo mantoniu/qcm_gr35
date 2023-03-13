@@ -106,7 +106,7 @@ class QCM:
 ## Ajouter sauvegarde
 
 class LiveQCM():
-    def __init__(self, owner_email: str, statements: list, id: str = None, ended: bool = False, owner_sid: str = None) -> None:
+    def __init__(self, owner_email: str, statements: list, id: str = None, opened: bool = True, owner_sid: str = None) -> None:
         self.owner_email = owner_email
         self.owner_sid = owner_sid
         self.statements = statements
@@ -117,7 +117,7 @@ class LiveQCM():
             self.generate_id()
         else:
             self.id = id
-        self.end = ended
+        self.opened = opened
 
     def generate_id(self) -> str:
         self.id = hash(str(uuid4()))[:8]
@@ -156,6 +156,12 @@ class LiveQCM():
             return None
         else:
             return None
+    
+    def get_registering_line(self) -> list:
+        line_to_add = [self.id, self.owner_email]
+        for statement in self.statements:
+            line_to_add.append(statement.id)
+        return line_to_add
 
     def __eq__(self, other_liveqcm : LiveQCM) -> bool:
         return self.statements == other_liveqcm.statements

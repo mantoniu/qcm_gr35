@@ -285,7 +285,7 @@ class LiveQCMData():
                 statements = []
                 for i in range(2, len(row)):
                     statements.append(self.statements_data.get_statement_by_id(row[i]))
-                self.liveqcm_array.append(LiveQCM(id=row[0], owner_email=row[1], ended=True, statements=statements))
+                self.liveqcm_array.append(LiveQCM(id=row[0], owner_email=row[1], opened=False, statements=statements))
     
     def contains_id(self, id: str):
         for liveqcm in self.liveqcm_array:
@@ -306,6 +306,20 @@ class LiveQCMData():
     
     def get_all_liveqcm(self) -> list:
         return self.liveqcm_array
+    
+    def get_opened_liveqcm(self) -> list:
+        opened_liveqcm = []
+        for liveqcm in self.liveqcm_array:
+            if liveqcm.opened:
+                opened_liveqcm.append(liveqcm)
+        return opened_liveqcm
+    
+    def get_closed_liveqcm(self) -> list:
+        closed_liveqcm = []
+        for liveqcm in self.liveqcm_array:
+            if not(liveqcm.opened):
+                closed_liveqcm.append(liveqcm)
+        return closed_liveqcm
     
     def get_liveqcm_from_user(self, email: str) -> list:
         result = []
