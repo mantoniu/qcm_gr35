@@ -130,7 +130,7 @@ class LiveQCM():
         else:
             return False
     
-    def get_responses_from_student_id(self, student_email: str) -> list:
+    def get_responses_from_student_email(self, student_email: str) -> list:
         responses = []
         for students_dic in self.students_responses:
             if student_email in students_dic:
@@ -163,17 +163,17 @@ class LiveQCM():
     def get_students_count(self) -> int:
         return len(self.connected_sockets_ids)
     
-    def student_join(self, student_id: str, socket_id: str) -> bool:
-        if not(student_id in self.get_students()):
-            self.connected_sockets_ids[socket_id] = student_id
+    def student_join(self, student_email: str, socket_id: str) -> bool:
+        if not(student_email in self.get_students()):
+            self.connected_sockets_ids[socket_id] = student_email
             return True
         else:
             return False
 
-    def student_leave(self, student_id: str) -> str:
-        if student_id in self.get_students():
+    def student_leave(self, student_email: str) -> str:
+        if student_email in self.get_students():
             for keys in self.connected_sockets_ids:
-                if self.connected_sockets_ids[keys] == student_id:
+                if self.connected_sockets_ids[keys] == student_email:
                     self.connected_sockets_ids.pop(keys)
                     return keys
             return None
