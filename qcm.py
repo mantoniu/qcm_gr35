@@ -112,6 +112,7 @@ class LiveQCM():
         self.statements = statements
         self.statements_len = len(statements)
         self.connected_sockets_ids = {}
+        self.students_responses = []
         self.statement_index = 0
         if id == None:
             self.generate_id()
@@ -119,13 +120,32 @@ class LiveQCM():
             self.id = id
         self.opened = opened
 
+    def respond(self, student_id: str, responses: list) -> bool :
+        if student_id in self.get_students():
+            self.students_responses[self.question_index][student_id] = responses
+            return True
+        else:
+            return False
+    
+    def get_responses_from_student_id(self, student_id: str) -> list:
+        responses = []
+        for students_dic in self.students_responses:
+            if student_id in students_dic:
+                responses.append(students_dic[student_id])
+            else:
+                responses.append([])
+        return responses
+
     def generate_id(self) -> str:
         self.id = hash(str(uuid4()))[:8]
         return self.id
 
-    def end(self) -> None:
-        ### Enregistrer 
-        pass
+    def end(self) -> bool:
+        if self.opened:
+            self.opened = False
+            return True
+        else:
+            return False
 
     def next_question(self) -> bool:
         self.question_index = self.question_index + 1
@@ -140,17 +160,17 @@ class LiveQCM():
     def get_students_count(self) -> int:
         return len(self.connected_sockets_ids)
     
-    def student_join(self, student: Student, socket_id: str) -> bool:
-        if not(student in self.get_students()):
-            self.connected_sockets_ids[socket_id] = student
+    def student_join(self, student_id: str, socket_id: str) -> bool:
+        if not(student_id in self.get_students()):
+            self.connected_sockets_ids[socket_id] = student_id
             return True
         else:
             return False
 
-    def student_leave(self, student: Student) -> str:
-        if student in self.get_students():
+    def student_leave(self, student_id: str) -> str:
+        if student_id in self.get_students():
             for keys in self.connected_sockets_ids:
-                if self.connected_sockets_ids[keys] == student:
+                if self.connected_sockets_ids[keys] == student_id:
                     self.connected_sockets_ids.pop(keys)
                     return keys
             return None
