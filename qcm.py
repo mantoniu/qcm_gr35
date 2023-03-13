@@ -120,18 +120,18 @@ class LiveQCM():
             self.id = id
         self.opened = opened
 
-    def respond(self, student_id: str, responses: list) -> bool :
-        if student_id in self.get_students():
-            self.students_responses[self.question_index][student_id] = responses
+    def respond(self, student_email: str, responses: list) -> bool :
+        if student_email in self.get_students():
+            self.students_responses[self.question_index][student_email] = responses
             return True
         else:
             return False
     
-    def get_responses_from_student_id(self, student_id: str) -> list:
+    def get_responses_from_student_id(self, student_email: str) -> list:
         responses = []
         for students_dic in self.students_responses:
-            if student_id in students_dic:
-                responses.append(students_dic[student_id])
+            if student_email in students_dic:
+                responses.append(students_dic[student_email])
             else:
                 responses.append([])
         return responses
