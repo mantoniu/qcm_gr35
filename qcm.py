@@ -120,8 +120,11 @@ class LiveQCM():
             self.id = id
         self.opened = opened
 
+    def has_responded(self, student_email: str) -> bool:
+        return student_email in self.students_responses[self.question_index]
+
     def respond(self, student_email: str, responses: list) -> bool :
-        if student_email in self.get_students():
+        if student_email in self.get_students() and not(self.has_responded(student_email)):
             self.students_responses[self.question_index][student_email] = responses
             return True
         else:
