@@ -30,37 +30,55 @@
         </ul>
 </header>   
 
-<div class="card"> 
-  <div class="header-card" id="header">   
-      <div class="translation" id="translation">  
-                  {{ statement.get_state()|safe }}
-      </div> 
-  </div>  
-  <div class="body-card">  
-      <div class="content" id="content-response">  
-          <input id="count" type="hidden" name="count" value="1">  
-          <div class="list-response" id="list-response"> 
-          {% if statement.decimal %} 
-          <input step="0.01" type="number" id="decimal-response" name="statement" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
-          {% else %}  
-              {% for i in range (0,statement.possibles_responses|length) %}
-                  <div class="response">
-                      <div class="switch">  
-                          <label id="{{ "switch" + i|string }}" class="switch">
-                              <input type="checkbox" name="{{ "switch" + i|string }}" id="{{ "switch" + i|string }}">
-                              <span class="slider round"></span>  
-                          </label>  
-                      </div>  
-                      <p class="textarea-response"> {{ statement.possibles_responses[i] }}</p>
-                  </div>
-              {% endfor %}
-          {% endif %}
-      </div>  
-          </div>  
-          <div class="card-navbar">  
-              <button class="animation" type="submit" id="valider">Valider</button>
-          </div>  
-  </div>  
-</div> 
+<div class="card">
+    <div class="header-card" id="header">   
+        <div class="translation" id="translation">  
+                    {{ statement.get_state()|safe }}
+        </div> 
+    </div>  
+    <div class="body-card">  
+        <form id="response" onsubmit="event.preventDefault();">
+            <div class="content" id="content-response">  
+                <input id="count" type="hidden" name="count" value="1">  
+                <div class="list-response" id="list-response"> 
+                {% if statement.decimal %} 
+                <input step="0.01" type="number" id="decimal-response" name="statement" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
+                {% else %}  
+                    {% for i in range (0,statement.possibles_responses|length) %}
+                        <div class="response">
+                            <div class="switch">  
+                                <label class="switch">
+                                    <input type="checkbox" name="{{ "switch" + i|string }}" id="{{ "switch" + i|string }}">
+                                    <span class="slider round"></span>  
+                                </label>  
+                            </div>  
+                            <p class="textarea-response"> {{ statement.possibles_responses[i] }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>  
+                </div>  
+                <div class="card-navbar">  
+                    <button class="animation" type="submit" id="valider">Valider</button>
+                </div>  
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+
+$(document).ready(function(){
+    $("#response").submit(function(){
+        response_list = []
+        for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
+            if($('#switch'+i).is(":checked")){
+                response_list.push(i)
+            }
+        }
+        socket.emit("newresponse",response_list);
+    });
+});
+
+</script>
 </body>
 </html>

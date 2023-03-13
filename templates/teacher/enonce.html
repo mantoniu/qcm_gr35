@@ -68,7 +68,7 @@
                         </div>  
                         <p class="textarea-response"> {{ statement.possibles_responses[i] }}</p>
                     </div>
-                    <progress class="progress_bar" id="{{ "progress" + i|string }}" value="1" max="10"></progress>
+                    <progress class="progress_bar" id="{{ "progress" + i|string }}" value="0" max="0" hidden></progress>
                 {% endfor %}
             {% endif %}
             
@@ -79,7 +79,7 @@
             <div class="card-navbar">  
                 <a href="{{ "edit/" + statement.id|string }}" style="display: contents;"><button class="animation" type="submit" id="ajouter">Editer l'énoncé</button></a> 
                 {% if projected %}
-                <button class="animation" type="submit" id="project" onclick="stop('{{ statement.id }}')">Stopper la projection</button>
+                <button class="animation" type="submit" id="project" onclick="stop()">Stopper la projection</button>
                 {% else %}
                 <button class="animation" type="submit" id="project" onclick="projection('{{ statement.id }}')">Projeter la question</button>
                 {% endif %}
@@ -88,6 +88,8 @@
     </div>  
 </div> 
 <script>
+
+var liveqcm_id = 0
 
 function correction(){
     if(!{{ statement.decimal|tojson }}){
@@ -107,24 +109,33 @@ function projection(id){
     socket.emit('project',id,owner)
 }
 
-function stop(id){
+function stop(){
     $('#project').html("Projeter la question");
     $('#project').attr('onclick','projection("{{ statement.id }}")');
-    socket.emit('stop',id);
+    $('#liveqcm_id').text("");
+    socket.emit('stop',liveqcm_id);
 }
 
-socket.on('response',(reponse,response_count)=>{
-    $('#progress'+reponse_number).val(response_count);
+socket.on('liveqcmid',(id)=>{
+    liveqcm_id = id;
+    $('#liveqcm_id').text("ID du questionnaire : "+id);
 })
+
 
 socket.on('project',(liveqcmid)=>{
     $('#liveqcm_id').text("Identifiant du questionnaire : "+liveqcmid);
 })
 
+socket.on('response',()=>{
+
+});
+
+
 
 socket.on('count',(count)=>{
     console.log(count)
     $('#student_count').text("Nombre d'étudiants : "+count);
+    $('.progress_bar').css("display","flex");
     $('.progress_bar').attr('max',count);
 })
 

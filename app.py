@@ -14,9 +14,8 @@ import os
 
 # Liste des questions projetées
 
-global projected_qcm,count,students,owner
+global projected_qcmid,count,students,owner
 
-projected_qcm = []
 projected_qcmid = []
 
 
@@ -101,22 +100,22 @@ def student_account():
 
 @app.route('/student/question/<id>')
 def joined_statement(id):
-      global count,students
+      global count,students,projected_qcmid
       if is_logged("student"):
             if id in projected_qcmid:
                   student = saving.students_data.get_user_by_email(session['email'])
                   if student not in students:
-                        student_join(statement_id)
                         count +=1    
                         socket.emit('count',count,to=owner)
-                  return render_template("/student/statement.html",statement=saving.statements_data.get_statement_by_id(id))
+                  print(saving.liveqcm_data.get_liveqcm_by_id(id))
+                  return render_template("/student/statement.html",statement=(saving.liveqcm_data.get_liveqcm_by_id(id)).statements[0])
       return redirect('/student')
 
 
 @app.route('/student/join/',methods = ['POST'])
 def student_join():
       id = request.form['id']
-      not_found = id not in projected_qcm
+      not_found = id not in projected_qcmid
       return {"not_found":not_found}
 
 # Changement de mot de passe
@@ -319,28 +318,15 @@ def upload_file():
                   return redirect(url_for('upload_file', name=filename))
       return redirect('/')
 
-@socket.on('message')
-def test(msg):
-      print(msg)
-      socket.emit('test',['test'])
-
-@socket.on('kilian')
-def kilian():
-      print("PNJJJJ \n")
-
 
 @socket.on('disconnect')
 def disconnection():
       print("ID déco",request.sid)
 
-@socket.on('disconnected')
-def disco(id):
-      # Si prof déconnecté fermer tous ses liveqcm
-      print(" AHBUIADUAIHU \n ANINFIZFIUB",id,"\n")
 
 @socket.on('project')
 def project(id,owner_sid):
-      owner = saving.teachers_data.get_user_by_email(session['email'])
+      global projected_qcmid
       liveqcm = None
       # Question simple
       if saving.statements_data.contains_id(id):
@@ -348,22 +334,29 @@ def project(id,owner_sid):
       elif saving.qcm_data.contains_id(id):
             statements = saving.qcm_data.get_qcm_by_id(id).statements
       else:
-            pass
+            print('Id not exist')
+            return 
 
-      liveqcm = LiveQCM(owner, owner_sid, statements)
+      liveqcm = LiveQCM(owner_email=session['email'], statements=statements, owner_sid=owner_sid)
+      saving.liveqcm_data.add_liveqcm(liveqcm)
 
-      if liveqcm not in projected_qcm:
-            projected_qcm.append(liveqcm)
-            projected_qcmid.append(liveqcm.id)
-            socket.emit('project',liveqcm.id)
-      print(projected_qcm,owner)
+      projected_qcmid.append(liveqcm.id)
+      socket.emit('liveqcmid',liveqcm.id)
+
+      print(projected_qcmid,owner)
 
 @socket.on('stop')
-def stop(id):
-      if id in projected_qcmid:
-            ## Suprimer le qcm correspondant à l'id
-            projected_qcm.remove(id)
-      print(projected_qcm)
+def stop(liveqcm_id):
+      global projected_qcmid
+      if liveqcm_id in projected_qcmid:
+            # Enregistrer le liveqcm
+            projected_qcmid.remove(liveqcm_id)
+
+@socket.on('newresponse')
+def response(response_list):
+      student_email = session['email']
+      student = saving.students_data.get_user_by_email(student_email)
+      print(response_list,student.firstname)
 
 if __name__ == '__main__':
       socket.run(app)
