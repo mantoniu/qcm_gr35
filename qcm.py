@@ -106,8 +106,8 @@ class QCM:
 ## Ajouter sauvegarde
 
 class LiveQCM():
-    def __init__(self, owner: Teacher, owner_sid: str, statements: list,id: str = None) -> None:
-        self.owner = owner
+    def __init__(self, owner_email: str, statements: list, id: str = None, ended: bool = False, owner_sid: str = None) -> None:
+        self.owner_email = owner_email
         self.owner_sid = owner_sid
         self.statements = statements
         self.statements_len = len(statements)
@@ -117,6 +117,7 @@ class LiveQCM():
             self.generate_id()
         else:
             self.id = id
+        self.end = ended
 
     def generate_id(self) -> str:
         self.id = hash(str(uuid4()))[:8]

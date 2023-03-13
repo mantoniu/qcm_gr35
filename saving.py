@@ -1,6 +1,6 @@
 from utilities import *
 from user import Student, Teacher
-from qcm import QCM, Statement
+from qcm import QCM, Statement, LiveQCM
 
 class TeachersData():
     def __init__(self) -> None:
@@ -20,7 +20,7 @@ class TeachersData():
     def contains_user(self, user: Teacher) -> bool:
         return self.get_user_by_email(user.email) != None
     
-    def update_user_data(self, user: Teacher):
+    def update_user_data(self, user: Teacher) -> None:
         set_lines_which_contains(self.save_file, user.email, user.get_registering_line())
 
     def add_user(self, user: Teacher) -> bool:
@@ -98,7 +98,7 @@ class StudentsData():
                     return False
         return False
 
-    def update_user_data(self, user: Student):
+    def update_user_data(self, user: Student) -> None:
         set_lines_which_contains(self.save_file, user.email, user.get_registering_line())
 
     def create_accounts_from_tab(self, tab: list) -> bool:
@@ -139,7 +139,7 @@ class StatementsData():
                 return True
         return False
 
-    def contains_name(name:str) -> bool:
+    def contains_name(self, name: str) -> bool:
         for statement in self.statement_array:
             if statement.name == name:
                 return True
@@ -148,17 +148,29 @@ class StatementsData():
     def contains_statement(self, statement: Statement) -> bool:
         return self.contains_id(statement.id)
 
-    def add_statement(self, statement: Statement) -> None:
-        add_line_to_file(self.save_file, statement.get_registering_line())
-        self.statements_array.append(statement)
+    def add_statement(self, statement: Statement) -> bool:
+        if not(self.contains_statement(statement)):
+            add_line_to_file(self.save_file, statement.get_registering_line())
+            self.statements_array.append(statement)
+            return True
+        else:
+            return False
     
-    def remove_statement_by_id(self, id: str) -> None:
-        self.statements_array.remove(self.get_statement_by_id(id))
-        remove_lines_which_contains(self.save_file, string=id)
+    def remove_statement_by_id(self, id: str) -> bool:
+        if self.contains_id(id):
+            self.statements_array.remove(self.get_statement_by_id(id))
+            remove_lines_which_contains(self.save_file, string=id)
+            return True
+        else:
+            return False
     
-    def remove_statement(self, statement: Statement) -> None:
-        self.statements_array.remove(statement)
-        remove_lines_which_contains(self.save_file, string=statement.id)
+    def remove_statement(self, statement: Statement) -> bool:
+        if self.contains_statement(statement):
+            self.statements_array.remove(statement)
+            remove_lines_which_contains(self.save_file, string=statement.id)
+            return True
+        else:
+            return False
     
     def get_all_statements(self) -> list:
         return self.statements_array
@@ -222,9 +234,13 @@ class QCMData():
     def contains_qcm(self, qcm: QCM) -> bool:
         return self.contains_id(qcm.id)
 
-    def add_qcm(self, qcm: QCM) -> None:
-        add_line_to_file(self.save_file, qcm.get_registering_line())
-        self.qcm_array.append(qcm)
+    def add_qcm(self, qcm: QCM) -> bool:
+        if not(self.contains_qcm(qcm)):
+            add_line_to_file(self.save_file, qcm.get_registering_line())
+            self.qcm_array.append(qcm)
+            return True
+        else:
+            return False
     
     def get_all_qcm(self) -> list:
         return self.qcm_array
@@ -242,13 +258,83 @@ class QCMData():
                 return qcm
         return None
 
-    def remove_qcm_by_id(self, id: str) -> None:
-        self.qcm_array.remove(self.get_qcm_by_id(id))
-        remove_lines_which_contains(self.save_file, string=id)
+    def remove_qcm_by_id(self, id: str) -> bool:
+        if self.contains_id(id):
+            self.qcm_array.remove(self.get_qcm_by_id(id))
+            remove_lines_which_contains(self.save_file, string=id)
+            return True
+        else:
+            return False
     
-    def remove_statement(self, qcm: QCM) -> None:
-        self.qcm_array.remove(qcm)
-        remove_lines_which_contains(self.save_file, string=qcm.id)
+    def remove_qcm(self, qcm: QCM) -> bool:
+        if self.contains_qcm(qcm):
+            self.qcm_array.remove(qcm)
+            remove_lines_which_contains(self.save_file, string=qcm.id)
+            return True
+        else:
+            return False
+
+class LiveQCMData():
+    def __init__(self, statements_data: StatementsData) -> None:
+        self.save_file = create_save_file("liveqcm.txt")
+        self.statements_data = statements_data
+        self.liveqcm_array = []
+        tab = read_file(self.save_file)
+        for row in tab:
+            if len(row) > 3:
+                statements = []
+                for i in range(2, len(row)):
+                    statements.append(self.statements_data.get_statement_by_id(row[i]))
+                self.liveqcm_array.append(LiveQCM(id=row[0], owner_email=row[1], ended=True, statements=statements))
+    
+    def contains_id(self, id: str):
+        for liveqcm in self.liveqcm_array:
+            if liveqcm.id == id:
+                return True
+        return False
+    
+    def contains_liveqcm(self, liveqcm: LiveQCM) -> bool:
+        return self.contains_id(liveqcm.id)
+
+    def add_liveqcm(self, liveqcm: LiveQCM) -> bool:
+        if not(self.contains_liveqcm(liveqcm)):
+            add_line_to_file(self.save_file, liveqcm.get_registering_line())
+            self.liveqcm_array.append(liveqcm)
+            return True
+        else:
+            return False
+    
+    def get_all_liveqcm(self) -> list:
+        return self.liveqcm_array
+    
+    def get_liveqcm_from_user(self, email: str) -> list:
+        result = []
+        for liveqcm in self.liveqcm_array:
+            if liveqcm.owner_email == email:
+                result.append(liveqcm)
+        return result
+    
+    def get_liveqcm_by_id(self, id: str) -> LiveQCM:
+        for liveqcm in self.liveqcm_array:
+            if liveqcm.id == id:
+                return liveqcm
+        return None
+
+    def remove_liveqcm_by_id(self, id: str) -> bool:
+        if self.contains_id(id):
+            self.liveqcm_array.remove(self.get_liveqcm_by_id(id))
+            remove_lines_which_contains(self.save_file, string=id)
+            return True
+        else:
+            return False
+    
+    def remove_liveqcm(self, liveqcm: LiveQCM) -> bool:
+        if self.contains_liveqcm(liveqcm):
+            self.liveqcm_array.remove(liveqcm)
+            remove_lines_which_contains(self.save_file, string=liveqcm.id)
+            return True
+        else:
+            return False
 
 def init():
     global teachers_data
@@ -259,3 +345,5 @@ def init():
     statements_data = StatementsData()
     global qcm_data
     qcm_data = QCMData(statements_data=statements_data)
+    global liveqcm_data
+    liveqcm_data = LiveQCMData(statements_data=statements_data)
