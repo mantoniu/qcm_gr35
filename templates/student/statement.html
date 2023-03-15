@@ -37,7 +37,6 @@
         </div> 
     </div>  
     <div class="body-card">  
-        <form id="response" onsubmit="event.preventDefault();">
             <div class="content" id="content-response">  
                 <input id="count" type="hidden" name="count" value="1">  
                 <div class="list-response" id="list-response"> 
@@ -48,7 +47,11 @@
                         <div class="response">
                             <div class="switch">  
                                 <label class="switch">
+                                    {% if stopped %}
+                                    <input type="checkbox" onclick="return false;" name="{{ "switch" + i|string }}" id="{{ "switch" + i|string }}">
+                                    {% else %}
                                     <input type="checkbox" name="{{ "switch" + i|string }}" id="{{ "switch" + i|string }}">
+                                    {% endif %}
                                     <span class="slider round"></span>  
                                 </label>  
                             </div>  
@@ -59,35 +62,56 @@
             </div>  
                 </div>  
                 <div class="card-navbar">  
-                    <button class="animation" type="submit" id="valider">Valider</button>
+                    {% if stopped %}
+                    <button class="animation" type="button" id="valider" onclick="alert('Vous ne pouvez pas répondre pour le moment')">Valider</button>
+                    {% else %}
+                    <button class="animation" type="button" id="valider" onclick="send_response()">Valider</button>
+                    {% endif %}
+                    
                 </div>  
             </div>
-        </form>
     </div>
 </div>
 <script>
 
 socket.emit('studentjoin',"{{ liveqcmid }}");
 
-$(document).ready(function(){
-    $("#response").submit(function(){
+function send_response(){
         response_list = []
         for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
+            $('#switch'+i).attr("onclick","return false;");
             if($('#switch'+i).is(":checked")){
                 response_list.push(i)
+                console.log(response_list)
             }
         }
         socket.emit("newresponse",response_list,"{{liveqcmid}}");
-    });
-});
+}
 
 socket.on('response_success',(success)=>{
     console.log(success);
     if(success) alert('Réponse envoyée avec succès !');
     else alert('Vous avez déjà répondu au questionnaire ! ');
+});
+
+socket.on('stop_question',()=>{
+    console.log('stop')
+    $('#valider').attr("onclick","alert('Vous ne pouvez pas répondre pour le moment');");
+    for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
+        $('#switch'+i).attr("onclick","return false;");
+    }
+    
+});
+
+socket.on('unstop_question',()=>{
+    console.log('test');
+    $('#valider').attr("onclick","send_response()");
+    for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
+        $('#switch'+i).attr("onclick","");
+    }
 })
 
-socket.emit("sidtest");
+
 
 </script>
 </body>

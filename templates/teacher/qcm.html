@@ -4,11 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="../static/css/utilities/header.css" >
-    <link rel="stylesheet" type="text/css" href="../static/css/qcm.css" >
-    <link rel="stylesheet" type="text/css" href="../static/css/utilities/list.css" >
-    <link rel="stylesheet" href="/static/css/card/card-style.css">
+    <title>Question</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
@@ -16,48 +12,159 @@
     <script type="text/javascript" src="/static/js/math-rendering.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/js/script.js"></script>
-</head>
+    <script type="text/javascript" src="../static/js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../static/css/utilities/header.css" >
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../../static/css/card/card-style.css">
+    <script>
+        socket = io();
+        socket.connect('http://127.0.0.1:5000/')
+    </script>
+</head>    
 <body>
+
+
 <header>
-    <ul>
-      <li><a href="/">Accueil</a></li>
-      <li><a href="/my_qcm">Mes QCM</a></li>
-      <li><a href="/my_states">Mes énoncés</a></li>
-      <li><a href="/qcm">Liste des QCM</a></li>
-      <li><a href="/logout">Déconnexion</a></li>
-    </ul>
+        <ul>
+          <li><a href="/">Accueil</a></li>
+          <li><a href="/my_qcm">Mes QCM</a></li>
+          <li><a href="/my_states">Mes énoncés</a></li>
+          <li><a href="/qcm">Liste des QCM</a></li>
+          <li><a href="/logout">Déconnexion</a></li>
+        </ul>
 </header>
-<h1> {{ qcm.name }}</h1>
-{% for statement in qcm.statements %}
-<div class="card"> 
+    
+<style>
+    .card{
+        margin-left: 0px;
+    }
+</style>
+<h1> Nom du Qcm : {{ qcm.name }}</h1>
+<h2 id ='liveqcm_id'></h2>  
+<div class="card" id="card" value="{{ statement.id }}"> 
     <div class="header-card" id="header">   
         <div class="translation" id="translation">  
-            {{ statement.get_state()|safe }}
+                    {{ statement.get_state()|safe }}
         </div> 
     </div>  
-    <div class="body-card">  
+    <div class="body-card" >  
         <div class="content" id="content-response">  
             <input id="count" type="hidden" name="count" value="1">  
-            <div class="list-response" id="list-response">  
+            <div class="list-response" id="list-response"> 
+            {% if statement.decimal %} 
+            <p id="decimalresponse" class="textarea-response" style="display: none;"> {{ statement.possibles_responses[0] }}</p>
+            {% else %}  
                 {% for i in range (0,statement.possibles_responses|length) %}
-                <div class="response">  
-                    <div class="switch">  
-                        <label id="{{ "switch" + i|string }}" class="switch">
-                            <input type="checkbox" name="{{ "switch" + i|string }}" id="{{ "switch" + i|string }}">
-                            <span class="slider round"></span>  
-                        </label>  
-                    </div>  
-                    <p class="textarea-response"> {{ statement.possibles_responses[i] }}</p>
-                </div>
+                    <div class="response">
+                        <div class="switch">  
+                            <label id="{{ "switch" + i|string }}" class="switch">
+                                {% if i in statement.valids_responses %}
+                                <input onclick="return false;" type="checkbox" name="{{ "switch" + i|string }}" id="valid">
+                                {% else %}
+                                <input onclick="return false;" type="checkbox" name="{{ "switch" + i|string }}" id="{{ "switch" + i|string }}">
+                                {% endif %}
+                                <span class="slider round"></span>  
+                            </label>  
+                        </div>  
+                        <p class="textarea-response"> {{ statement.possibles_responses[i] }}</p>
+                    </div>
+                    <progress class="progress_bar" id="{{ "progress" + i|string }}" value="0" max="0" hidden></progress>
                 {% endfor %}
-        </div>  
-    </div>  
-        <div class="card-navbar">  
-            <button class="animation" type="submit" id="ajouter">Valider</button>  
-        </div>  
+            {% endif %}
+            
+        </div>
+            <p id ='student_count'>Connectés : 0</p>
+            <p id ='response_count'>Réponses : 0</p>  
+            </div>  
+            <div class="card-navbar">  
+                <button class="animation" type="submit" id="stop" onclick="stop(liveqcm_id)" hidden>Désactiver les réponses</button>
+                <button class="animation" type="submit" id="project" onclick="projection('{{ qcm.id }}')">Projeter le qcm</button>
+                <button class="animation" type="submit" id="correction" onclick="correction()">Correction</button>
+                {% if not(final) %}
+                <button class="animation" id="nextquestion" onclick="nextquestion()">Suivant</button>
+                {% endif %}
+            </div>  
     </div>  
 </div> 
-{% endfor %}
+<script>
+
+var liveqcm_id = 0
+
+function nextquestion(){
+    statement_number = parseInt("{{statement_number}}")
+    statement_number ++;
+    window.location.replace("/qcm/"+"{{ qcm.id }}"+"/"+statement_number);
+}
+
+
+function correction(){
+    if(!{{ statement.decimal|tojson }}){
+        if($('input#valid').is(':checked')) $('input#valid').prop('checked',false);
+        else $('input#valid').prop('checked',true);
+    }
+    else{
+        if($('#decimalresponse').is(':hidden')) $('#decimalresponse').css('display','flex');
+        else $('#decimalresponse').css('display','none');
+    }
+}
+
+function projection(id){
+    $('#project').html("Stopper la projection");
+    $('#project').attr('onclick','stop_projection("{{ statement.id }}")')
+    $('#stop').css("display","flex");
+    socket.emit('project',id)
+}
+
+
+function stop(){
+    socket.emit('stop_question',liveqcm_id);
+    $('#stop').html("Activer réponses");
+    $('#stop').attr('onclick','unstop(liveqcm_id)');
+}
+
+function unstop(){
+    socket.emit('unstop_question',liveqcm_id)
+    $('#stop').html("Désactiver réponses");
+    $('#stop').attr('onclick','stop(liveqcm_id)');
+}
+
+function stop_projection(){
+    $('#project').html("Projeter la question");
+    $('#project').attr('onclick','projection("{{ statement.id }}")');
+    $('#liveqcm_id').text("");
+    $('#stop').css('display','none');
+    $('#stop').html("Désactiver réponses");
+    $('#stop').attr('onclick','stop(liveqcm_id)');
+    socket.emit('stop',liveqcm_id);
+}
+
+socket.on('liveqcmid',(id)=>{
+    liveqcm_id = id;
+    $('#liveqcm_id').text("ID du questionnaire : "+id);
+})
+
+
+socket.on('project',(liveqcmid)=>{
+    $('#liveqcm_id').text("Identifiant du questionnaire : "+liveqcmid);
+})
+
+socket.on('response',(data)=>{
+    console.log(data);
+    count_list = data.responses_count
+    for(let i=0;i<count_list.length;i++){
+        $('#progress'+i).val(count_list[i]);
+    }
+    $('#response_count').html("Réponses : "+data.count);
+});
+
+
+socket.on('count',(count)=>{
+    console.log(count)
+    $('#student_count').text("Nombre d'étudiants : "+count);
+    $('.progress_bar').css("display","flex");
+    $('.progress_bar').attr('max',count);
+})
+
+</script>
 </body>
 </html>

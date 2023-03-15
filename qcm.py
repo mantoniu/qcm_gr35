@@ -118,11 +118,15 @@ class LiveQCM():
         self.opened = opened
 
     def has_responded(self, student_email: str) -> bool:
-        return student_email in self.students_responses[self.statement_index]
+        students_dic = self.students_responses[self.statement_index]
+        return student_email in students_dic and students_dic[student_email] != []
 
     def respond(self, student_email: str, responses: list) -> bool :
         if not(self.paused):
+            print("1\n",student_email in self.students_email)
+            print("1\n",self.has_responded(student_email))
             if student_email in self.students_email and not(self.has_responded(student_email)):
+                print("2 \n")
                 self.students_responses[self.statement_index][student_email] = responses
                 return True
             else:
@@ -153,7 +157,11 @@ class LiveQCM():
             for responses in one_student_responses_tab:
                 responses_count[responses] += 1
         return responses_count
-    
+
+    def get_total_responses_count(self) -> int:
+        return len(self.students_responses[self.statement_index])
+
+
     def pause(self) -> bool:
         if not(self.paused):
             self.paused = True

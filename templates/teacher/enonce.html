@@ -78,11 +78,8 @@
             </div>  
             <div class="card-navbar">  
                 <a href="{{ "edit/" + statement.id|string }}" style="display: contents;"><button class="animation" type="submit" id="ajouter">Editer l'énoncé</button></a> 
-                {% if projected %}
-                <button class="animation" type="submit" id="project" onclick="stop()">Stopper la projection</button>
-                {% else %}
+                <button class="animation" type="submit" id="stop" onclick="stop(liveqcm_id)" hidden>Désactiver les réponses</button>
                 <button class="animation" type="submit" id="project" onclick="projection('{{ statement.id }}')">Projeter la question</button>
-                {% endif %}
                 <button class="animation" type="submit" id="correction" onclick="correction()">Correction</button>
             </div>  
     </div>  
@@ -103,16 +100,32 @@ function correction(){
 }
 
 function projection(id){
-    owner = socket.id
     $('#project').html("Stopper la projection");
-    $('#project').attr('onclick','stop("{{ statement.id }}")')
-    socket.emit('project',id,owner)
+    $('#project').attr('onclick','stop_projection("{{ statement.id }}")')
+    $('#stop').css("display","flex");
+    socket.emit('project',id)
 }
 
+
 function stop(){
+    socket.emit('stop_question',liveqcm_id);
+    $('#stop').html("Activer réponses");
+    $('#stop').attr('onclick','unstop(liveqcm_id)');
+}
+
+function unstop(){
+    socket.emit('unstop_question',liveqcm_id)
+    $('#stop').html("Désactiver réponses");
+    $('#stop').attr('onclick','stop(liveqcm_id)');
+}
+
+function stop_projection(){
     $('#project').html("Projeter la question");
     $('#project').attr('onclick','projection("{{ statement.id }}")');
     $('#liveqcm_id').text("");
+    $('#stop').css('display','none');
+    $('#stop').html("Désactiver réponses");
+    $('#stop').attr('onclick','stop(liveqcm_id)');
     socket.emit('stop',liveqcm_id);
 }
 
@@ -126,7 +139,13 @@ socket.on('project',(liveqcmid)=>{
     $('#liveqcm_id').text("Identifiant du questionnaire : "+liveqcmid);
 })
 
-socket.on('response',()=>{
+socket.on('response',(data)=>{
+    console.log(data);
+    count_list = data.responses_count
+    for(let i=0;i<count_list.length;i++){
+        $('#progress'+i).val(count_list[i]);
+    }
+    $('#response_count').html("Réponses : "+data.count);
 });
 
 

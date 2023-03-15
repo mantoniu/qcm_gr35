@@ -35,21 +35,15 @@
 </form>
 <div id="content">
     <form method="POST" action="/newqcm" id="newqcm">
-    <ul>
-        {% for statement in my_states_array %}
-            <li><input name="{{ statement.id }}" type="checkbox" id="{{ statement.id }}">
-            <label for="{{ statement.id }}"><a href="{{ "statement/" + statement.id }}">{{ statement.name }}</a><a href="{{ "statement/delete/" + statement.id|string }}"><button type="button">Supprimer</button></a></label></li>
-        {% endfor %}
-    </ul>
-    <button type="button" id="button-create-qcm">Creer un Questionnaire</button>
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-                <div id="qcm">Titre du QCM : <input type="text" name="qcm_title" id="qcm_title"></div><br/><br/>
-            <input id="button-create-qcm" type="submit" value="Valider">
-        </div>
-      </div>
-
+        <ul>
+            {% for statement in my_states_array %}
+                <li><input name="{{ statement.id }}" type="checkbox" id="{{ statement.id }}">
+                <label for="{{ statement.id }}"><a href="{{ "statement/" + statement.id }}">{{ statement.name }}</a><a href="{{ "statement/delete/" + statement.id|string }}"><button type="button">Supprimer</button></a></label></li>
+            {% endfor %}
+        </ul>
+        <button type="submit" id="button-create-qcm" >Creer un Questionnaire</button>
+        <div id="qcm">Titre du QCM : <input type="text" name="qcm_title" id="qcm_title"></div><br/><br/>
+        <input id="button-create-qcm" type="submit" value="Valider">
     </form>
     <br/>
     <a href="/create">

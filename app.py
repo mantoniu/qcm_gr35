@@ -7,7 +7,7 @@ from qcm import *
 import markdown as md
 from utilities import read_file
 from flask_session import Session
-from flask_socketio import SocketIO, join_room, leave_room, emit
+from flask_socketio import SocketIO, join_room, leave_room, emit,rooms
 from werkzeug.utils import secure_filename
 import os
 
@@ -98,7 +98,7 @@ def joined_statement(id):
       if is_logged("student"):
             if id in projected_qcmid:
                   liveqcm = saving.liveqcm_data.get_liveqcm_by_id(id)
-                  return render_template("/student/statement.html",statement=liveqcm.statements[0],liveqcmid=id)
+                  return render_template("/student/statement.html",statement=liveqcm.get_current_statement(),liveqcmid=id,stopped=liveqcm.is_paused())
       return redirect('/student')
 
 
@@ -199,13 +199,6 @@ def my_states():
       else:
             return redirect('/')
 
-# Renvoi les informations d'un qcm pour l'afficher
-@app.route('/qcm')
-def qcm():
-      if is_logged("teacher"):
-            return render_template('/teacher/qcm_list.html', qcm_array=saving.qcm_data.get_all_qcm())
-      else:
-            return redirect('/')
 
 # Creation d'un nouvel énoncé (submit formulaire)
 @app.route('/newstate',methods=['POST'])
@@ -250,9 +243,18 @@ def statement(id):
       return render_template("/teacher/enonce.html",statement=statement)   
       
 # Renvoi de l'affichage du qcm correspondant
-@app.route('/qcm/<id>')
-def qcm_id(id):
-      return render_template("/teacher/qcm.html",qcm=saving.qcm_data.get_qcm_by_id(id)) 
+@app.route('/qcm/<id>/<statement_number>')
+def qcm_id(id,statement_number):
+      qcm = saving.qcm_data.get_qcm_by_id(id)
+      statement_number = int(statement_number)
+      if statement_number+2 <= len(qcm.statements):
+            current_statement = qcm.statements[statement_number]
+            return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=False) 
+      elif statement_number == len(qcm.statements):
+            return redirect('/my_qcm')
+      else:
+            current_statement = qcm.statements[statement_number]
+            return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=True)
 
 # Renvoi la conversion html du markdown 
 @app.route('/preview',methods=['POST','GET'])
@@ -310,7 +312,7 @@ def disconnection():
 
 
 @socket.on('project')
-def project(id,owner_sid):
+def project(id):
       global projected_qcmid
       liveqcm = None
       # Question simple
@@ -318,16 +320,13 @@ def project(id,owner_sid):
             statements = [saving.statements_data.get_statement_by_id(id)]
       elif saving.qcm_data.contains_id(id):
             statements = saving.qcm_data.get_qcm_by_id(id).statements
-      else:
-            print('Id not exist')
-            return 
-
-      liveqcm = LiveQCM(owner_email=session['email'], statements=statements, owner_sid=owner_sid)
+      liveqcm = LiveQCM(owner_email=session['email'], statements=statements)
+      join_room(liveqcm.id+"/teacher")
       saving.liveqcm_data.add_liveqcm(liveqcm)
 
       projected_qcmid.append(liveqcm.id)
       print(projected_qcmid)
-      socket.emit('liveqcmid',liveqcm.id)
+      socket.emit('liveqcmid',liveqcm.id,to=liveqcm.id+"/teacher")
 
 @socket.on('stop')
 def stop(liveqcm_id):
@@ -343,7 +342,7 @@ def response(response_list,liveqcmid):
       success = liveqcm.respond(student_email,response_list)
       socket.emit('response_success',success)
       if success:
-            socket.emit('response',"pnj",to=liveqcm.owner_sid)
+            socket.emit('response',{"responses_count":liveqcm.get_responses_count(),"count":liveqcm.get_total_responses_count()},to=liveqcm.id+"/teacher")
 
 
 @socket.on('liveqcm_join')
@@ -351,15 +350,28 @@ def liveqcm_join(qcmid):
       global projected_qcmid
       print(projected_qcmid,qcmid)
       not_found = qcmid not in projected_qcmid
-      socket.emit('liveqcm_join',{"not_found":not_found,"qcmid":qcmid})
+      socket.emit('liveqcm_join',{"not_found":not_found,"qcmid":qcmid},to=request.sid)
 
 @socket.on('studentjoin')
 def student_join(qcmid):
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(qcmid)
-      if session['email'] not in liveqcm.get_students():
-            print(request.sid)
-            liveqcm.student_join(session['email'], request.sid)
-            socket.emit('count',liveqcm.get_students_count(),to=liveqcm.owner_sid)
+      join_room(qcmid)
+      liveqcm.student_join(session['email'])
+      socket.emit('count',liveqcm.get_students_count(),to=liveqcm.id+"/teacher")
+
+@socket.on('stop_question')
+def stop_question(liveqcm_id):
+      liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcm_id)
+      liveqcm.pause()
+      socket.emit('stop_question',to=liveqcm_id)
+
+@socket.on('unstop_question')
+def unstop_question(liveqcm_id):
+      liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcm_id)
+      liveqcm.resume()
+      socket.emit('unstop_question',to=liveqcm_id)
+
+print(saving.liveqcm_data.get_all_liveqcm())
 
 if __name__ == '__main__':
       socket.run(app)
