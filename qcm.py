@@ -174,6 +174,9 @@ class LiveQCM():
         else:
             self.paused = True
         return self.paused
+    
+    def is_paused(self) -> bool:
+        return self.paused
 
     def generate_id(self) -> str:
         self.id = hash(str(uuid4()))[:8]
