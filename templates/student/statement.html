@@ -67,6 +67,8 @@
 </div>
 <script>
 
+socket.emit('studentjoin',"{{ liveqcmid }}");
+
 $(document).ready(function(){
     $("#response").submit(function(){
         response_list = []
@@ -75,9 +77,17 @@ $(document).ready(function(){
                 response_list.push(i)
             }
         }
-        socket.emit("newresponse",response_list);
+        socket.emit("newresponse",response_list,"{{liveqcmid}}");
     });
 });
+
+socket.on('response_success',(success)=>{
+    console.log(success);
+    if(success) alert('Réponse envoyée avec succès !');
+    else alert('Vous avez déjà répondu au questionnaire ! ');
+})
+
+socket.emit("sidtest");
 
 </script>
 </body>

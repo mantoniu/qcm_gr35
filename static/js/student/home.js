@@ -1,18 +1,17 @@
 $(document).ready(function(){
     $("#join").submit(function(){
-        $.ajax({
-            data : { id : $("#id").val()},
-            type : 'POST', 
-            url : '/student/join', 
-            success: function (data) { 
-                if(data.not_found){
-                    alert("Aucun questionnaire n'a été trouvé !");
-                }
-                else{
-                    window.location.replace("/student/question/"+$("#id").val());
-                }
-            },
-            error: function (e) { console.log('Erreur') }
-          }); 
+        socket.emit('liveqcm_join',$("#id").val())
     });
+});
+
+
+
+socket.on('liveqcm_join',(data)=>{
+    console.log(data);
+    if(data.not_found) alert("Aucun questionnaire n'a été trouvé !");
+    else{
+        console.log("test")
+        console.log("/student/question/"+data.qcmid)
+        window.location.replace("/student/question/"+data.qcmid);
+    }
 });

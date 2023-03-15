@@ -112,7 +112,7 @@ class LiveQCM():
         self.statements = statements
         self.statements_len = len(statements)
         self.connected_sockets_ids = {}
-        self.students_responses = []
+        self.students_responses = [{}]
         self.statement_index = 0
         if id == None:
             self.generate_id()
@@ -121,11 +121,11 @@ class LiveQCM():
         self.opened = opened
 
     def has_responded(self, student_email: str) -> bool:
-        return student_email in self.students_responses[self.question_index]
+        return student_email in self.students_responses[self.statement_index]
 
     def respond(self, student_email: str, responses: list) -> bool :
         if student_email in self.get_students() and not(self.has_responded(student_email)):
-            self.students_responses[self.question_index][student_email] = responses
+            self.students_responses[self.statement_index][student_email] = responses
             return True
         else:
             return False
@@ -155,10 +155,11 @@ class LiveQCM():
         if self.question_index >= self.statements_len:
             self.end()
             return True
+        self.students_responses.append({})
         return False
 
     def get_students(self) -> list:
-        return self.connected_sockets_ids.values()
+        return list(self.connected_sockets_ids.values())
     
     def get_students_count(self) -> int:
         return len(self.connected_sockets_ids)

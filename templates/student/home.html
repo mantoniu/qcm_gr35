@@ -8,6 +8,11 @@
     <link rel="stylesheet" type="text/css" href="../static/css/index/styles.css" />
     <link rel="stylesheet" type="text/css" href="../static/css/utilities/header.css"></link>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+    <script>
+        socket = io();
+        socket.connect('http://127.0.0.1:5000/');
+    </script>    
     <script type="text/javascript" src="../static/js/student/home.js"></script>
 </head>
 <body>
@@ -15,7 +20,7 @@
         <ul>
           <li><a href="/student">Accueil</a></li>
           <li><a href="/student/myaccount">Mon compte</a></li>
-          <li><a href="/student/logout">Déconnexion</a></li>
+          <li><a href="/stucommencédent/logout">Déconnexion</a></li>
         </ul>
 </header>
 <div class="column">

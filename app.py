@@ -14,16 +14,10 @@ import os
 
 # Liste des questions projetées
 
-global projected_qcmid,count,students,owner
+global projected_qcmid
 
 projected_qcmid = []
 
-
-# A mettre dans un objet
-
-count = 0
-students = []
-owner = 0
 
 # Initialisation
 app = Flask(__name__)
@@ -100,23 +94,14 @@ def student_account():
 
 @app.route('/student/question/<id>')
 def joined_statement(id):
-      global count,students,projected_qcmid
+      global projected_qcmid
       if is_logged("student"):
             if id in projected_qcmid:
-                  student = saving.students_data.get_user_by_email(session['email'])
-                  if student not in students:
-                        count +=1    
-                        socket.emit('count',count,to=owner)
-                  print(saving.liveqcm_data.get_liveqcm_by_id(id))
-                  return render_template("/student/statement.html",statement=(saving.liveqcm_data.get_liveqcm_by_id(id)).statements[0])
+                  liveqcm = saving.liveqcm_data.get_liveqcm_by_id(id)
+                  return render_template("/student/statement.html",statement=liveqcm.statements[0],liveqcmid=id)
       return redirect('/student')
 
 
-@app.route('/student/join/',methods = ['POST'])
-def student_join():
-      id = request.form['id']
-      not_found = id not in projected_qcmid
-      return {"not_found":not_found}
 
 # Changement de mot de passe
 
@@ -341,9 +326,8 @@ def project(id,owner_sid):
       saving.liveqcm_data.add_liveqcm(liveqcm)
 
       projected_qcmid.append(liveqcm.id)
+      print(projected_qcmid)
       socket.emit('liveqcmid',liveqcm.id)
-
-      print(projected_qcmid,owner)
 
 @socket.on('stop')
 def stop(liveqcm_id):
@@ -353,10 +337,29 @@ def stop(liveqcm_id):
             projected_qcmid.remove(liveqcm_id)
 
 @socket.on('newresponse')
-def response(response_list):
+def response(response_list,liveqcmid):
       student_email = session['email']
-      student = saving.students_data.get_user_by_email(student_email)
-      print(response_list,student.firstname)
+      liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcmid)
+      success = liveqcm.respond(student_email,response_list)
+      socket.emit('response_success',success)
+      if success:
+            socket.emit('response',"pnj",to=liveqcm.owner_sid)
+
+
+@socket.on('liveqcm_join')
+def liveqcm_join(qcmid):
+      global projected_qcmid
+      print(projected_qcmid,qcmid)
+      not_found = qcmid not in projected_qcmid
+      socket.emit('liveqcm_join',{"not_found":not_found,"qcmid":qcmid})
+
+@socket.on('studentjoin')
+def student_join(qcmid):
+      liveqcm = saving.liveqcm_data.get_liveqcm_by_id(qcmid)
+      if session['email'] not in liveqcm.get_students():
+            print(request.sid)
+            liveqcm.student_join(session['email'], request.sid)
+            socket.emit('count',liveqcm.get_students_count(),to=liveqcm.owner_sid)
 
 if __name__ == '__main__':
       socket.run(app)
