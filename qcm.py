@@ -103,14 +103,14 @@ class QCM:
       return False
 
 class LiveQCM():
-    def __init__(self, owner_email: str, statements: list, id: str = None, opened: bool = True, owner_sid: str = None) -> None:
+    def __init__(self, owner_email: str, statements: list, id: str = None, opened: bool = True) -> None:
         self.owner_email = owner_email
-        self.owner_sid = owner_sid
         self.statements = statements
         self.statements_len = len(statements)
-        self.connected_sockets_ids = {}
+        self.students_email = []
         self.students_responses = [{}]
         self.statement_index = 0
+        self.paused = False
         if id == None:
             self.generate_id()
         else:
@@ -121,9 +121,12 @@ class LiveQCM():
         return student_email in self.students_responses[self.statement_index]
 
     def respond(self, student_email: str, responses: list) -> bool :
-        if student_email in self.get_students() and not(self.has_responded(student_email)):
-            self.students_responses[self.statement_index][student_email] = responses
-            return True
+        if not(self.paused):
+            if student_email in self.students_email and not(self.has_responded(student_email)):
+                self.students_responses[self.statement_index][student_email] = responses
+                return True
+            else:
+                return False
         else:
             return False
     
@@ -150,6 +153,20 @@ class LiveQCM():
             for responses in one_student_responses_tab:
                 responses_count[responses] += 1
         return responses_count
+    
+    def pause(self) -> bool:
+        if not(self.paused):
+            self.paused = True
+            return True
+        else:
+            return False
+    
+    def resume(self) -> bool:
+        if self.paused:
+            self.paused = False
+            return True
+        else:
+            return False
 
     def generate_id(self) -> str:
         self.id = hash(str(uuid4()))[:8]
@@ -168,7 +185,7 @@ class LiveQCM():
     def next_statement(self) -> bool:
         current_students_responses = self.students_responses[self.statement_index]
         students_who_responded = list(current_students_responses.keys())
-        for students_email in self.get_students():
+        for students_email in self.students_email:
             if not(students_email in students_who_responded):
                 current_students_responses[students_email] = []
 
@@ -178,39 +195,26 @@ class LiveQCM():
             return True
         self.students_responses.append({})
         return False
-
-    def get_students(self) -> list:
-        return list(self.connected_sockets_ids.keys())
     
     def get_students_count(self) -> int:
-        return len(self.connected_sockets_ids)
+        return len(self.students_email)
     
-    def update_sid(self, student_email: str, new_sid : str) -> bool:
-        if student_email in self.connected_sockets_ids:
-            self.connected_sockets_ids[student_email] = new_sid
-            return True
-        else:
-            self.connected_sockets_ids[student_email] = new_sid
-            return False
-    
-    def student_join(self, student_email: str, socket_id: str) -> bool:
-        if not(student_email in self.get_students()):
-            self.connected_sockets_ids[socket_id] = student_email
+    def student_join(self, email: str) -> bool:
+        if not(email in self.students_email):
+            self.students_email.append(email)
             for students_dic in self.students_responses:
-                if not(student_email in students_dic):
-                    students_dic[student_email] = []
+                if not(email in students_dic):
+                    students_dic[email] = []
             return True
         else:
             return False
 
-    def student_leave(self, student_email: str) -> str:
-        if student_email in self.get_students():
-            for keys in self.connected_sockets_ids:
-                if keys == student_email:
-                    return self.connected_sockets_ids.pop(keys)
-            return None
+    def student_leave(self, email: str) -> bool:
+        if email in self.students_email:
+            self.students_email.remove(email)
+            return True
         else:
-            return None
+            return False
     
     def get_registering_line(self) -> list:
         line_to_add = [self.id, self.owner_email]
