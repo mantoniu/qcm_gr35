@@ -74,7 +74,13 @@
 </div>
 <script>
 
-socket.emit('studentjoin',"{{ liveqcmid }}");
+
+function student_join(){
+    console.log("SALEM KADER")
+    socket.emit('studentjoin',"{{ liveqcmid }}");
+}
+
+window.onload = student_join;
 
 function send_response(){
         response_list = []
@@ -111,7 +117,9 @@ socket.on('unstop_question',()=>{
     }
 })
 
-
+socket.on('nextquestion',()=>{
+    window.location.reload();
+});
 
 </script>
 </body>

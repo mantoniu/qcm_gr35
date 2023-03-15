@@ -371,7 +371,16 @@ def unstop_question(liveqcm_id):
       liveqcm.resume()
       socket.emit('unstop_question',to=liveqcm_id)
 
-print(saving.liveqcm_data.get_all_liveqcm())
+@socket.on('nextquestion')
+def next_question(liveqcm_id):
+      qcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcm_id)
+      qcm.next_statement()
+      socket.emit('nextquestion',to=liveqcm_id)
+
+@socket.on('owner')
+def refresh_owner(liveqcm_id):
+      print('\n',request.sid)
+      join_room(liveqcm_id+"/teacher")
 
 if __name__ == '__main__':
       socket.run(app)
