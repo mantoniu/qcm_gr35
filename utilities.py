@@ -3,11 +3,8 @@ from hashlib import md5
 from os import mkdir, path, stat
 import pickle
 
-global line_separator
 line_separator = "@__|||1S"
-global row_separator
 row_separator = "@__|||2S"
-global csv_delimiter
 csv_delimiter = ","
 
 def hash(word: str) -> str:

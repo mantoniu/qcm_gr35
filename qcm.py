@@ -103,12 +103,11 @@ class QCM:
       return False
 
 class LiveQCM():
-    def __init__(self, owner_email: str, statements: list, id: str = None, opened: bool = True) -> None:
+    def __init__(self, owner_email: str, statements: list, id: str = None, stats: list = [{}], opened: bool = True) -> None:
         self.owner_email = owner_email
         self.statements = statements
-        self.statements_len = len(statements)
         self.students_email = []
-        self.students_responses = [{}]
+        self.students_responses = stats
         self.statement_index = 0
         self.paused = False
         if id == None:
@@ -191,6 +190,9 @@ class LiveQCM():
     
     def get_current_statement(self) -> Statement:
         return self.statements[self.statement_index]
+    
+    def get_statements_len(self) -> int:
+        return len(self.statements)
 
     def next_statement(self) -> bool:
         current_students_responses = self.students_responses[self.statement_index]
@@ -200,7 +202,7 @@ class LiveQCM():
                 current_students_responses[students_email] = []
 
         self.statement_index = self.statement_index + 1
-        if self.statement_index >= self.statements_len:
+        if self.statement_index >= self.get_statements_len():
             self.end()
             return True
         self.students_responses.append({})
@@ -228,8 +230,23 @@ class LiveQCM():
     
     def get_registering_line(self) -> list:
         line_to_add = [self.id, self.owner_email]
-        for statement in self.statements:
-            line_to_add.append(statement.id)
+        statements_str = self.statements[0].id
+        for i in range(1, self.get_statements_len()):
+            statements_str += ";" + self.statements[i].id
+        line_to_add.append(statements_str)
+        for statements_dic in self.students_responses:
+            row_to_add = ""
+            for keys in statements_dic:
+                row_to_add += keys + ":"
+                if len(statements_dic[keys]) > 0:
+                    row_to_add += str(statements_dic[keys][0])
+                    for i in range(1, len(statements_dic[keys])):
+                        row_to_add += ";" + str(str(statements_dic[keys][i]))
+                row_to_add += ","
+            row_to_add = row_to_add[:-1]
+            line_to_add.append(row_to_add)
+            
+
         return line_to_add
 
     def __eq__(self, other_liveqcm : LiveQCM) -> bool:
