@@ -249,12 +249,10 @@ class LiveQCM():
                 if len(statements_dic[keys]) > 0:
                     row_to_add += str(statements_dic[keys][0])
                     for i in range(1, len(statements_dic[keys])):
-                        row_to_add += ";" + str(str(statements_dic[keys][i]))
+                        row_to_add += ";" + str(statements_dic[keys][i])
                 row_to_add += ","
             row_to_add = row_to_add[:-1]
             line_to_add.append(row_to_add)
-            
-
         return line_to_add
 
     def __eq__(self, other_liveqcm : LiveQCM) -> bool:
