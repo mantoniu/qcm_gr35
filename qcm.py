@@ -102,9 +102,6 @@ class QCM:
                 return True
       return False
 
-
-## Ajouter sauvegarde
-
 class LiveQCM():
     def __init__(self, owner_email: str, statements: list, id: str = None, opened: bool = True, owner_sid: str = None) -> None:
         self.owner_email = owner_email
@@ -139,6 +136,15 @@ class LiveQCM():
                 responses.append([])
         return responses
 
+    def get_responses_count(self) -> list:
+        responses_count = [0] * len(self.get_current_statement().possibles_responses)
+        current_responses_from_all_students = self.students_responses[self.statement_index]
+        for students_email in current_responses_from_all_students:
+            one_student_responses_tab = current_responses_from_all_students[students_email]
+            for responses in one_student_responses_tab:
+                responses_count[responses] += 1
+        return responses_count
+
     def generate_id(self) -> str:
         self.id = hash(str(uuid4()))[:8]
         return self.id
@@ -149,10 +155,13 @@ class LiveQCM():
             return True
         else:
             return False
+    
+    def get_current_statement(self) -> Statement:
+        return self.statements[self.statement_index]
 
-    def next_question(self) -> bool:
-        self.question_index = self.question_index + 1
-        if self.question_index >= self.statements_len:
+    def next_statement(self) -> bool:
+        self.statement_index = self.statement_index + 1
+        if self.statement_index >= self.statements_len:
             self.end()
             return True
         self.students_responses.append({})
