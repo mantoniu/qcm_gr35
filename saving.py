@@ -281,11 +281,19 @@ class LiveQCMData():
         self.liveqcm_array = []
         tab = read_file(self.save_file)
         for row in tab:
-            if len(row) > 3:
-                statements = []
-                for i in range(2, len(row)):
-                    statements.append(self.statements_data.get_statement_by_id(row[i]))
-                self.liveqcm_array.append(LiveQCM(id=row[0], owner_email=row[1], opened=False, statements=statements))
+            statements_ids = row[2].split(";")
+            statements = []
+            for ids in statements_ids:
+                statements.append(self.statements_data.get_statement_by_id(ids))
+            stats = []
+            for i in range(3, len(row)):
+                all_students_stats = {}
+                each_student_stats = row.split(",")
+                for one_student_stats in each_student_stats:
+                    email_responses = one_student_stats.split(":")
+                    all_students_stats[email_responses[0]] = list(map(str, email_responses[1].split(";")))
+                stats.append(all_students_stats)
+            self.liveqcm_array.append(LiveQCM(id=row[0], owner_email=row[1], statements=statements, stats=stats, opened=False))
     
     def contains_id(self, id: str):
         for liveqcm in self.liveqcm_array:
