@@ -185,6 +185,14 @@ class LiveQCM():
     def get_students_count(self) -> int:
         return len(self.connected_sockets_ids)
     
+    def update_sid(self, student_email: str, new_sid : str) -> bool:
+        if student_email in self.connected_sockets_ids:
+            self.connected_sockets_ids[student_email] = new_sid
+            return True
+        else:
+            self.connected_sockets_ids[student_email] = new_sid
+            return False
+    
     def student_join(self, student_email: str, socket_id: str) -> bool:
         if not(student_email in self.get_students()):
             self.connected_sockets_ids[socket_id] = student_email
