@@ -135,6 +135,12 @@ class LiveQCM():
             else:
                 responses.append([])
         return responses
+    
+    def get_current_responses_from_student_email(self, student_email: str) -> list:
+        if len(self.get_responses_from_student_email(student_email)) >= self.statement_index:
+            return self.get_responses_from_student_email(student_email)[self.statement_index]
+        else:
+            return []
 
     def get_responses_count(self) -> list:
         responses_count = [0] * len(self.get_current_statement().possibles_responses)
@@ -160,6 +166,12 @@ class LiveQCM():
         return self.statements[self.statement_index]
 
     def next_statement(self) -> bool:
+        current_students_responses = self.students_responses[self.statement_index]
+        students_who_responded = list(current_students_responses.keys())
+        for students_email in self.get_students():
+            if not(students_email in students_who_responded):
+                current_students_responses[students_email] = []
+
         self.statement_index = self.statement_index + 1
         if self.statement_index >= self.statements_len:
             self.end()
@@ -168,7 +180,7 @@ class LiveQCM():
         return False
 
     def get_students(self) -> list:
-        return list(self.connected_sockets_ids.values())
+        return list(self.connected_sockets_ids.keys())
     
     def get_students_count(self) -> int:
         return len(self.connected_sockets_ids)
@@ -176,6 +188,9 @@ class LiveQCM():
     def student_join(self, student_email: str, socket_id: str) -> bool:
         if not(student_email in self.get_students()):
             self.connected_sockets_ids[socket_id] = student_email
+            for students_dic in self.students_responses:
+                if not(student_email in students_dic):
+                    students_dic[student_email] = []
             return True
         else:
             return False
@@ -183,9 +198,8 @@ class LiveQCM():
     def student_leave(self, student_email: str) -> str:
         if student_email in self.get_students():
             for keys in self.connected_sockets_ids:
-                if self.connected_sockets_ids[keys] == student_email:
-                    self.connected_sockets_ids.pop(keys)
-                    return keys
+                if keys == student_email:
+                    return self.connected_sockets_ids.pop(keys)
             return None
         else:
             return None
