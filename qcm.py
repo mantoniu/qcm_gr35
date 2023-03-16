@@ -101,6 +101,10 @@ class QCM:
             if liveqcm.statements == self.statements:
                 return True
       return False
+    
+class Reponse():
+    def __init__(self) -> None:
+        pass
 
 class LiveQCM():
     def __init__(self, owner_email: str, statements: list, id: str = None, stats: list = [{}], opened: bool = True) -> None:
@@ -122,10 +126,7 @@ class LiveQCM():
 
     def respond(self, student_email: str, responses: list) -> bool :
         if not(self.paused):
-            print("1\n",student_email in self.students_email)
-            print("1\n",self.has_responded(student_email))
             if student_email in self.students_email and not(self.has_responded(student_email)):
-                print("2 \n")
                 self.students_responses[self.statement_index][student_email] = responses
                 return True
             else:
@@ -218,6 +219,12 @@ class LiveQCM():
     
     def get_students_count(self) -> int:
         return len(self.students_email)
+    
+    def contains_student(self, student_email: str) -> bool:
+        for elements in self.students_email:
+            if student_email == elements:
+                return True
+        return False
     
     def student_join(self, email: str) -> bool:
         if not(email in self.students_email):
