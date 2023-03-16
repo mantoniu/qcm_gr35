@@ -14,9 +14,10 @@ import os
 
 # Liste des questions projetées
 
-global projected_qcmid
+global projected_qcmid,owners
 
 projected_qcmid = []
+owners = {}
 
 
 # Initialisation
@@ -245,16 +246,17 @@ def statement(id):
 # Renvoi de l'affichage du qcm correspondant
 @app.route('/qcm/<id>/<statement_number>')
 def qcm_id(id,statement_number):
+      global owners
       qcm = saving.qcm_data.get_qcm_by_id(id)
       statement_number = int(statement_number)
       if statement_number+2 <= len(qcm.statements):
             current_statement = qcm.statements[statement_number]
-            return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=False) 
+            return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=False,projected=session['email'] in owners.keys()) 
       elif statement_number == len(qcm.statements):
             return redirect('/my_qcm')
       else:
             current_statement = qcm.statements[statement_number]
-            return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=True)
+            return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=True,projected=session['email'] in owners.keys())
 
 # Renvoi la conversion html du markdown 
 @app.route('/preview',methods=['POST','GET'])
@@ -308,25 +310,34 @@ def upload_file():
 
 @socket.on('disconnect')
 def disconnection():
-      print("ID déco",request.sid)
+      print('disconnected')
+      
 
+@socket.on('connect')
+def connection():
+      if session['email'] in owners.keys():
+            owners[session['email']] = request.sid
+            liveqcm = saving.liveqcm_data.get_liveqcm_by_owner_email(session['email'])
+            socket.emit('count',liveqcm.get_students_count(),to=owners[session['email']])
+            print("\n",request.sid,"\n")
 
 @socket.on('project')
 def project(id):
-      global projected_qcmid
+      global projected_qcmid,owners
       liveqcm = None
       # Question simple
       if saving.statements_data.contains_id(id):
             statements = [saving.statements_data.get_statement_by_id(id)]
+      # Séquence de question
       elif saving.qcm_data.contains_id(id):
             statements = saving.qcm_data.get_qcm_by_id(id).statements
       liveqcm = LiveQCM(owner_email=session['email'], statements=statements)
-      join_room(liveqcm.id+"/teacher")
+      owners[session['email']] = request.sid
       saving.liveqcm_data.add_liveqcm(liveqcm)
 
       projected_qcmid.append(liveqcm.id)
       print(projected_qcmid)
-      socket.emit('liveqcmid',liveqcm.id,to=liveqcm.id+"/teacher")
+      socket.emit('liveqcmid',liveqcm.id,to=owners[session['email']])
 
 @socket.on('stop')
 def stop(liveqcm_id):
@@ -337,12 +348,13 @@ def stop(liveqcm_id):
 
 @socket.on('newresponse')
 def response(response_list,liveqcmid):
+      global owners
       student_email = session['email']
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcmid)
       success = liveqcm.respond(student_email,response_list)
       socket.emit('response_success',success)
       if success:
-            socket.emit('response',{"responses_count":liveqcm.get_responses_count(),"count":liveqcm.get_total_responses_count()},to=liveqcm.id+"/teacher")
+            socket.emit('response',{"responses_count":liveqcm.get_responses_count(),"count":liveqcm.get_total_responses_count()},to=owners[session['email']])
 
 
 @socket.on('liveqcm_join')
@@ -357,7 +369,7 @@ def student_join(qcmid):
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(qcmid)
       join_room(qcmid)
       liveqcm.student_join(session['email'])
-      socket.emit('count',liveqcm.get_students_count(),to=liveqcm.id+"/teacher")
+      socket.emit('count',liveqcm.get_students_count(),to=owners[liveqcm.owner_email])
 
 @socket.on('stop_question')
 def stop_question(liveqcm_id):
@@ -373,14 +385,13 @@ def unstop_question(liveqcm_id):
 
 @socket.on('nextquestion')
 def next_question(liveqcm_id):
+      global owners
       qcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcm_id)
       qcm.next_statement()
       socket.emit('nextquestion',to=liveqcm_id)
+      print(owners[session['email']])
 
-@socket.on('owner')
-def refresh_owner(liveqcm_id):
-      print('\n',request.sid)
-      join_room(liveqcm_id+"/teacher")
+      socket.emit('count',liveqcm.get_students_count(),to=owners[session['email']])
 
 if __name__ == '__main__':
       socket.run(app)

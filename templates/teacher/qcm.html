@@ -12,13 +12,15 @@
     <script type="text/javascript" src="/static/js/math-rendering.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script type="text/javascript" src="../static/js/script.js"></script>
     <link rel="stylesheet" type="text/css" href="../../static/css/utilities/header.css" >
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../static/css/card/card-style.css">
     <script>
         socket = io();
         socket.connect('http://127.0.0.1:5000/')
+        socket.on('connect',()=>{
+            console.log(socket.id);
+        })
     </script>
 </head>    
 <body>
@@ -95,13 +97,12 @@
 
 var liveqcm_id = ""
 
-socket.emit('owner')
-
 function nextquestion(){
     statement_number = parseInt("{{statement_number}}")
     statement_number ++;
-    window.location.replace("/qcm/"+"{{ qcm.id }}"+"/"+statement_number);
     socket.emit('nextquestion',liveqcm_id)
+    window.location.replace("/qcm/"+"{{ qcm.id }}"+"/"+statement_number);
+    
 }
 
 function previous(){

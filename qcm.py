@@ -258,4 +258,7 @@ class LiveQCM():
         return line_to_add
 
     def __eq__(self, other_liveqcm : LiveQCM) -> bool:
-        return self.statements == other_liveqcm.statements
+        if other_liveqcm == None:
+            return False
+        else:
+            return self.statements == other_liveqcm.statements
