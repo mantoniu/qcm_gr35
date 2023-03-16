@@ -307,11 +307,14 @@ class LiveQCMData():
 
     def add_liveqcm(self, liveqcm: LiveQCM) -> bool:
         if not(self.contains_liveqcm(liveqcm)):
-            add_line_to_file(self.save_file, liveqcm.get_registering_line())
             self.liveqcm_array.append(liveqcm)
             return True
         else:
             return False
+    
+    def save_liveqcm_to_file(self, liveqcm: LiveQCM) -> None:
+        add_line_to_file(self.save_file, liveqcm.get_registering_line())
+        self.add_liveqcm(liveqcm)
     
     def get_all_liveqcm(self) -> list:
         return self.liveqcm_array
@@ -346,6 +349,12 @@ class LiveQCMData():
     def get_liveqcm_by_owner_email(self, email: str) -> LiveQCM:
         for liveqcm in self.liveqcm_array:
             if liveqcm.owner_email == email and liveqcm.opened:
+                return liveqcm
+        return None
+    
+    def get_liveqcm_by_student_email(self, student_email: str) -> LiveQCM:
+        for liveqcm in self.get_opened_liveqcm():
+            if liveqcm.contains_student(student_email):
                 return liveqcm
         return None
 
