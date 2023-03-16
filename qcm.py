@@ -261,7 +261,6 @@ class LiveQCM():
             row_to_add = row_to_add[:-1]
             line_to_add.append(row_to_add)
             
-
         return line_to_add
 
     def __eq__(self, other_liveqcm : LiveQCM) -> bool:

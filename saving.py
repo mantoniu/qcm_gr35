@@ -290,9 +290,13 @@ class LiveQCMData():
                 for i in range(3, len(row)):
                     all_students_stats = {}
                     each_student_stats = row[i].split(",")
+                    print(each_student_stats)
                     for one_student_stats in each_student_stats:
                         email_responses = one_student_stats.split(":")
-                        all_students_stats[email_responses[0]] = list(map(str, email_responses[1].split(";")))
+                        if len(email_responses) == 2:
+                            all_students_stats[email_responses[0]] = list(map(str, email_responses[1].split(";")))
+                        else:
+                            all_students_stats[email_responses[0]] = []
                     stats.append(all_students_stats)
                 self.liveqcm_array.append(LiveQCM(id=row[0], owner_email=row[1], statements=statements, stats=stats, opened=False))
     
