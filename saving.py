@@ -314,7 +314,17 @@ class LiveQCMData():
     
     def save_liveqcm_to_file(self, liveqcm: LiveQCM) -> None:
         add_line_to_file(self.save_file, liveqcm.get_registering_line())
-        self.add_liveqcm(liveqcm)
+
+    def end_and_save_liveqcm(self, liveqcm: LiveQCM) -> None:
+        liveqcm.end()
+        self.save_liveqcm_to_file(liveqcm)
+    
+    def end_and_save_liveqcm_by_id(self, id: str) -> bool:
+        if self.contains_id(id):
+            self.end_and_save_liveqcm(self.get_liveqcm_by_id(id))
+            return True
+        else:
+            return False
     
     def get_all_liveqcm(self) -> list:
         return self.liveqcm_array
