@@ -13,9 +13,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script type="text/javascript" src="../../static/js/script.js"></script>
-    <link rel="stylesheet" type="text/css" href="../../static/css/global.css" >
+    <link rel="stylesheet" type="text/css" href="../../static/css/global.css" >    
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../../static/css/card/card-style.css">
+    <link rel="stylesheet" href="../../static/css/card-style.css">
     <script>
         socket = io();
         socket.connect('http://127.0.0.1:5000/')
@@ -78,18 +78,18 @@
             </div>  
             <div class="card-navbar">  
                 {% if statement_number != 0 and not(projected) %}
-                <button class="animation" id="previousquestion" onclick="previous()">Précédent</button>
+                <button class="animation rectangle" id="previousquestion" onclick="previous()">Précédent</button>
                 {% endif %}      
                 {% if not(projected) %}          
-                <button class="animation" type="submit" id="project" onclick="projection('{{ qcm.id }}')">Projeter le qcm</button>
-                <button class="animation" type="submit" id="stop" onclick="stop(liveqcm_id)" hidden>Désactiver les réponses</button>
+                <button class="animation rectangle" type="submit" id="project" onclick="projection('{{ qcm.id }}')">Projeter le qcm</button>
+                <button class="animation rectangle" type="submit" id="stop" onclick="stop(liveqcm_id)" hidden>Désactiver les réponses</button>
                 {% else %}
-                <button class="animation" type="submit" id="stop" onclick="stop(liveqcm_id)">Désactiver les réponses</button>
-                <button class="animation" type="submit" id="project" onclick="stop_projection()">Stopper la projection</button>
+                <button class="animation rectangle" type="submit" id="stop" onclick="stop(liveqcm_id)">Désactiver les réponses</button>
+                <button class="animation rectangle" type="submit" id="project" onclick="stop_projection()">Stopper la projection</button>
                 {% endif %}
-                <button class="animation" type="submit" id="correction" onclick="correction()">Correction</button>
+                <button class="animation rectangle" type="submit" id="correction" onclick="correction()">Correction</button>
                 {% if not(final) %}
-                <button class="animation" id="nextquestion" onclick="nextquestion()">Suivant</button>
+                <button class="animation rectangle" id="nextquestion" onclick="nextquestion()">Suivant</button>
                 {% endif %}
             </div>  
     </div>  
