@@ -1,9 +1,9 @@
 import globals
+from qcm import *
 import saving
 from flask import flash,Flask,url_for,render_template,request,session,redirect
 from flaskext.markdown import Markdown
 from user import Student, Teacher
-from qcm import *
 import markdown as md
 from utilities import read_file
 from flask_session import Session
