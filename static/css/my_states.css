@@ -1,44 +1,226 @@
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  }
-  
-  /* Modal Content/Box */
-  .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
-  }
-  
-  /* The Close Button */
-  .close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
+.bloc{
+    width: 30%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.contain-body{
+    width: 100%;
+    height: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.form{
+    width: 100%;
+}
+#searchform{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+#newqcm{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
+  align-items: center;
+}
+#qcm_title{
+    border: none;
+    width: 60%;
+    padding: 12.5px;
+    background: white;
     font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
+    font-size: 1em;
+    border-radius: 20px;
+    height: 50px;
+    outline: none;
+}
+.button-list a{
+    width: 100%;
+}
+.button-search-submit{
+    width: 50%!important;
+}
+.button-add {
+    margin-block: 1.5em;
+    padding-block:1.5em;
+    width: 100%;
+    background: #efefef;
+    border: none;
+    border-radius: .5rem;
+    color: #444;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: .2rem;
+    text-align: center;
+    outline: none;
+    cursor: pointer;
+    transition: .2s ease-in-out;
+    box-shadow: -6px -6px 14px rgba(255, 255, 255, .7),
+                -6px -6px 10px rgba(255, 255, 255, .5),
+                6px 6px 8px rgba(255, 255, 255, .075),
+                6px 6px 10px rgba(0, 0, 0, .15);
+}
+.button-add:hover {
+box-shadow: -2px -2px 6px rgba(255, 255, 255, .6),
+            -2px -2px 4px rgba(255, 255, 255, .4),
+            2px 2px 2px rgba(255, 255, 255, .05),
+            2px 2px 4px rgba(0, 0, 0, .1);
+}
+.button-add:active {
+box-shadow: inset -2px -2px 6px rgba(255, 255, 255, .7),
+            inset -2px -2px 4px rgba(255, 255, 255, .5),
+            inset 2px 2px 2px rgba(255, 255, 255, .075),
+            inset 2px 2px 4px rgba(0, 0, 0, .15);
+}
+.chosen-choices{
+    background: white;
+}
+.title-enonce{
     color: black;
     text-decoration: none;
+    font-size: 2em;
+}
+#content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.body-bloc input{
+    height: 100%;
+    width: 325px;
+    padding: 12.5px;
+    outline: none;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.2em;
+    color:black;
+    font-weight: bold;
+    background-color: white;
+    transition: .4s;
+}
+.button-link{
+    width: 100%;
+}
+.ul-enonce{
+  background: white;
+  border-radius: 15px;
+  display: flex;
+  width: 100%;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.li-enonce{
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.suppr-enonce{
+  background: transparent;
+  border: none;
+  }
+  .suppr-enonce i{
+    width: 100%;
+    height: auto;
+  }
+  .suppr-enonce:hover{
     cursor: pointer;
   }
-
-  #submitnews{
-    margin-top: 10px;
+  .suppr-enonce:hover i{
+    color: red ;
+    cursor: pointer;
   }
-
-  #add-student{
+  .suppr-enonce:active i{
+    color: rgb(165, 165, 165);
+}
+.chzn-select{
+    width: 80%;
+}
+.overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    transition: opacity 500ms;
+    visibility: hidden;
+    opacity: 0;
+  }
+  .overlay:target {
+    visibility: visible;
+    opacity: 1;
+  }
+  .create_questionnaire{
+    border: none;
+    width: 60%;
+    padding: 12.5px;
+    background: white;
+    font-weight: bold;
+    font-size: 1em;
+    border-radius: 20px;
+    height: 50px;
+    outline: none;
+    transition: background 0.3s ease;
+  }
+  .create_questionnaire:hover{
+    cursor: pointer;
+    background: rgb(205, 237, 203);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  }
+  .create_questionnaire:active{
+    background: rgb(189, 214, 187);
+  }
+  .popup {
+    margin: 70px auto;
+    padding: 20px;
+    background: rgb(37, 37, 37);
+    border-radius: 5px;
     width: 30%;
+    height: 40%;
+    position: relative;
+    transition: all 5s ease-in-out;
+  }
+  
+  .popup h2 {
+    margin-top: 0;
+    color: rgb(255, 255, 255);
+    font-family: Tahoma, Arial, sans-serif;
+  }
+  .popup .close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    transition: all 200ms;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+  }
+  .popup .close:hover {
+    color: #06D85F;
+  }
+  .popup .content {
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+  
+  @media screen and (max-width: 700px){
+    .box{
+      width: 70%;
+    }
+    .popup{
+      width: 70%;
+    }
   }

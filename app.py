@@ -59,7 +59,7 @@ def statement_values():
             possibles_responses.append(request.form['statement'])
             valids_reponses.append(0)
             
-      return  Statement(name=name, question=question, valids_reponses=valids_reponses, possibles_responses=possibles_responses, user_email=session['email'])
+      return  Statement(name=name, question=question, valids_reponses=valids_reponses, possibles_responses=possibles_responses, user_email=session['email'],tags=tags)
 
 # Fonction qui vérifie si l'utilisateur est connecté
 def is_logged(role:str) -> bool:
@@ -214,6 +214,7 @@ def my_states():
 @app.route('/newstate',methods=['POST'])
 def newstate():
       statement = statement_values()
+      print("\n",statement.tags,"\n")
       saving.statements_data.add_statement(statement)
       return redirect('/my_states')
 

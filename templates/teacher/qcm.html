@@ -12,7 +12,8 @@
     <script type="text/javascript" src="/static/js/math-rendering.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../../static/css/utilities/header.css" >
+    <script type="text/javascript" src="../../static/js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../static/css/global.css" >
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../static/css/card/card-style.css">
     <script>
@@ -23,24 +24,21 @@
         })
     </script>
 </head>    
-<body>
+<body style="
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+">
+<nav>
+    <ul>
+        <li><a href="/">Accueil</a></li>
+        <li><a href="/my_qcm">Mes QCM</a></li>
+        <li><a href="/my_states">Mes énoncés</a></li>
+        <li><a href="/qcm">Liste des QCM</a></li>
+        <li><a href="/logout">Déconnexion</a></li>
+    </ul>
+</nav>
 
-
-<header>
-        <ul>
-          <li><a href="/">Accueil</a></li>
-          <li><a href="/my_qcm">Mes QCM</a></li>
-          <li><a href="/my_states">Mes énoncés</a></li>
-          <li><a href="/qcm">Liste des QCM</a></li>
-          <li><a href="/logout">Déconnexion</a></li>
-        </ul>
-</header>
-    
-<style>
-    .card{
-        margin-left: 0px;
-    }
-</style>
 <h1> Nom du Qcm : {{ qcm.name }}</h1>
 <h2 id ='liveqcm_id'>{% if projected %} Identifiant du questionnaire : {{ statement.id }} {% endif %}</h2>  
 <div class="card" id="card" value="{{ statement.id }}"> 
