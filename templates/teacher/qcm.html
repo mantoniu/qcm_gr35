@@ -172,6 +172,7 @@ socket.on('project',(liveqcmid)=>{
 })
 
 socket.on('response',(data)=>{
+    console.log('respose');
     count_list = data.responses_count
     for(let i=0;i<count_list.length;i++){
         $('#progress'+i).val(count_list[i]);

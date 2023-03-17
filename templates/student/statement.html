@@ -83,12 +83,17 @@ window.onload = student_join;
 
 function send_response(){
         response_list = []
-        for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
-            $('#switch'+i).attr("onclick","return false;");
-            if($('#switch'+i).is(":checked")){
-                response_list.push(i)
-                console.log(response_list)
+        if("{{ statement.decimal|tojson }}"==="false"){
+            for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
+                $('#switch'+i).attr("onclick","return false;");
+                if($('#switch'+i).is(":checked")){
+                    response_list.push(i)
+                    console.log(response_list)
+                }
             }
+        }
+        else{
+            response_list.push($('decimal-response').val());
         }
         socket.emit("newresponse",response_list,"{{liveqcmid}}");
 }

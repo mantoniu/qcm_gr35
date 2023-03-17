@@ -290,10 +290,8 @@ def qcm_id(id,statement_number):
       
       if statement_number+2 <= len(qcm.statements):
             current_statement = qcm.statements[statement_number]
-            print("\ n",session['email'] in owners.keys())
             return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=False,projected=session['email'] in owners.keys(),liveqcm_id=liveqcm_id,statement_index=statement_index) 
       elif statement_number == len(qcm.statements):
-            print('\n TEST \n',qcm.statements)
             return redirect('/my_qcm')
       else:
             current_statement = qcm.statements[statement_number]
@@ -406,10 +404,12 @@ def response(response_list,liveqcmid):
       global owners
       student_email = session['email']
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcmid)
+      print(response_list)
       success = liveqcm.respond(student_email,response_list)
+      print('\n Success \n')
       socket.emit('response_success',success)
       if success:
-            socket.emit('response',{"responses_count":liveqcm.get_responses_count(),"count":liveqcm.get_total_responses_count()},to=owners[session['email']])
+            socket.emit('response',{"responses_count":liveqcm.get_responses_count(),"count":liveqcm.get_total_responses_count()},to=owners[liveqcm.owner_email])
 
 
 @socket.on('liveqcm_join')
