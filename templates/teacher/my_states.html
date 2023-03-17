@@ -18,7 +18,7 @@
 <body>
 <nav>
     <ul>
-        <li><a href="/">Ajouter des étudiants</a></li>
+        <li><a href="/add_students">Ajouter des étudiants</a></li>
       <li><a href="/my_qcm">Mes QCM</a></li>
       <li><a href="/my_states">Mes énoncés</a></li>
       <li><a href="/qcm">Liste des QCM</a></li>
@@ -37,6 +37,7 @@
                 <input type="submit" value="Valider" class="button-add button-search-submit" id="button-add">
             </form>
         </div>
+        <form method="POST" action="/newqcm" class="form" id="newqcm">
         <ul class="ul-enonce">
             {% for statement in my_states_array %}
             <li class="li-enonce">
@@ -54,7 +55,7 @@
             {% endfor %}
         </ul>
         <a class="button-link" href="#popup1">
-            <button type="submit" class="button-add" id="button-add-card">Creer un Questionnaire</button>
+            <button type="button" class="button-add" id="button-add-card">Creer un Questionnaire</button>
         </a>
         <a href="/create" class="button-link">
             <button value="Ajouter card" class="button-add" id="button-add-card">Ajouter un énoncé</button>
@@ -64,7 +65,6 @@
                 <h2>Titre du QCM</h2>
                 <a class="close" href="#">&times;</a>
                 <div class="content">
-                    <form method="POST" action="/newqcm" class="form" id="newqcm">
                         <input type="text" name="qcm_title" id="qcm_title" placeholder="Titre du QCM">
                         <button type="submit" class="create_questionnaire" id="button-add-card">Creer un Questionnaire</button>
                     </form>

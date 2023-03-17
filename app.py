@@ -88,7 +88,7 @@ def index():
 @app.route('/teacher')
 def teacher_home():
       if is_logged("teacher"):
-            return render_template('/teacher/home.html')
+            return redirect("/my_states")
       else: 
             return render_template('/teacher/index.html')
 
@@ -145,7 +145,7 @@ def sudent_logout():
             session.pop('email')
             session.pop('password')
             session.pop('role')
-      return redirect('/student')
+      return redirect('/')
 
 
 # Route qui gère la connexion
@@ -158,7 +158,7 @@ def login():
                   session['email'] = email
                   session['password'] = password
                   session['role'] = "teacher"
-      return redirect('/')
+      return redirect('/teacher')
 
 # Route qui gère la connexion
 @app.route('/student/login',methods = ['POST'])
@@ -183,9 +183,18 @@ def register():
             if saving.teachers_data.add_user(Teacher(email, password, name, firstname)):
                   session['email'] = email
                   session['password'] = password
-                  return redirect('/')
+                  return redirect('/teacher')
             else:
                   return render_template('/teacher/index.html')
+
+# Ajouter des étudiants
+
+@app.route('/add_students')
+def add_students():
+      if is_logged("teacher"):
+            return render_template('/teacher/add_students.html')
+      else:
+            return redirect('/teacher')
 
 # Liste de tous les qcm
 @app.route('/qcm')
@@ -193,7 +202,7 @@ def qcm():
       if is_logged("teacher"):
             return render_template('/teacher/qcm_list.html', qcm_array=saving.qcm_data.get_all_qcm())
       else:
-            return redirect('/')
+            return redirect('/teacher')
 
 
 # Permet de renvoyer la liste des qcm et donc l'affichage de ceux-ci dans my_qcm.html
@@ -202,7 +211,7 @@ def my_qcm():
       if is_logged("teacher"):
             return render_template('/teacher/my_qcm.html', my_qcm_array=saving.qcm_data.get_qcm_from_user(session['email']))
       else:
-            return redirect('/')
+            return redirect('/teacher')
 
 # Permet de renvoyer la liste des énoncés et donc l'affichage de ceux-ci dans my_states.html
 # et si des tags ont été rentrés d'afficher seulement les énoncés correspondant
@@ -221,7 +230,7 @@ def my_states():
             else :
                   return render_template('/teacher/my_states.html', my_states_array=saving.statements_data.get_statement_from_user(session['email']),tags=(saving.teachers_data.get_user_by_email(session['email'])).tags_array)
       else:
-            return redirect('/')
+            return redirect('/teacher')
 
 
 # Creation d'un nouvel énoncé (submit formulaire)
@@ -284,6 +293,7 @@ def qcm_id(id,statement_number):
             print("\ n",session['email'] in owners.keys())
             return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=False,projected=session['email'] in owners.keys(),liveqcm_id=liveqcm_id,statement_index=statement_index) 
       elif statement_number == len(qcm.statements):
+            print('\n TEST \n',qcm.statements)
             return redirect('/my_qcm')
       else:
             current_statement = qcm.statements[statement_number]
@@ -336,7 +346,7 @@ def upload_file():
                   saving.students_data.create_accounts_from_csv("static/files/" + filename)
                   os.remove("static/files/" + filename)
                   return redirect(url_for('upload_file', name=filename))
-      return redirect('/')
+      return redirect('/teacher')
 
 
 @socket.on('disconnect')

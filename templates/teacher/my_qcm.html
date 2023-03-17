@@ -16,7 +16,7 @@
 ">
 <nav>
     <ul>
-        <li><a href="/">Ajouter des étudiants</a></li>
+        <li><a href="/add_students">Ajouter des étudiants</a></li>
       <li><a href="/my_qcm">Mes QCM</a></li>
       <li><a href="/my_states">Mes énoncés</a></li>
       <li><a href="/qcm">Liste des QCM</a></li>
@@ -26,7 +26,8 @@
 <div id="content">
     <ul>
         {% for qcm in my_qcm_array %}
-            <a class="lien-qcm" href="{{ 'qcm/' + qcm.id + '/0'}}"><li>{{ qcm.name }}</a><a href="{{ "qcm/delete/" + qcm.id|string }}"> <button type="button" class="suppr-enonce"><i class="fas fa-trash"></i></button></a></li>
+            <a class="lien-qcm" href="{{ 'qcm/' + qcm.id + '/0'}}">
+            <li>{{ qcm.name }}</a><a href="{{ 'qcm/delete/' + qcm.id|string }}"> <button type="button" class="suppr-enonce"><i class="fas fa-trash"></i></button></a></li>
         {% endfor %}
     </ul>
 </div>
