@@ -11,7 +11,6 @@ from flask_socketio import SocketIO, join_room, leave_room, emit,rooms
 from werkzeug.utils import secure_filename
 import os
 
-
 # Liste des questions projetées
 
 global projected_qcmid,owners
