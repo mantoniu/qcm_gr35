@@ -42,7 +42,7 @@
     }
 </style>
 <h1> Nom du Qcm : {{ qcm.name }}</h1>
-<h2 id ='liveqcm_id'></h2>  
+<h2 id ='liveqcm_id'>{% if projected %} Identifiant du questionnaire : {{ statement.id }} {% endif %}</h2>  
 <div class="card" id="card" value="{{ statement.id }}"> 
     <div class="header-card" id="header">   
         <div class="translation" id="translation">  
@@ -79,13 +79,16 @@
             <p id ='response_count'>Réponses : 0</p>  
             </div>  
             <div class="card-navbar">  
-                {% if statement_number != 0 %}
+                {% if statement_number != 0 and not(projected) %}
                 <button class="animation" id="previousquestion" onclick="previous()">Précédent</button>
-                {% else %}                
+                {% endif %}      
+                {% if not(projected) %}          
                 <button class="animation" type="submit" id="project" onclick="projection('{{ qcm.id }}')">Projeter le qcm</button>
-                {% endif %}
                 <button class="animation" type="submit" id="stop" onclick="stop(liveqcm_id)" hidden>Désactiver les réponses</button>
-
+                {% else %}
+                <button class="animation" type="submit" id="stop" onclick="stop(liveqcm_id)">Désactiver les réponses</button>
+                <button class="animation" type="submit" id="project" onclick="stop_projection()">Stopper la projection</button>
+                {% endif %}
                 <button class="animation" type="submit" id="correction" onclick="correction()">Correction</button>
                 {% if not(final) %}
                 <button class="animation" id="nextquestion" onclick="nextquestion()">Suivant</button>
@@ -157,6 +160,7 @@ function stop_projection(){
 socket.on('liveqcmid',(id)=>{
     liveqcm_id = id;
     $('#liveqcm_id').text("ID du questionnaire : "+id);
+    window.location.reload();
 })
 
 
@@ -179,6 +183,11 @@ socket.on('count',(count)=>{
     $('#student_count').text("Nombre d'étudiants : "+count);
     $('.progress_bar').css("display","flex");
     $('.progress_bar').attr('max',count);
+});
+
+socket.on('stop',()=>{
+    console.log('stop');
+    window.location.reload();
 })
 
 </script>
