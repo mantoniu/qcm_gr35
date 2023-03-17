@@ -1,0 +1,103 @@
+body{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0;
+    height: 100vh;
+    background: url('images/background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    font: inherit;
+    font-family: Euclid,sans-serif,Arial,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue;
+    font-size: 20px;
+    letter-spacing: -.63px;
+}
+.card{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 70%;
+    width: 30%;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.413);
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 8px );
+    -webkit-backdrop-filter: blur( 4px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+h1,li{
+    color: rgb(39, 55, 76);
+}
+.content{
+    height: 40%;
+    display: flex;
+    align-items: center;
+}
+.avantages{
+    height: 100%;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-around;
+}
+.avantages li{
+    font-size: 1.2em;
+}
+.button_integrate{
+    width: 60%;
+    height: 10%;
+    border: none;
+    border-radius: 10px;
+    background: white;
+    font-size:100%;
+    text-align: center;
+    transition: 0.3s ease all;
+}
+.button_integrate{
+    border-color: rgb(39, 55, 76);
+    color: white;
+    background:rgb(39, 55, 76) ;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: transform 0.5s ease;
+}
+.button_integrate:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+    background:#DAF7A6;
+    border-color: #DAF7A6;
+    color: black;
+}
+.button_integrate:active{
+    transform: scale(1);
+    background:white;
+    border-color: #DAF7A6;
+    color: black;
+}
+
+
+@media (max-width:1250px){
+    body{
+        flex-direction: column;
+    }
+    h1{
+        margin: 0;
+    }
+    .card{
+        width: 50%;
+        height: 80%;
+        margin: 1em;
+    }
+    .content{
+        height: 50%;
+    }
+    .avantages{
+        justify-content: space-between;
+    }
+    .avantages li{
+        font-size: 100%;
+    }
+    
+}

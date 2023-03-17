@@ -5,36 +5,36 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Création d'énoncé</title>
-    <link rel="stylesheet" href="../static/css/card/card-style.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/utilities/header.css" >
+    <link rel="stylesheet" href="../../static/css/card-style.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/global.css" >
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.3.0/mermaid.min.js"></script>
-    <script type="text/javascript" src="../static/js/math-rendering.js"></script>
+    <script type="text/javascript" src="../../static/js/math-rendering.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
     <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
     <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
-    <script type="text/javascript" src="../static/js/chosen.jquery.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css">
+    <script type="text/javascript" src="../../static/js/chosen.jquery.js"></script>
+    <link rel="stylesheet" href="../../static/css/chosen.css">
 </head>    
 <body>
     
-<header>
-        <ul>
-          <li><a href="/">Accueil</a></li>
-          <li><a href="/my_qcm">Mes QCM</a></li>
-          <li><a href="/my_states">Mes énoncés</a></li>
-          <li><a href="/qcm">Liste des QCM</a></li>
-          <li><a href="/logout">Déconnexion</a></li>
-        </ul>
-</header>
+<nav>
+    <ul>
+      <li><a href="/">Accueil</a></li>
+      <li><a href="/my_qcm">Mes QCM</a></li>
+      <li><a href="/my_states">Mes énoncés</a></li>
+      <li><a href="/qcm">Liste des QCM</a></li>
+      <li><a href="/logout">Déconnexion</a></li>
+    </ul>
+</nav>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>    
-<script type="text/javascript" src="../static/js/script.js"></script>
+<script type="text/javascript" src="../../static/js/script.js"></script>
 <script>
 $(function() {
     $(".chzn-select").chosen(
@@ -47,15 +47,22 @@ var socket = io();
 <form method="POST" id="new-statement" action="/newstate" class="form-card">
 
     <div class="info" id="info">
-        <input type="checkbox" id="decimal" name="decimal">
-        <label for="decimal">Decimal</label>
-        Nom : <input name="statement_name" id="statement_name" type="text">
+        <div class="decimal">
+            <label for="decimal">Decimal</label>
+            <input type="checkbox" id="decimal" name="decimal">
+        </div>
+        <div class="name_card">
+        <p>Nom : </p>
+        <input name="statement_name" id="statement_name" type="text">
+        </div>
+        <div class="etiquettes_bloc">
         <p>Choix des étiquettes : &nbsp;</p>
         <select class="chzn-select" id="select-tags" data-placeholder="Etiquettes" multiple="true" name="etiquettes" style="width:200px;">
         {% for tag in tags %}
         <option>{{ tag }}</option>
         {% endfor %}
         </select>
+    </div>
     </div>
     
 
@@ -89,9 +96,9 @@ var socket = io();
             </div>  
         </div>  
             <div class="card-navbar">  
-                <button class="animation" type="button" onclick="preview()" id="apercu">Aperçu</button>  
-                <div id="add_answer" onclick="add_answer()" class="circle animation"><i class="fas fa-plus"></i></div>  
-                <button class="animation" type="submit" id="ajouter">Valider</button>  
+                <button class="animation rectangle" type="button" onclick="preview()" id="apercu">Aperçu</button>  
+                <div onclick="add_answer()" class="circle animation"><i class="fas fa-plus"></i></div>  
+                <button class="animation rectangle" type="submit" id="ajouter">Valider</button>
             </div>  
         </div>  
     </div> 
