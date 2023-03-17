@@ -382,7 +382,7 @@ def project(id):
       owners[session['email']] = request.sid
       saving.liveqcm_data.add_liveqcm(liveqcm)
       projected_qcmid.append(liveqcm.id)
-      print(projected_qcmid)
+      print(owners[session['email']])
       socket.emit('liveqcmid',liveqcm.id,to=owners[session['email']])
 
 @socket.on('stop')

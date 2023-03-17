@@ -19,6 +19,9 @@
     <script>
         socket = io();
         socket.connect('http://127.0.0.1:5000/')
+        socket.on('connect',()=>{
+            console.log(socket.id);
+        })
     </script>
 </head>    
 <body style="
@@ -126,14 +129,11 @@ function stop_projection(){
 }
 
 socket.on('liveqcmid',(id)=>{
+    console.log(id)
     liveqcm_id = id;
     $('#liveqcm_id').text("ID du questionnaire : "+id);
-})
+});
 
-
-socket.on('project',(liveqcmid)=>{
-    $('#liveqcm_id').text("Identifiant du questionnaire : "+liveqcmid);
-})
 
 socket.on('response',(data)=>{
     console.log(data);

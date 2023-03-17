@@ -177,6 +177,10 @@ class LiveQCM():
 
     def respond(self, student_email: str, responses: list) -> bool :
         if not(self.paused):
+            print('\n')
+            print(student_email in self.students_email)
+            print(not(self.has_responded(student_email)))
+            print('\n')
             if student_email in self.students_email and not(self.has_responded(student_email)):
                 self.get_current_stats().set_response(student_email, responses)
                 return True
