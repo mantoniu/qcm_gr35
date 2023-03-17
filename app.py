@@ -448,7 +448,7 @@ def next_question(liveqcm_id,statement_number):
             qcm.next_statement()
             socket.emit('nextquestion',to=liveqcm_id)
             socket.emit('nextquestion',qcm.statement_index,to=owners[qcm.owner_email])
-            socket.emit('count',liveqcm.get_students_count(),to=owners[session['email']])
+            socket.emit('count',qcm.get_students_count(),to=owners[session['email']])
       else:
             socket.emit('nextquestion',statement_number+1)
 

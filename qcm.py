@@ -117,6 +117,7 @@ class LiveStatementStats():
     
     def get_students_responses(self) -> dict:
         students_responses = {}
+        print(self.stats)
         for students_emails in self.stats:
             students_responses[students_emails] = self.stats[students_emails]["responses"]
         return students_responses
