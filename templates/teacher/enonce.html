@@ -28,7 +28,7 @@
 ">
 <nav>
     <ul>
-        <li><a href="/">Accueil</a></li>
+        <li><a href="/">Ajouter des étudiants</a></li>
         <li><a href="/my_qcm">Mes QCM</a></li>
         <li><a href="/my_states">Mes énoncés</a></li>
         <li><a href="/qcm">Liste des QCM</a></li>
@@ -85,7 +85,7 @@
 var liveqcm_id = 0
 
 function correction(){
-    if(!{{ statement.decimal|tojson }}){
+    if("{{ statement.decimal|tojson }}"==="false"){
         if($('input#valid').is(':checked')) $('input#valid').prop('checked',false);
         else $('input#valid').prop('checked',true);
     }

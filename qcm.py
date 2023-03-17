@@ -120,6 +120,7 @@ class LiveQCM():
             self.id = id
         self.opened = opened
 
+
     def has_responded(self, student_email: str) -> bool:
         students_dic = self.students_responses[self.statement_index]
         return student_email in students_dic and students_dic[student_email] != []

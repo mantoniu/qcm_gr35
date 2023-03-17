@@ -20,12 +20,4 @@ $(document).ready(function(){
         }     
         return true
     });
-    if($("#content ul li").length >= 1){
-        document.getElementById("button-create-qcm").style.display = "flex";
-        document.getElementById("qcm").style.display = "flex";
-    }
-    else{
-        document.getElementById("button-create-qcm").style.display = "none";
-        document.getElementById("qcm").style.display = "none";
-    }
 });
