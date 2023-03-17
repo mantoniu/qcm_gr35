@@ -396,6 +396,7 @@ def stop():
             projected_qcmid.remove(liveqcm_id)
             print("\n STOP \n")
             socket.emit('stop',to=owners[session['email']])
+            socket.emit('stop',to=liveqcm_id)
             del owners[session['email']]
 
 @socket.on('newresponse')
@@ -431,7 +432,6 @@ def stop_question(liveqcm_id):
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcm_id)
       liveqcm.pause()
       socket.emit('stop_question',to=liveqcm_id)
-      socket.emit
 
 @socket.on('unstop_question')
 def unstop_question(liveqcm_id):
@@ -448,7 +448,7 @@ def next_question(liveqcm_id,statement_number):
             qcm.next_statement()
             socket.emit('nextquestion',to=liveqcm_id)
             socket.emit('nextquestion',qcm.statement_index,to=owners[qcm.owner_email])
-            socket.emit('count',liveqcm.get_students_count(),to=owners[session['email']])
+            socket.emit('count',qcm.get_students_count(),to=owners[session['email']])
       else:
             socket.emit('nextquestion',statement_number+1)
 

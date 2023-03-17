@@ -126,6 +126,10 @@ socket.on('nextquestion',()=>{
     window.location.reload();
 });
 
+socket.on('stop',()=>{
+    window.location.replace('/student');
+})
+
 </script>
 </body>
 </html>
