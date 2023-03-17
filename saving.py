@@ -290,9 +290,13 @@ class LiveQCMData():
                 for i in range(3, len(row)):
                     all_students_stats = {}
                     each_student_stats = row[i].split(",")
+                    print(each_student_stats)
                     for one_student_stats in each_student_stats:
                         email_responses = one_student_stats.split(":")
-                        all_students_stats[email_responses[0]] = list(map(str, email_responses[1].split(";")))
+                        if len(email_responses) == 2:
+                            all_students_stats[email_responses[0]] = list(map(str, email_responses[1].split(";")))
+                        else:
+                            all_students_stats[email_responses[0]] = []
                     stats.append(all_students_stats)
                 self.liveqcm_array.append(LiveQCM(id=row[0], owner_email=row[1], statements=statements, stats=stats, opened=False))
     
@@ -307,8 +311,21 @@ class LiveQCMData():
 
     def add_liveqcm(self, liveqcm: LiveQCM) -> bool:
         if not(self.contains_liveqcm(liveqcm)):
-            add_line_to_file(self.save_file, liveqcm.get_registering_line())
             self.liveqcm_array.append(liveqcm)
+            return True
+        else:
+            return False
+    
+    def save_liveqcm_to_file(self, liveqcm: LiveQCM) -> None:
+        add_line_to_file(self.save_file, liveqcm.get_registering_line())
+
+    def end_and_save_liveqcm(self, liveqcm: LiveQCM) -> None:
+        liveqcm.end()
+        self.save_liveqcm_to_file(liveqcm)
+    
+    def end_and_save_liveqcm_by_id(self, id: str) -> bool:
+        if self.contains_id(id):
+            self.end_and_save_liveqcm(self.get_liveqcm_by_id(id))
             return True
         else:
             return False
@@ -346,6 +363,12 @@ class LiveQCMData():
     def get_liveqcm_by_owner_email(self, email: str) -> LiveQCM:
         for liveqcm in self.liveqcm_array:
             if liveqcm.owner_email == email and liveqcm.opened:
+                return liveqcm
+        return None
+    
+    def get_liveqcm_by_student_email(self, student_email: str) -> LiveQCM:
+        for liveqcm in self.get_opened_liveqcm():
+            if liveqcm.contains_student(student_email):
                 return liveqcm
         return None
 

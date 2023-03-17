@@ -76,7 +76,6 @@
 
 
 function student_join(){
-    console.log("SALEM KADER")
     socket.emit('studentjoin',"{{ liveqcmid }}");
 }
 
@@ -118,6 +117,7 @@ socket.on('unstop_question',()=>{
 })
 
 socket.on('nextquestion',()=>{
+    console.log('test');
     window.location.reload();
 });
 

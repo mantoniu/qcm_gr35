@@ -19,6 +19,9 @@
     <script>
         socket = io();
         socket.connect('http://127.0.0.1:5000/')
+        socket.on('connect',()=>{
+            console.log(socket.id);
+        })
     </script>
 </head>    
 <body style="
@@ -92,13 +95,12 @@
 
 var liveqcm_id = ""
 
-socket.emit('owner')
-
 function nextquestion(){
     statement_number = parseInt("{{statement_number}}")
     statement_number ++;
-    window.location.replace("/qcm/"+"{{ qcm.id }}"+"/"+statement_number);
     socket.emit('nextquestion',liveqcm_id)
+    window.location.replace("/qcm/"+"{{ qcm.id }}"+"/"+statement_number);
+    
 }
 
 function previous(){
