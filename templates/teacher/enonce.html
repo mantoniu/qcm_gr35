@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Question</title>
-    <link rel="stylesheet" href="../static/css/card/card-style.css">
+    <link rel="stylesheet" href="../../static/css/card-style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
@@ -13,32 +13,28 @@
     <script type="text/javascript" src="/static/js/math-rendering.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script type="text/javascript" src="../static/js/script.js"></script>
-    <link rel="stylesheet" type="text/css" href="../../static/css/utilities/header.css" >
+    <script type="text/javascript" src="../../static/js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../static/css/global.css" >
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
     <script>
         socket = io();
         socket.connect('http://127.0.0.1:5000/')
     </script>
 </head>    
-<body>
-
-
-<header>
-        <ul>
-          <li><a href="/">Accueil</a></li>
-          <li><a href="/my_qcm">Mes QCM</a></li>
-          <li><a href="/my_states">Mes énoncés</a></li>
-          <li><a href="/qcm">Liste des QCM</a></li>
-          <li><a href="/logout">Déconnexion</a></li>
-        </ul>
-</header>
-    
-<style>
-    .card{
-        margin-left: 0px;
-    }
-</style>
+<body style="
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+">
+<nav>
+    <ul>
+        <li><a href="/add_students">Ajouter des étudiants</a></li>
+        <li><a href="/my_qcm">Mes QCM</a></li>
+        <li><a href="/my_states">Mes énoncés</a></li>
+        <li><a href="/qcm">Liste des QCM</a></li>
+        <li><a href="/logout">Déconnexion</a></li>
+    </ul>
+</nav>
 
 <h1 id ='liveqcm_id'></h1>  
 <div class="card" id="card" value="{{ statement.id }}"> 
@@ -77,10 +73,10 @@
             <p id ='response_count'>Réponses : 0</p>  
             </div>  
             <div class="card-navbar">  
-                <a href="{{ "edit/" + statement.id|string }}" style="display: contents;"><button class="animation" type="submit" id="ajouter">Editer l'énoncé</button></a> 
-                <button class="animation" type="submit" id="stop" onclick="stop(liveqcm_id)" hidden>Désactiver les réponses</button>
-                <button class="animation" type="submit" id="project" onclick="projection('{{ statement.id }}')">Projeter la question</button>
-                <button class="animation" type="submit" id="correction" onclick="correction()">Correction</button>
+                <a href="{{ "edit/" + statement.id|string }}" style="display: contents;"><button class="animation rectangle" type="submit" id="ajouter">Editer l'énoncé</button></a> 
+                <button class="animation rectangle" type="submit" id="stop" onclick="stop(liveqcm_id)" hidden>Désactiver les réponses</button>
+                <button class="animation rectangle" type="submit" id="project" onclick="projection('{{ statement.id }}')">Projeter la question</button>
+                <button class="animation rectangle" type="submit" id="correction" onclick="correction()">Correction</button>
             </div>  
     </div>  
 </div> 
@@ -89,7 +85,7 @@
 var liveqcm_id = 0
 
 function correction(){
-    if(!{{ statement.decimal|tojson }}){
+    if("{{ statement.decimal|tojson }}"==="false"){
         if($('input#valid').is(':checked')) $('input#valid').prop('checked',false);
         else $('input#valid').prop('checked',true);
     }

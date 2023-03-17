@@ -5,51 +5,74 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes énoncés</title>
-    <link rel="stylesheet" type="text/css" href="../static/css/utilities/header.css" >
-    <link rel="stylesheet" type="text/css" href="../static/css/my_qcm.css" >
-    <link rel="stylesheet" type="text/css" href="../static/css/my_states.css" >
+    <link rel="stylesheet" type="text/css" href="../../static/css/global.css" >
+    <link rel="stylesheet" type="text/css" href="../../static/css/my_states.css" >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../static/css/chosen.css" >
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
     <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
     <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css">
 </head>
 <body>
-<header>
+<nav>
     <ul>
-      <li><a href="/">Accueil</a></li>
+        <li><a href="/add_students">Ajouter des étudiants</a></li>
       <li><a href="/my_qcm">Mes QCM</a></li>
       <li><a href="/my_states">Mes énoncés</a></li>
       <li><a href="/qcm">Liste des QCM</a></li>
       <li><a href="/logout">Déconnexion</a></li>
     </ul>
-</header>
-<form method="POST" action="/my_states">
-    <select class="chzn-select" id="select-tags" data-placeholder="Etiquettes" multiple="true" name="etiquettes" style="width:200px;">
-        {% for tag in tags %}
-        <option>{{ tag }}</option>
-        {% endfor %}
-    </select>
-    <input type="submit" value="Valider">
-</form>
-<div id="content">
-    <form method="POST" action="/newqcm" id="newqcm">
-        <ul>
+  </nav>
+  <div class="contain-body">
+    <div class="bloc">
+        <div class="form">
+            <form method="POST" action="/my_states" class="form" id="searchform">
+                <select class="chzn-select" id="select-tags" data-placeholder="Etiquettes" multiple="true" name="etiquettes">
+                    {% for tag in tags %}
+                    <option>{{ tag }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Valider" class="button-add button-search-submit" id="button-add">
+            </form>
+        </div>
+        <form method="POST" action="/newqcm" class="form" id="newqcm">
+        <ul class="ul-enonce">
             {% for statement in my_states_array %}
-                <li><input name="{{ statement.id }}" type="checkbox" id="{{ statement.id }}">
-                <label for="{{ statement.id }}"><a href="{{ "statement/" + statement.id }}">{{ statement.name }}</a><a href="{{ "statement/delete/" + statement.id|string }}"><button type="button">Supprimer</button></a></label></li>
+            <li class="li-enonce">
+                <div class="switch">  
+                    <label id="{{ statement.id }}" class="switch">
+                        <input type="checkbox" name="{{ statement.id }}" id="{{ statement.id }}" class="checkbox-round">
+                        <span class="slider round"></span>
+                    </label>  
+                </div>  
+                <a class="title-enonce" href="{{ "statement/" + statement.id }}">{{ statement.name }}</a>
+                        <a href="{{ "statement/delete/" + statement.id|string }}">
+                        <button type="button" class="suppr-enonce"><i class="fas fa-trash"></i></button>
+                </a>                
+            </li>
             {% endfor %}
         </ul>
-        <button type="submit" id="button-create-qcm" >Creer un Questionnaire</button>
-        <div id="qcm">Titre du QCM : <input type="text" name="qcm_title" id="qcm_title"></div><br/><br/>
-        <input id="button-create-qcm" type="submit" value="Valider">
-    </form>
-    <br/>
-    <a href="/create">
-        <button value="Ajouter card" id="button-add-card">Ajouter un énoncé</button>
-    </a>
+        <a class="button-link" href="#popup1">
+            <button type="button" class="button-add" id="button-add-card">Creer un Questionnaire</button>
+        </a>
+        <a href="/create" class="button-link">
+            <button value="Ajouter card" class="button-add" id="button-add-card">Ajouter un énoncé</button>
+        </a>
+        <div id="popup1" class="overlay">
+            <div class="popup">
+                <h2>Titre du QCM</h2>
+                <a class="close" href="#">&times;</a>
+                <div class="content">
+                        <input type="text" name="qcm_title" id="qcm_title" placeholder="Titre du QCM">
+                        <button type="submit" class="create_questionnaire" id="button-add-card">Creer un Questionnaire</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<script type="text/javascript" src="../static/js/mystates.js"></script>
+<script type="text/javascript" src="../../static/js/mystates.js"></script>
 </body>
 </html>

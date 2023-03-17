@@ -170,6 +170,7 @@ class LiveQCM():
     def get_current_all_students_responses(self) -> dict:
         return self.get_current_stats().get_students_responses()
 
+
     def has_responded(self, student_email: str) -> bool:
         students_dic = self.get_current_all_students_responses()
         return student_email in students_dic and students_dic[student_email] != []

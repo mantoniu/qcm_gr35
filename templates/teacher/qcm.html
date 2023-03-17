@@ -12,9 +12,10 @@
     <script type="text/javascript" src="/static/js/math-rendering.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../../static/css/utilities/header.css" >
+    <script type="text/javascript" src="../../static/js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../static/css/global.css" >    
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../../static/css/card/card-style.css">
+    <link rel="stylesheet" href="../../static/css/card-style.css">
     <script>
         socket = io();
         socket.connect('http://127.0.0.1:5000/')
@@ -23,26 +24,23 @@
         })
     </script>
 </head>    
-<body>
+<body style="
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+" onload="verify_statement()">
+<nav>
+    <ul>
+        <li><a href="/add_students">Ajouter des étudiants</a></li>
+        <li><a href="/my_qcm">Mes QCM</a></li>
+        <li><a href="/my_states">Mes énoncés</a></li>
+        <li><a href="/qcm">Liste des QCM</a></li>
+        <li><a href="/logout">Déconnexion</a></li>
+    </ul>
+</nav>
 
-
-<header>
-        <ul>
-          <li><a href="/">Accueil</a></li>
-          <li><a href="/my_qcm">Mes QCM</a></li>
-          <li><a href="/my_states">Mes énoncés</a></li>
-          <li><a href="/qcm">Liste des QCM</a></li>
-          <li><a href="/logout">Déconnexion</a></li>
-        </ul>
-</header>
-    
-<style>
-    .card{
-        margin-left: 0px;
-    }
-</style>
 <h1> Nom du Qcm : {{ qcm.name }}</h1>
-<h2 id ='liveqcm_id'></h2>  
+<h2 id ='liveqcm_id'>{% if projected %} Identifiant du questionnaire : {{ statement.id }} {% endif %}</h2>  
 <div class="card" id="card" value="{{ statement.id }}"> 
     <div class="header-card" id="header">   
         <div class="translation" id="translation">  
@@ -79,16 +77,18 @@
             <p id ='response_count'>Réponses : 0</p>  
             </div>  
             <div class="card-navbar">  
-                {% if statement_number != 0 %}
-                <button class="animation" id="previousquestion" onclick="previous()">Précédent</button>
-                {% else %}                
-                <button class="animation" type="submit" id="project" onclick="projection('{{ qcm.id }}')">Projeter le qcm</button>
+                {% if statement_number != 0 and not(projected) %}
+                <button class="animation rectangle" id="previousquestion" onclick="previous()">Précédent</button> 
+                {% elif not(projected) %}          
+                <button class="animation rectangle" type="submit" id="project" onclick="projection('{{ qcm.id }}')">Projeter le qcm</button>
+                <button class="animation rectangle" type="submit" id="stop" onclick="stop(liveqcm_id)" hidden>Désactiver les réponses</button>
+                {% else %}
+                <button class="animation rectangle" type="submit" id="stop" onclick="stop(liveqcm_id)">Désactiver les réponses</button>
+                <button class="animation rectangle" type="submit" id="project" onclick="stop_projection()">Stopper la projection</button>
                 {% endif %}
-                <button class="animation" type="submit" id="stop" onclick="stop(liveqcm_id)" hidden>Désactiver les réponses</button>
-
-                <button class="animation" type="submit" id="correction" onclick="correction()">Correction</button>
+                <button class="animation rectangle" type="submit" id="correction" onclick="correction()">Correction</button>
                 {% if not(final) %}
-                <button class="animation" id="nextquestion" onclick="nextquestion()">Suivant</button>
+                <button class="animation rectangle" id="nextquestion" onclick="nextquestion()">Suivant</button>
                 {% endif %}
             </div>  
     </div>  
@@ -97,13 +97,20 @@
 
 var liveqcm_id = ""
 
-function nextquestion(){
-    statement_number = parseInt("{{statement_number}}")
-    statement_number ++;
-    socket.emit('nextquestion',liveqcm_id)
-    window.location.replace("/qcm/"+"{{ qcm.id }}"+"/"+statement_number);
-    
+function verify_statement(){
+    if("{{ projected|tojson }}"==="true" && "{{ statement_index }}"!= "{{ statement_number }}"){
+        window.location.replace("/qcm/"+"{{ qcm.id }}/"+"{{ statement_index }}");
+    }
 }
+
+function nextquestion(){
+    statement_number = parseInt("{{statement_number}}");
+    socket.emit('nextquestion',liveqcm_id,statement_number);
+}
+
+socket.on('nextquestion',(statement_number)=>{
+    window.location.replace("/qcm/"+"{{ qcm.id }}"+"/"+statement_number);
+});
 
 function previous(){
     statement_number = parseInt("{{statement_number}}")
@@ -114,7 +121,7 @@ function previous(){
 }
 
 function correction(){
-    if(!{{ statement.decimal|tojson }}){
+    if("{{ statement.decimal|tojson }}"==="false"){
         if($('input#valid').is(':checked')) $('input#valid').prop('checked',false);
         else $('input#valid').prop('checked',true);
     }
@@ -151,7 +158,7 @@ function stop_projection(){
     $('#stop').css('display','none');
     $('#stop').html("Désactiver réponses");
     $('#stop').attr('onclick','stop(liveqcm_id)');
-    socket.emit('stop',liveqcm_id);
+    socket.emit('stop');
 }
 
 socket.on('liveqcmid',(id)=>{
@@ -165,7 +172,6 @@ socket.on('project',(liveqcmid)=>{
 })
 
 socket.on('response',(data)=>{
-    console.log(data);
     count_list = data.responses_count
     for(let i=0;i<count_list.length;i++){
         $('#progress'+i).val(count_list[i]);
@@ -175,10 +181,13 @@ socket.on('response',(data)=>{
 
 
 socket.on('count',(count)=>{
-    console.log(count)
     $('#student_count').text("Nombre d'étudiants : "+count);
     $('.progress_bar').css("display","flex");
     $('.progress_bar').attr('max',count);
+});
+
+socket.on('stop',()=>{
+    window.location.reload();
 })
 
 </script>
