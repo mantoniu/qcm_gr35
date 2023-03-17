@@ -117,7 +117,6 @@ class LiveStatementStats():
     
     def get_students_responses(self) -> dict:
         students_responses = {}
-        print(self.stats)
         for students_emails in self.stats:
             students_responses[students_emails] = self.stats[students_emails]["responses"]
         return students_responses
@@ -135,7 +134,7 @@ class LiveStatementStats():
             return False
     
     def set_response(self, student_email: str, responses: list) -> None:
-        self.stats[student_email] = {"reponses": responses, "time": time()}
+        self.stats[student_email] = {"responses": responses, "time": time()}
     
     def get_registering_line(self) -> str:
         line_to_add = [self.id]
