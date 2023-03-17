@@ -1,6 +1,6 @@
 from utilities import *
 from user import Student, Teacher
-from qcm import QCM, Statement, LiveQCM
+from qcm import *
 
 class TeachersData():
     def __init__(self) -> None:
@@ -274,30 +274,87 @@ class QCMData():
         else:
             return False
 
+class LiveStatementsStatsData():
+    def __init__(self) -> None:
+        self.save_file = create_save_file("livestatementsstats.txt")
+        self.livestatementsstats_array = []
+        tab = read_file(self.save_file)
+        for row in tab:
+            if len(row) > 1:
+                stats = {}
+                all_students_data = row[1].split(";")
+                for each_students_data in all_students_data:
+                    email_responses_time = each_students_data.split(":")
+                    stats[email_responses_time[0]] = {"responses": list(map(int, email_responses_time[1].split(","))), "time": int(email_responses_time[2])}
+                self.livestatementsstats_array.append(LiveStatementStats(stats=stats, id=row[0]))
+
+    def contains_id(self, id: str):
+        for livestatementsstats in self.livestatementsstats_array:
+            if livestatementsstats.id == id:
+                return True
+        return False
+    
+    def contains_livestatementsstats(self, livestatementsstats: LiveStatementStats) -> bool:
+        return self.contains_id(livestatementsstats.id)
+
+    def add_livestatementsstats(self, livestatementsstats: LiveStatementStats) -> bool:
+        if not(self.contains_livestatementsstats(livestatementsstats)):
+            self.livestatementsstats_array.append(livestatementsstats)
+            return True
+        else:
+            return False
+    
+    def save_livestatementsstats_to_file(self, livestatementsstats: LiveStatementStats) -> None:
+        add_line_to_file(self.save_file, livestatementsstats.get_registering_line())
+    
+    def get_all_livestatementsstats(self) -> list:
+        return self.livestatementsstats_array
+    
+    def get_livestatementsstats_by_id(self, id: str) -> LiveQCM:
+        for livestatementsstats in self.livestatementsstats_array:
+            if livestatementsstats.id == id:
+                return livestatementsstats
+        return None
+    
+    def get_livestatementsstats_by_student_email(self, student_email: str) -> LiveQCM:
+        for livestatementsstats in self.livestatementsstats_array:
+            if livestatementsstats.contains_student(student_email):
+                return livestatementsstats
+        return None
+
+    def remove_livestatementsstats_by_id(self, id: str) -> bool:
+        if self.contains_id(id):
+            self.livestatementsstats_array.remove(self.get_livestatementsstats_by_id(id))
+            remove_lines_which_contains(self.save_file, string=id)
+            return True
+        else:
+            return False
+    
+    def remove_livestatementsstats(self, liveqcm: LiveStatementStats) -> bool:
+        if self.contains_livestatementsstats(liveqcm):
+            self.livestatementsstats_array.remove(livestatementsstats_data)
+            remove_lines_which_contains(self.save_file, string=liveqcm.id)
+            return True
+        else:
+            return False
+
 class LiveQCMData():
-    def __init__(self, statements_data: StatementsData) -> None:
+    def __init__(self, statements_data: StatementsData, livestatementsstats_data: LiveStatementsStatsData) -> None:
         self.save_file = create_save_file("liveqcm.txt")
         self.statements_data = statements_data
+        self.livestatementsstats_data = livestatementsstats_data
         self.liveqcm_array = []
         tab = read_file(self.save_file)
         for row in tab:
             if len(row) > 3:
                 statements_ids = row[2].split(";")
+                livestatementsstats_ids = row[3].split(";")
                 statements = []
                 for ids in statements_ids:
                     statements.append(self.statements_data.get_statement_by_id(ids))
                 stats = []
-                for i in range(3, len(row)):
-                    all_students_stats = {}
-                    each_student_stats = row[i].split(",")
-                    print(each_student_stats)
-                    for one_student_stats in each_student_stats:
-                        email_responses = one_student_stats.split(":")
-                        if len(email_responses) == 2:
-                            all_students_stats[email_responses[0]] = list(map(str, email_responses[1].split(";")))
-                        else:
-                            all_students_stats[email_responses[0]] = []
-                    stats.append(all_students_stats)
+                for ids in livestatementsstats_ids:
+                    stats.append(self.livestatementsstats_data.get_livestatementsstats_by_id(ids))
                 self.liveqcm_array.append(LiveQCM(id=row[0], owner_email=row[1], statements=statements, stats=stats, opened=False))
     
     def contains_id(self, id: str):
@@ -397,5 +454,7 @@ def init():
     statements_data = StatementsData()
     global qcm_data
     qcm_data = QCMData(statements_data=statements_data)
+    global livestatementsstats_data
+    livestatementsstats_data = LiveStatementsStatsData()
     global liveqcm_data
-    liveqcm_data = LiveQCMData(statements_data=statements_data)
+    liveqcm_data = LiveQCMData(statements_data=statements_data, livestatementsstats_data=livestatementsstats_data)
