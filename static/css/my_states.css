@@ -86,6 +86,13 @@ box-shadow: inset -2px -2px 6px rgba(255, 255, 255, .7),
     color: black;
     text-decoration: none;
     font-size: 2em;
+    transition: 0.3s ease;
+    padding: 0.5em;
+    border-radius: 10px;
+}
+.title-enonce:hover{
+  background: black;
+  color: white;
 }
 #content{
     display: flex;
@@ -214,6 +221,7 @@ box-shadow: inset -2px -2px 6px rgba(255, 255, 255, .7),
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    align-items: center;
   }
   
   @media screen and (max-width: 700px){
