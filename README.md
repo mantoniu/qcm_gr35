@@ -41,7 +41,7 @@ IMAGES :
     - site-background.jpg
     - background.jpg
 
-# JAVASCRIPT:
+### JAVASCRIPT:
 
     - chosen.jquery.js 
     - math-rendering.js
@@ -58,7 +58,7 @@ HTML :
     - my_states.html
     - qcm_list.html
     - qcm.html
-
+    
 
 PYTHON :
 
