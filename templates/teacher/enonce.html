@@ -102,7 +102,7 @@ function projection(id){
     $('#project').html("Stopper la projection");
     $('#project').attr('onclick','stop_projection("{{ statement.id }}")')
     $('#stop').css("display","flex");
-    socket.emit('project',id)
+    socket.emit('project',id);
 }
 
 

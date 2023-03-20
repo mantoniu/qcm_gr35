@@ -11,11 +11,12 @@ from flask_socketio import SocketIO, join_room, leave_room, emit,rooms
 from werkzeug.utils import secure_filename
 import os
 
-# Liste des questions projetées
 
 global projected_qcmid,owners
 
+# Liste des questions projetées
 projected_qcmid = []
+# Dictionnaire contenant les emails des professeurs et le socket id qui correspond
 owners = {}
 
 
@@ -34,6 +35,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 globals.init() 
 saving.init()
 
+# Vérification du type de fichier uploadé
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -76,12 +78,12 @@ def disconnect_student(student_email):
             user_liveqcm.student_leave(session['email'])
             socket.emit('count',user_liveqcm.get_students_count(),to=owners[user_liveqcm.owner_email])
 
-# Renvoie sur la route "/" des fichiers html
+# Renvoie du fichier pour choisir la partie souhaitée
 @app.route('/')
 def index():
       return render_template("student_or_teacher.html")
 
-
+# Renvoie de la partie professeur
 @app.route('/teacher')
 def teacher_home():
       if is_logged("teacher"):
@@ -89,6 +91,7 @@ def teacher_home():
       else: 
             return render_template('/teacher/index.html')
 
+# Renvoie de la partie étudiant
 @app.route('/student',methods = ['GET','POST'])
 def student_home():
       if is_logged("student"):
@@ -97,12 +100,14 @@ def student_home():
       else:
             return render_template('/student/login.html')
 
+# Page de gestion du compte étudiant
 @app.route('/student/myaccount')
 def student_account():
       disconnect_student(session['email'])
       user = saving.students_data.get_user_by_email(session['email'])
       return render_template('/student/myaccount.html',user=user)
 
+# Affichage d'une question
 @app.route('/student/question/<id>')
 def joined_statement(id):
       global projected_qcmid
@@ -115,7 +120,6 @@ def joined_statement(id):
 
 
 # Changement de mot de passe
-
 @app.route('/student/newpassword',methods=['POST'])
 def change_password():
       if 'actual_password' in request.form and 'new_password' in request.form:
@@ -400,7 +404,7 @@ def response(response_list,liveqcmid):
       student_email = session['email']
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcmid)
       success = liveqcm.respond(student_email,response_list)
-      socket.emit('response_success',success)
+      socket.emit('response_success',success,to=request.sid)
       if success:
             socket.emit('response',{"responses_count":liveqcm.get_responses_count(),"count":liveqcm.get_total_responses_count()},to=owners[liveqcm.owner_email])
 

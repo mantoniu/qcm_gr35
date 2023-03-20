@@ -95,7 +95,7 @@
 </div> 
 <script>
 
-var liveqcm_id = ""
+var liveqcm_id = "";
 
 function verify_statement(){
     if("{{ projected|tojson }}"==="true" && "{{ statement_index }}"!= "{{ statement_number }}"){
@@ -135,7 +135,7 @@ function projection(id){
     $('#project').html("Stopper la projection");
     $('#project').attr('onclick','stop_projection("{{ statement.id }}")')
     $('#stop').css("display","flex");
-    socket.emit('project',id)
+    socket.emit('project',id);
 }
 
 
@@ -164,15 +164,14 @@ function stop_projection(){
 socket.on('liveqcmid',(id)=>{
     liveqcm_id = id;
     $('#liveqcm_id').text("ID du questionnaire : "+id);
-})
+});
 
 
 socket.on('project',(liveqcmid)=>{
     $('#liveqcm_id').text("Identifiant du questionnaire : "+liveqcmid);
-})
+});
 
 socket.on('response',(data)=>{
-    console.log('respose');
     count_list = data.responses_count
     for(let i=0;i<count_list.length;i++){
         $('#progress'+i).val(count_list[i]);
@@ -189,7 +188,7 @@ socket.on('count',(count)=>{
 
 socket.on('stop',()=>{
     window.location.reload();
-})
+});
 
 </script>
 </body>
