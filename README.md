@@ -27,30 +27,56 @@ Méthodes de sauvegarde :
 
 ## Ensembles des fichiers sources :
 
-### Partie étudiant
+### Partie générale
 
-### Partie professeur
+HTML :
 
-CSS :
-
-    - card-style.css
-    - styles.css
-    - header.css
-    - list.css
-    - my_qcm.css
-    - style-tag.css
+    -student_or_teacher.html
 
 IMAGES :
 
-    - site-background.jpg
     - background.jpg
+
+CSS :
+    
+    - card-style.css
+    - choosen.css
+    - global.css
+    - home.css
+    - list_qcm.css
+    - my_states.css
+    - student_or_teacher.css
+    - styles.css
+
+TXT :
+
+    - requirements.txt pour faire fonctionner le module md-mermaid
+    - liveqcm.txt, livestatementsstats.txt, qcm.txt, statements.txt, teachers.txt, students.txt pour les enregistrements
+
+### Partie étudiant
+
+JAVASCRIPT :
+
+    - home.js
+
+HTML :
+
+    - home.html
+    - login.html
+    - myaccount.html
+    - statement.html
+
+### Partie professeur
 
 JAVASCRIPT:
 
     - chosen.jquery.js 
+    - home.js
     - math-rendering.js
+    - mystates.js
+    - script.js
     - select-button.js
-
+    
  HTML :
 
     - add_students.html
@@ -73,10 +99,7 @@ PYTHON :
     - user.py (classe User)
     - utilities.py 
 
-TXT :
 
-    - requirements.txt pour faire fonctionner le module md-mermaid
-    - qcm.txt, statements.txt, user.txt pour les enregistrements
 
 
 ## Webographie :
