@@ -53,6 +53,9 @@
                 </a>                
             </li>
             {% endfor %}
+            {% if my_states_array|length == 0 %}
+            <h2> Il n'y a aucun énoncé </h2>
+            {% endif %}
         </ul>
         <a class="button-link" href="#popup1">
             <button type="button" class="button-add" id="button-add-card">Creer un Questionnaire</button>

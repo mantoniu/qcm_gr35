@@ -28,6 +28,9 @@
         {% for qcm in qcm_array %}
             <a class="lien-qcm" href="{{ 'qcm/' + qcm.id + '/0'}}"><li>{{ qcm.name }}</a><a href="{{ "qcm/delete/" + qcm.id|string }}"> <button type="button" class="suppr-enonce"><i class="fas fa-trash"></i></button></a></li>
         {% endfor %}
+        {% if qcm_array|length == 0 %}
+            <h2>Aucun Qcm enregistré</h2>
+        {% endif %}
     </ul>
 </div>
 </body>

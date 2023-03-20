@@ -4,9 +4,6 @@ $(function() {
     );
 });
 
-
-
-
 $(document).ready(function(){ 
     $("#newqcm").submit(function(){           
         if ($('input:checkbox').filter(':checked').length < 1){
@@ -19,5 +16,6 @@ $(document).ready(function(){
             return false;
         }     
         return true
-    });
+    });   
 });
+
