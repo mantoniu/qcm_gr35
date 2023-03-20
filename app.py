@@ -451,5 +451,13 @@ def next_question(liveqcm_id,statement_number):
       else:
             socket.emit('nextquestion',statement_number+1)
 
+# Gestion de la demande de correction
+@socket.on('correction')
+def correction(id):
+      print("\n",id,"\n")
+      liveqcm = saving.liveqcm_data.get_liveqcm_by_id(id)
+      statement = liveqcm.get_current_statement()
+      socket.emit('correction',{"valids_responses":statement.valids_responses,"decimal":statement.decimal},to=id)
+
 if __name__ == '__main__':
       socket.run(app)

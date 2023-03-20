@@ -110,7 +110,6 @@ socket.on('stop_question',()=>{
     for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
         $('#switch'+i).attr("onclick","return false;");
     }
-    
 });
 
 socket.on('unstop_question',()=>{
@@ -129,6 +128,23 @@ socket.on('nextquestion',()=>{
 socket.on('stop',()=>{
     window.location.replace('/student');
 })
+
+socket.on('correction',(data)=>{
+    console.log(data);
+    if(data.decimal){
+        
+    }
+    else{
+        $('#valider').attr("onclick","alert('Vous ne pouvez pas répondre pendant la correction');");
+        for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
+            $('#switch'+i).attr("onclick","return false;");
+            if(data.valids_responses.includes(i)){
+                console.log(i);
+                $('#switch'+i).prop('checked',true);;
+            }
+        }
+    }
+});
 
 </script>
 </body>
