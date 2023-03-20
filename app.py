@@ -418,6 +418,7 @@ def liveqcm_join(qcmid):
 # Enregistrement de l'étudiant dans le questionnaire
 @socket.on('studentjoin')
 def student_join(qcmid):
+      print('\n TEST \n')
       disconnect_student(session['email'])      
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(qcmid)
       join_room(qcmid)
@@ -444,12 +445,25 @@ def next_question(liveqcm_id,statement_number):
       global projected_qcmid,owners
       if liveqcm_id in projected_qcmid:
             qcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcm_id)
+            qcm.resume()
             qcm.next_statement()
             socket.emit('nextquestion',to=liveqcm_id)
             socket.emit('nextquestion',qcm.statement_index,to=owners[qcm.owner_email])
             socket.emit('count',qcm.get_students_count(),to=owners[session['email']])
       else:
             socket.emit('nextquestion',statement_number+1)
+
+# Gestion de la demande de correction
+@socket.on('correction')
+def correction(id):
+      liveqcm = saving.liveqcm_data.get_liveqcm_by_id(id)
+      statement = liveqcm.get_current_statement()
+      liveqcm.pause()
+      if statement.decimal:
+            valids_responses = statement.possibles_responses
+      else:
+            valids_responses = statement.valids_responses
+      socket.emit('correction',{"valids_responses":valids_responses,"decimal":statement.decimal},to=id)
 
 if __name__ == '__main__':
       socket.run(app)

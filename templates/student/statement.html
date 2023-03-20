@@ -41,6 +41,7 @@
                 <input id="count" type="hidden" name="count" value="1">  
                 <div class="list-response" id="list-response"> 
                 {% if statement.decimal %} 
+                <p id="decimalresponse_correction" class="textarea-response" style="display: none;" hidden></p>
                 <input step="0.01" type="number" id="decimal-response" name="statement" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
                 {% else %}  
                     {% for i in range (0,statement.possibles_responses|length) %}
@@ -81,21 +82,44 @@ function student_join(){
 
 window.onload = student_join;
 
-function send_response(){
-        response_list = []
-        if("{{ statement.decimal|tojson }}"==="false"){
-            for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
-                $('#switch'+i).attr("onclick","return false;");
-                if($('#switch'+i).is(":checked")){
-                    response_list.push(i)
-                    console.log(response_list)
-                }
+function verify_input(){
+    if("{{ statement.decimal|tojson }}"==="false"){
+        for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
+            if($('#switch'+i).is(":checked")){
+                return true;
             }
         }
-        else{
-            response_list.push($('decimal-response').val());
+        return false;
+    }
+    else{
+        if($("#decimal-response").val()){
+            return true;
         }
-        socket.emit("newresponse",response_list,"{{liveqcmid}}");
+        return false;
+    }
+}
+
+
+function send_response(){
+        if(verify_input()){
+            response_list = []
+            if("{{ statement.decimal|tojson }}"==="false"){
+                for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
+                    $('#switch'+i).attr("onclick","return false;");
+                    if($('#switch'+i).is(":checked")){
+                        response_list.push(i)
+                        console.log(response_list)
+                    }
+                }
+            }
+            else{
+                response_list.push($('decimal-response').val());
+            }
+            socket.emit("newresponse",response_list,"{{liveqcmid}}");
+        }
+        else{
+            alert("Veuillez remplir les champs de réponse");
+        }
 }
 
 socket.on('response_success',(success)=>{
@@ -110,7 +134,6 @@ socket.on('stop_question',()=>{
     for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
         $('#switch'+i).attr("onclick","return false;");
     }
-    
 });
 
 socket.on('unstop_question',()=>{
@@ -129,6 +152,25 @@ socket.on('nextquestion',()=>{
 socket.on('stop',()=>{
     window.location.replace('/student');
 })
+
+socket.on('correction',(data)=>{
+    $('#valider').attr("onclick","alert('Vous ne pouvez pas répondre pendant la correction');");
+    if(data.decimal){
+        $("#decimal-response").css('display','none');
+        $("#decimalresponse_correction")
+        .html(data.valids_responses[0])
+        .css('display',"flex");
+    }
+    else{
+        for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
+            $('#switch'+i).attr("onclick","return false;");
+            if(data.valids_responses.includes(i)){
+                console.log(i);
+                $('#switch'+i).prop('checked',true);;
+            }
+        }
+    }
+});
 
 </script>
 </body>

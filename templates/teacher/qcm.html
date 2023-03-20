@@ -40,7 +40,7 @@
 </nav>
 
 <h1> Nom du Qcm : {{ qcm.name }}</h1>
-<h2 id ='liveqcm_id'>{% if projected %} Identifiant du questionnaire : {{ statement.id }} {% endif %}</h2>  
+<h2 id ='liveqcm_id'>{% if projected %} Identifiant du questionnaire : {{ liveqcm_id }} {% endif %}</h2>  
 <div class="card" id="card" value="{{ statement.id }}"> 
     <div class="header-card" id="header">   
         <div class="translation" id="translation">  
@@ -95,7 +95,7 @@
 </div> 
 <script>
 
-var liveqcm_id = "";
+var liveqcm_id = "{{ liveqcm_id }}";
 
 function verify_statement(){
     if("{{ projected|tojson }}"==="true" && "{{ statement_index }}"!= "{{ statement_number }}"){
@@ -129,6 +129,7 @@ function correction(){
         if($('#decimalresponse').is(':hidden')) $('#decimalresponse').css('display','flex');
         else $('#decimalresponse').css('display','none');
     }
+    socket.emit('correction',liveqcm_id);
 }
 
 function projection(id){
