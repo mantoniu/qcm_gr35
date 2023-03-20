@@ -7,6 +7,8 @@ Pour lancer l'application, il faut préalablement installer différents modules 
     - le module Flask-Markdown avec la commande "pip intall Flask-Markdown"
     - le module markdown avec la commande "pip install -r requirements.txt" car il faut une version antérieure à la 3.2 pour fonctionner avec md-mermaid
     - le module md-mermaid avec la commande "pip install md-mermaid"
+    - le module FLask-SocketIO avec la commande "pip install Flask-SocketIO"
+    - le module Flask-Session avec la commande "pip install Flask-Session"
 
 Ensuite il faut utiliser : "python3 app.py" pour lancer le serveur
 
@@ -27,30 +29,56 @@ Méthodes de sauvegarde :
 
 ## Ensembles des fichiers sources :
 
-### Partie étudiant
+### Partie générale
 
-### Partie professeur
+HTML :
 
-CSS :
-
-    - card-style.css
-    - styles.css
-    - header.css
-    - list.css
-    - my_qcm.css
-    - style-tag.css
+    -student_or_teacher.html
 
 IMAGES :
 
-    - site-background.jpg
     - background.jpg
+
+CSS :
+    
+    - card-style.css
+    - choosen.css
+    - global.css
+    - home.css
+    - list_qcm.css
+    - my_states.css
+    - student_or_teacher.css
+    - styles.css
+
+TXT :
+
+    - requirements.txt pour faire fonctionner le module md-mermaid
+    - liveqcm.txt, livestatementsstats.txt, qcm.txt, statements.txt, teachers.txt, students.txt pour les enregistrements
+
+### Partie étudiant
+
+JAVASCRIPT :
+
+    - home.js
+
+HTML :
+
+    - home.html
+    - login.html
+    - myaccount.html
+    - statement.html
+
+### Partie professeur
 
 JAVASCRIPT:
 
     - chosen.jquery.js 
+    - home.js
     - math-rendering.js
+    - mystates.js
+    - script.js
     - select-button.js
-
+    
  HTML :
 
     - add_students.html
@@ -73,12 +101,6 @@ PYTHON :
     - user.py (classe User)
     - utilities.py 
 
-TXT :
-
-    - requirements.txt pour faire fonctionner le module md-mermaid
-    - qcm.txt, statements.txt, user.txt pour les enregistrements
-
-
 ## Webographie :
 
     - Documentation Flask : https://flask.palletsprojects.com/en/2.2.x/
@@ -86,10 +108,12 @@ TXT :
     - Ajout de tags : https://boundlessjourney.wordpress.com/2014/06/12/adding-new-values-to-chosen-plugin/
     - Jquery chosen : https://harvesthq.github.io/chosen/
     - Documentation Flask-SocketIO : https://flask-socketio.readthedocs.io/en/latest/
+    - Uploading files FLask : https://flask.palletsprojects.com/en/2.2.x/patterns/fileuploads/
 
 ## Améliorations à faire :
 
     - Impression des QCM
     - Résultats après avoir fini un QCM
     - Éventuellement mieux sécuriser les enregistrements (interdire les chaînes séparatrices par exemple)
-    - Statistiques
+    - Mettre en place les statistiques
+    - Résoudre bug de réponse
