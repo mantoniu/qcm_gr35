@@ -41,6 +41,7 @@
                 <input id="count" type="hidden" name="count" value="1">  
                 <div class="list-response" id="list-response"> 
                 {% if statement.decimal %} 
+                <p id="decimalresponse_correction" class="textarea-response" style="display: none;" hidden></p>
                 <input step="0.01" type="number" id="decimal-response" name="statement" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
                 {% else %}  
                     {% for i in range (0,statement.possibles_responses|length) %}
@@ -130,12 +131,14 @@ socket.on('stop',()=>{
 })
 
 socket.on('correction',(data)=>{
-    console.log(data);
+    $('#valider').attr("onclick","alert('Vous ne pouvez pas répondre pendant la correction');");
     if(data.decimal){
-        
+        $("#decimal-response").css('display','none');
+        $("#decimalresponse_correction")
+        .html(data.valids_responses[0])
+        .css('display',"flex");
     }
     else{
-        $('#valider').attr("onclick","alert('Vous ne pouvez pas répondre pendant la correction');");
         for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
             $('#switch'+i).attr("onclick","return false;");
             if(data.valids_responses.includes(i)){

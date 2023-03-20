@@ -85,7 +85,7 @@
 </div> 
 <script>
 
-var liveqcm_id = 0
+var liveqcm_id = "{{ liveqcmid }}";
 
 function correction(){
     if("{{ statement.decimal|tojson }}"==="false"){
@@ -96,6 +96,7 @@ function correction(){
         if($('#decimalresponse').is(':hidden')) $('#decimalresponse').css('display','flex');
         else $('#decimalresponse').css('display','none');
     }
+    socket.emit('correction',liveqcm_id);
 }
 
 function projection(id){

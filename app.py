@@ -444,6 +444,7 @@ def next_question(liveqcm_id,statement_number):
       global projected_qcmid,owners
       if liveqcm_id in projected_qcmid:
             qcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcm_id)
+            qcm.resume()
             qcm.next_statement()
             socket.emit('nextquestion',to=liveqcm_id)
             socket.emit('nextquestion',qcm.statement_index,to=owners[qcm.owner_email])
@@ -457,7 +458,12 @@ def correction(id):
       print("\n",id,"\n")
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(id)
       statement = liveqcm.get_current_statement()
-      socket.emit('correction',{"valids_responses":statement.valids_responses,"decimal":statement.decimal},to=id)
+      liveqcm.pause()
+      if statement.decimal:
+            valids_responses = statement.possibles_responses
+      else:
+            valids_responses = statement.valids_responses
+      socket.emit('correction',{"valids_responses":valids_responses,"decimal":statement.decimal},to=id)
 
 if __name__ == '__main__':
       socket.run(app)
