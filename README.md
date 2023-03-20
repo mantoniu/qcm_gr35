@@ -7,6 +7,8 @@ Pour lancer l'application, il faut préalablement installer différents modules 
     - le module Flask-Markdown avec la commande "pip intall Flask-Markdown"
     - le module markdown avec la commande "pip install -r requirements.txt" car il faut une version antérieure à la 3.2 pour fonctionner avec md-mermaid
     - le module md-mermaid avec la commande "pip install md-mermaid"
+    - le module FLask-SocketIO avec la commande "pip install Flask-SocketIO"
+    - le module Flask-Session avec la commande "pip install Flask-Session"
 
 Ensuite il faut utiliser : "python3 app.py" pour lancer le serveur
 
@@ -99,9 +101,6 @@ PYTHON :
     - user.py (classe User)
     - utilities.py 
 
-
-
-
 ## Webographie :
 
     - Documentation Flask : https://flask.palletsprojects.com/en/2.2.x/
@@ -109,10 +108,12 @@ PYTHON :
     - Ajout de tags : https://boundlessjourney.wordpress.com/2014/06/12/adding-new-values-to-chosen-plugin/
     - Jquery chosen : https://harvesthq.github.io/chosen/
     - Documentation Flask-SocketIO : https://flask-socketio.readthedocs.io/en/latest/
+    - Uploading files FLask : https://flask.palletsprojects.com/en/2.2.x/patterns/fileuploads/
 
 ## Améliorations à faire :
 
     - Impression des QCM
     - Résultats après avoir fini un QCM
     - Éventuellement mieux sécuriser les enregistrements (interdire les chaînes séparatrices par exemple)
-    - Statistiques
+    - Mettre en place les statistiques
+    - Résoudre bug de réponse
