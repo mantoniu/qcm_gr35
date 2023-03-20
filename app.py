@@ -64,10 +64,8 @@ def statement_values():
 def is_logged(role:str) -> bool:
       if 'role' in session and 'email' in session and 'password' in session and role==session['role']:
             if session['role']=="teacher":
-                  print("\n t \n",saving.teachers_data.login(session['email'], session['password']))
                   return saving.teachers_data.login(session['email'], session['password'])
             else:
-                  print("\n s \n",saving.students_data.login(session['email'], session['password']))
                   return saving.students_data.login(session['email'], session['password'])
       return False
 
@@ -236,7 +234,6 @@ def my_states():
 @app.route('/newstate',methods=['POST'])
 def newstate():
       statement = statement_values()
-      print("\n",statement.tags,"\n")
       saving.statements_data.add_statement(statement)
       return redirect('/my_states')
 
@@ -350,24 +347,22 @@ def upload_file():
 def disconnection():
       print('disconnected')
       
-
+# Gestion de la connexion
 @socket.on('connect')
 def connection():
-      print('ZADNAZODNAZODNAOZND \n \n')
+      # Si professeur a projeté actualiser le socket id et renvoyer les compteurs 
       if session['email'] in owners.keys():
-            print('1ZADNAZODNAZODNAOZND \n \n')
             owners[session['email']] = request.sid
             liveqcm = saving.liveqcm_data.get_liveqcm_by_owner_email(session['email'])
             socket.emit('count',liveqcm.get_students_count(),to=owners[session['email']])
-            print("\n",request.sid,"\n")
       
+      # Si étudiant et est dans un live qcm rajouté l'étudiant dans la room et renvoyé les compteurs au professeur
       liveqcm = saving.liveqcm_data.get_liveqcm_by_student_email(session['email'])
       if liveqcm != None:
-            print('\n AHAHAHAHHAHAHHA TROP MARANT \n')
             join_room(liveqcm.id)
             socket.emit('count',liveqcm.get_students_count(),to=owners[liveqcm.owner_email])
 
-
+# Gestion de la projection d'un questionnaire
 @socket.on('project')
 def project(id):
       global projected_qcmid,owners
@@ -382,9 +377,9 @@ def project(id):
       owners[session['email']] = request.sid
       saving.liveqcm_data.add_liveqcm(liveqcm)
       projected_qcmid.append(liveqcm.id)
-      print(owners[session['email']])
       socket.emit('liveqcmid',liveqcm.id,to=owners[session['email']])
 
+# Arreter la projection d'une question
 @socket.on('stop')
 def stop():
       global projected_qcmid
@@ -394,31 +389,29 @@ def stop():
             liveqcm.end()
             saving.liveqcm_data.save_liveqcm_to_file(liveqcm)
             projected_qcmid.remove(liveqcm_id)
-            print("\n STOP \n")
             socket.emit('stop',to=owners[session['email']])
             socket.emit('stop',to=liveqcm_id)
             del owners[session['email']]
 
+# Gestion des réponses des étudiants
 @socket.on('newresponse')
 def response(response_list,liveqcmid):
       global owners
       student_email = session['email']
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcmid)
-      print(response_list)
       success = liveqcm.respond(student_email,response_list)
-      print('\n Success \n')
       socket.emit('response_success',success)
       if success:
             socket.emit('response',{"responses_count":liveqcm.get_responses_count(),"count":liveqcm.get_total_responses_count()},to=owners[liveqcm.owner_email])
 
-
+# Vérification de l'existence d'une projection 
 @socket.on('liveqcm_join')
 def liveqcm_join(qcmid):
       global projected_qcmid
-      print(projected_qcmid,qcmid)
       not_found = qcmid not in projected_qcmid
       socket.emit('liveqcm_join',{"not_found":not_found,"qcmid":qcmid},to=request.sid)
 
+# Enregistrement de l'étudiant dans le questionnaire
 @socket.on('studentjoin')
 def student_join(qcmid):
       disconnect_student(session['email'])      
@@ -427,22 +420,24 @@ def student_join(qcmid):
       liveqcm.student_join(session['email'])
       socket.emit('count',liveqcm.get_students_count(),to=owners[liveqcm.owner_email])
 
+# Mise en pause d'un questionnaire
 @socket.on('stop_question')
 def stop_question(liveqcm_id):
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcm_id)
       liveqcm.pause()
       socket.emit('stop_question',to=liveqcm_id)
 
+# Remettre la question en marche
 @socket.on('unstop_question')
 def unstop_question(liveqcm_id):
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcm_id)
       liveqcm.resume()
       socket.emit('unstop_question',to=liveqcm_id)
 
+# Passage à la question suivante
 @socket.on('nextquestion')
 def next_question(liveqcm_id,statement_number):
       global projected_qcmid,owners
-      print('test')
       if liveqcm_id in projected_qcmid:
             qcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcm_id)
             qcm.next_statement()
