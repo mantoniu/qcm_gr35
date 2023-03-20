@@ -118,7 +118,7 @@ function send_response(){
             socket.emit("newresponse",response_list,"{{liveqcmid}}");
         }
         else{
-            alert("Veuillez remplir les champs de réponse");
+            alert("Veuillez remplir les champs de réponses");
         }
 }
 
@@ -165,8 +165,10 @@ socket.on('correction',(data)=>{
         for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
             $('#switch'+i).attr("onclick","return false;");
             if(data.valids_responses.includes(i)){
-                console.log(i);
-                $('#switch'+i).prop('checked',true);;
+                $('#switch'+i).prop('checked',true);
+            }
+            else{
+                $('#switch'+i).prop('checked',false);
             }
         }
     }
