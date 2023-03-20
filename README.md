@@ -27,6 +27,10 @@ Méthodes de sauvegarde :
 
 ## Ensembles des fichiers sources :
 
+### Partie étudiant
+
+### Partie professeur
+
 CSS :
 
     - card-style.css
@@ -41,13 +45,13 @@ IMAGES :
     - site-background.jpg
     - background.jpg
 
-### JAVASCRIPT:
+JAVASCRIPT:
 
     - chosen.jquery.js 
     - math-rendering.js
     - select-button.js
 
-HTML :
+ HTML :
 
     - add_students.html
     - create.html
@@ -88,3 +92,4 @@ TXT :
     - Impression des QCM
     - Résultats après avoir fini un QCM
     - Éventuellement mieux sécuriser les enregistrements (interdire les chaînes séparatrices par exemple)
+    - Statistiques
