@@ -418,6 +418,7 @@ def liveqcm_join(qcmid):
 # Enregistrement de l'étudiant dans le questionnaire
 @socket.on('studentjoin')
 def student_join(qcmid):
+      print('\n TEST \n')
       disconnect_student(session['email'])      
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(qcmid)
       join_room(qcmid)
@@ -455,7 +456,6 @@ def next_question(liveqcm_id,statement_number):
 # Gestion de la demande de correction
 @socket.on('correction')
 def correction(id):
-      print("\n",id,"\n")
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(id)
       statement = liveqcm.get_current_statement()
       liveqcm.pause()
