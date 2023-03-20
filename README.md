@@ -41,7 +41,7 @@ IMAGES :
     - site-background.jpg
     - background.jpg
 
-JAVASCRIPT:
+# JAVASCRIPT:
 
     - chosen.jquery.js 
     - math-rendering.js
@@ -49,16 +49,16 @@ JAVASCRIPT:
 
 HTML :
 
+    - add_students.html
     - create.html
     - edit.html
     - enonce.html
-    - home.html
     - index.html
     - my_qcm.html
     - my_states.html
     - qcm_list.html
     - qcm.html
-    - tag.html
+
 
 PYTHON :
 
@@ -81,6 +81,7 @@ TXT :
     - Projet md-mermaid : https://pypi.org/project/md-mermaid/
     - Ajout de tags : https://boundlessjourney.wordpress.com/2014/06/12/adding-new-values-to-chosen-plugin/
     - Jquery chosen : https://harvesthq.github.io/chosen/
+    - Documentation Flask-SocketIO : https://flask-socketio.readthedocs.io/en/latest/
 
 ## Améliorations à faire :
 
