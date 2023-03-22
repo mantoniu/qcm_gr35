@@ -34,14 +34,18 @@
 </nav>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>    
-<script type="text/javascript" src="../../static/js/script.js"></script>
+
 <script>
 $(function() {
     $(".chzn-select").chosen(
         {no_results_text:"Pas d'étiquette trouvée. Appuyez sur entrée pour ajouter "}
     );
 });
+
+var decimal = false;
+
 </script>
+<script type="text/javascript" src="../../static/js/script.js"></script>
 <form method="POST" id="new-statement" action="/newstate" class="form-card">
 
     <div class="info" id="info">

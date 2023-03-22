@@ -22,10 +22,7 @@ function addOption(){
     $('#select-tags').trigger("chosen:updated");
 }
 
-var decimal = false;
-
 $(document).ready(function(){
-    let decimal;
     $("#decimal").change(function(){
         if(this.checked){
             decimal = true;

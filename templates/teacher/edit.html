@@ -12,7 +12,6 @@
     <script type="text/javascript" src="../../static/js/math-rendering.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/js/script.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
     <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
     <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
@@ -39,9 +38,12 @@ $(function() {
         {no_results_text:"Pas d'étiquette trouvée. Appuyez sur entrée pour ajouter "}
     );
 });
-</script>
-<form method="POST" id="new-statement" action="{{ "/set/" + statement.id|string }}" class="form-card">
 
+var decimal = "{{ statement.decimal|tojson }}"==="true"
+
+</script>
+<script type="text/javascript" src="/static/js/script.js"></script>
+<form method="POST" id="new-statement" action="{{ "/set/" + statement.id|string }}" class="form-card">
     <div class="info">
         <div class="decimal">
             <label for="decimal">Decimal</label>
