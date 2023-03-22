@@ -66,10 +66,10 @@ class Statement():
 
 
     def __eq__(self, stmt: Statement) -> bool:
-        return self.id == stmt.id
+        return stmt is None or self.id == stmt.id
 
 
-class QCM:
+class QCM():
     def __init__(self, name: str, statements: list, user_email: str, id:str = None) -> None:
         self.name = name
         self.statements = statements
@@ -136,9 +136,11 @@ class LiveStatementStats():
     def set_response(self, student_email: str, responses: list) -> None:
         self.stats[student_email] = {"responses": responses, "time": time()}
     
+    def clear_responses(self):
+        self.stats = {}
+    
     def get_registering_line(self) -> str:
         line_to_add = [self.id]
-        #kilian:1,3:9886;kdkdk:
         stats_str = ""
         if len(self.stats) > 0:
             for students_email in self.stats:
@@ -146,14 +148,20 @@ class LiveStatementStats():
             stats_str = stats_str[:-1]
         line_to_add.append(stats_str)
         return line_to_add
+    
+    def __str__(self) -> str:
+        return str(self.stats) + "===" + self.id
 
 class LiveQCM():
     def __init__(self, owner_email: str, statements: list, id: str = None, stats: list = None, opened: bool = True) -> None:
         self.owner_email = owner_email
         self.statements = statements
         self.students_email = []
+        self.stats = []
         if stats == None:
-            self.stats = [LiveStatementStats()] * len(statements)
+            for i in range(len(statements)):
+                livestatementstats = LiveStatementStats()
+                self.stats.append(livestatementstats)
         else:
             self.stats = stats
         self.statement_index = 0
@@ -164,25 +172,23 @@ class LiveQCM():
             self.id = id
         self.opened = opened
     
-    def get_current_stats(self) -> LiveStatementStats:
-        return self.stats[self.statement_index]
-    
-    def get_current_all_students_responses(self) -> dict:
-        return self.get_current_stats().get_students_responses()
-
+    def debug(self):
+        to_print = ""
+        for elements in self.stats:
+            to_print += "\n" + str(elements) + "=" + hex(id(elements)) + "=" + elements.id + " "
+        print(to_print)
 
     def has_responded(self, student_email: str) -> bool:
-        students_dic = self.get_current_all_students_responses()
+        students_dic = self.stats[self.statement_index].get_students_responses()
+        self.debug()
         return student_email in students_dic and students_dic[student_email] != []
 
     def respond(self, student_email: str, responses: list) -> bool :
         if not(self.paused):
-            print('\n')
-            print(student_email in self.students_email)
-            print(not(self.has_responded(student_email)))
-            print('\n')
             if student_email in self.students_email and not(self.has_responded(student_email)):
-                self.get_current_stats().set_response(student_email, responses)
+                self.stats[self.statement_index].set_response(student_email, responses)
+                for i in range(self.statement_index + 1, len(self.stats)):
+                    self.stats[i].clear_responses()
                 return True
             else:
                 return False
@@ -203,7 +209,7 @@ class LiveQCM():
 
     def get_responses_count(self) -> list:
         responses_count = [0] * len(self.get_current_statement().possibles_responses)
-        current_responses_from_all_students = self.get_current_all_students_responses()
+        current_responses_from_all_students = self.stats[self.statement_index].get_students_responses()
         for students_email in current_responses_from_all_students:
             one_student_responses_tab = current_responses_from_all_students[students_email]
             for responses in one_student_responses_tab:
@@ -211,7 +217,7 @@ class LiveQCM():
         return responses_count
 
     def get_total_responses_count(self) -> int:
-        return len(self.get_current_all_students_responses())
+        return len(self.stats[self.statement_index].get_students_responses())
 
 
     def pause(self) -> bool:
@@ -250,18 +256,13 @@ class LiveQCM():
             return False
     
     def get_current_statement(self) -> Statement:
+        print(str(self.statement_index) + " " + str(self.statements))
         return self.statements[self.statement_index]
     
     def get_statements_len(self) -> int:
         return len(self.statements)
 
     def next_statement(self) -> bool:
-        current_students_responses = self.get_current_all_students_responses()
-        students_who_responded = list(current_students_responses.keys())
-        for students_email in self.students_email:
-            if not(students_email in students_who_responded):
-                current_students_responses[students_email] = []
-
         self.statement_index = self.statement_index + 1
         if self.statement_index >= self.get_statements_len():
             self.end()

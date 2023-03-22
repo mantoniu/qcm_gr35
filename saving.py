@@ -350,13 +350,25 @@ class LiveQCMData():
                 statements_ids = row[2].split(";")
                 livestatementsstats_ids = row[3].split(";")
                 statements = []
+                is_anything_none = False
                 for ids in statements_ids:
-                    statements.append(self.statements_data.get_statement_by_id(ids))
+                    statement = self.statements_data.get_statement_by_id(ids)
+                    if statement is not None:
+                        statements.append(statement)
+                    else:
+                        is_anything_none = True
                 stats = []
                 for ids in livestatementsstats_ids:
-                    stats.append(self.livestatementsstats_data.get_livestatementsstats_by_id(ids))
-                self.liveqcm_array.append(LiveQCM(id=row[0], owner_email=row[1], statements=statements, stats=stats, opened=False))
-    
+                    stat = self.livestatementsstats_data.get_livestatementsstats_by_id(ids)
+                    if stat is not None:
+                        stats.append(stat)
+                    else:
+                        is_anything_none = True
+                if not(is_anything_none):
+                    self.liveqcm_array.append(LiveQCM(id=row[0], owner_email=row[1], statements=statements, stats=stats, opened=False))
+                else:
+                    self.remove_liveqcm_by_id(row[0])
+
     def contains_id(self, id: str):
         for liveqcm in self.liveqcm_array:
             if liveqcm.id == id:
@@ -430,17 +442,18 @@ class LiveQCMData():
         return None
 
     def remove_liveqcm_by_id(self, id: str) -> bool:
+        remove_lines_which_contains(self.save_file, string=id)
         if self.contains_id(id):
             self.liveqcm_array.remove(self.get_liveqcm_by_id(id))
-            remove_lines_which_contains(self.save_file, string=id)
             return True
         else:
             return False
+        
     
     def remove_liveqcm(self, liveqcm: LiveQCM) -> bool:
+        remove_lines_which_contains(self.save_file, string=liveqcm.id)
         if self.contains_liveqcm(liveqcm):
             self.liveqcm_array.remove(liveqcm)
-            remove_lines_which_contains(self.save_file, string=liveqcm.id)
             return True
         else:
             return False

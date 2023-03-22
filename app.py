@@ -387,6 +387,7 @@ def project(id):
 @socket.on('stop')
 def stop():
       global projected_qcmid
+      print("\nget_liveqcm_by_owner_email(session['email']) : " + str(session['email']))
       liveqcm_id = saving.liveqcm_data.get_liveqcm_by_owner_email(session['email']).id
       if liveqcm_id in projected_qcmid:
             liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcm_id)
@@ -404,6 +405,9 @@ def response(response_list,liveqcmid):
       student_email = session['email']
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcmid)
       success = liveqcm.respond(student_email,response_list)
+      print("\nstudent_email,response_list : " + str((student_email,response_list)))
+      print("liveqcm.get_current_responses_from_student_email : " + str(liveqcm.get_current_responses_from_student_email(student_email)))
+      liveqcm.debug()
       socket.emit('response_success',success,to=request.sid)
       if success:
             socket.emit('response',{"responses_count":liveqcm.get_responses_count(),"count":liveqcm.get_total_responses_count()},to=owners[liveqcm.owner_email])
