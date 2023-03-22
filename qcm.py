@@ -1,9 +1,9 @@
 from __future__ import annotations
 from markdown import markdown
 from uuid import uuid4
-from utilities import hash, file_contains
-from user import Student, Teacher
+from utilities import hash
 from time import time
+from datetime import datetime
 
 md_extensions = ['md_mermaid','markdown.extensions.attr_list','markdown.extensions.codehilite','markdown.extensions.fenced_code']
 
@@ -115,6 +115,12 @@ class LiveStatementStats():
         self.id = hash(str(uuid4()))
         return self.id
     
+    def get_all_students_responses(self) -> dict:
+        return_dic = {}
+        for students_email in self.stats:
+            return_dic[students_email] = {"responses" : list(map(str, self.stats[students_email]["responses"])), "time" : datetime.fromtimestamp(self.stats[students_email]["time"])}
+        return return_dic
+    
     def get_students_responses(self) -> dict:
         students_responses = {}
         for students_emails in self.stats:
@@ -134,7 +140,7 @@ class LiveStatementStats():
             return False
     
     def set_response(self, student_email: str, responses: list) -> None:
-        self.stats[student_email] = {"responses": responses, "time": time()}
+        self.stats[student_email] = {"responses": responses, "time": time() + 3600}
     
     def clear_responses(self):
         self.stats = {}
@@ -194,6 +200,9 @@ class LiveQCM():
                 return False
         else:
             return False
+    
+    def get_all_stats(self) -> list:
+        return self.stats
     
     def get_responses_from_student_email(self, student_email: str) -> list:
         responses = []
