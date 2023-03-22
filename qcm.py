@@ -144,7 +144,7 @@ class LiveStatementStats():
         stats_str = ""
         if len(self.stats) > 0:
             for students_email in self.stats:
-                stats_str += students_email + ":" + self.stats[students_email]["responses"] + ":" + self.stats[students_email]["time"] + ";"
+                stats_str += students_email + ":" + (','.join(map(str, self.stats[students_email]["responses"]))) + ":" + str(self.stats[students_email]["time"]) + ";"
             stats_str = stats_str[:-1]
         line_to_add.append(stats_str)
         return line_to_add
@@ -162,6 +162,7 @@ class LiveQCM():
             for i in range(len(statements)):
                 livestatementstats = LiveStatementStats()
                 self.stats.append(livestatementstats)
+                livestatementstats.clear_responses()
         else:
             self.stats = stats
         self.statement_index = 0
@@ -180,7 +181,6 @@ class LiveQCM():
 
     def has_responded(self, student_email: str) -> bool:
         students_dic = self.stats[self.statement_index].get_students_responses()
-        self.debug()
         return student_email in students_dic and students_dic[student_email] != []
 
     def respond(self, student_email: str, responses: list) -> bool :

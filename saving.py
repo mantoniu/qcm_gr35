@@ -285,7 +285,7 @@ class LiveStatementsStatsData():
                 all_students_data = row[1].split(";")
                 for each_students_data in all_students_data:
                     email_responses_time = each_students_data.split(":")
-                    stats[email_responses_time[0]] = {"responses": list(map(int, email_responses_time[1].split(","))), "time": int(email_responses_time[2])}
+                    stats[email_responses_time[0]] = {"responses": list(map(int, email_responses_time[1].split(","))), "time": float(email_responses_time[2])}
                 self.livestatementsstats_array.append(LiveStatementStats(stats=stats, id=row[0]))
 
     def contains_id(self, id: str):
@@ -387,6 +387,8 @@ class LiveQCMData():
     
     def save_liveqcm_to_file(self, liveqcm: LiveQCM) -> None:
         add_line_to_file(self.save_file, liveqcm.get_registering_line())
+        for stats in liveqcm.stats:
+            livestatementsstats_data.save_livestatementsstats_to_file(stats)
 
     def end_and_save_liveqcm(self, liveqcm: LiveQCM) -> None:
         liveqcm.end()
