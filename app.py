@@ -284,18 +284,20 @@ def qcm_id(id,statement_number):
       liveqcm = saving.liveqcm_data.get_liveqcm_by_owner_email(session['email'])
       liveqcm_id,statement_index = 0,0
       statement_number = int(statement_number)
+      projected = False
       if liveqcm != None:
             liveqcm_id = liveqcm.id
             statement_index = liveqcm.statement_index
+            projected = session['email'] in owners.keys() and qcm.statements == liveqcm.statements
       
       if statement_number+2 <= len(qcm.statements):
             current_statement = qcm.statements[statement_number]
-            return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=False,projected=session['email'] in owners.keys(),liveqcm_id=liveqcm_id,statement_index=statement_index) 
+            return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=False,projected=projected,liveqcm_id=liveqcm_id,statement_index=statement_index) 
       elif statement_number == len(qcm.statements):
             return redirect('/my_qcm')
       else:
             current_statement = qcm.statements[statement_number]
-            return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=True,projected=session['email'] in owners.keys(),liveqcm_id=liveqcm_id,statement_index=statement_index)
+            return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=True,projected=projected,liveqcm_id=liveqcm_id,statement_index=statement_index)
 
 # Renvoi la conversion html du markdown 
 @app.route('/preview',methods=['POST','GET'])
