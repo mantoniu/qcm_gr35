@@ -201,8 +201,17 @@ class LiveQCM():
         else:
             return False
     
-    def get_all_stats(self) -> list:
-        return self.stats
+    def get_reponses_by_time(self) -> list:
+        index_connected = []
+        for stat in self.stats:
+            index_connected.append(len(stat.stats))
+        return index_connected
+    
+    def get_logs(self) -> list:
+        logs = []
+        for stat in self.stats:
+            logs.append(stat.get_all_students_reponses())
+        return logs
     
     def get_responses_from_student_email(self, student_email: str) -> list:
         responses = []
