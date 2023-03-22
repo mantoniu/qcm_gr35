@@ -485,9 +485,9 @@ def correction(id):
 # Envoie des statistiques
 @socket.on('stats')
 def send_stats(liveqcmid):
-      x_values = [50,60,70,80,90,100,110,120,130,140,150]
-      y_values = [7,8,8,9,9,9,10,11,14,14,15]
-      socket.emit('stats',{"x_values":x_values,"y_values":y_values},to=request.sid)
+      liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcmid)
+      xy = liveqcm.get_reponses_by_time_xy()
+      socket.emit('stats',{"x_values":xy[0],"y_values":xy[1]},to=request.sid)
 
 
 if __name__ == '__main__':

@@ -32,10 +32,10 @@
       <li><a href="/logout">Déconnexion</a></li>
     </ul>
 </nav>
-<center><h2>Statistiques</h2></center>
+<center><h2 style="margin-top: 30%;margin-bottom: 30%;">Statistiques</h2></center>
 
-<select class="form-select" aria-label="select" id='liveqcm_select' style="width: 30%;">
-    <option selected>Sélectionner un liveqcm</option>
+<select class="form-select" aria-label="select" id='liveqcm_select' style="width: 30%; margin-bottom: 3%;">
+    <option value="option" selected>Sélectionner un liveqcm</option>
     {% for liveqcm in liveqcm_list %}
     <option value="{{ liveqcm.id }}">{{ liveqcm.id }}</option>
     {% endfor %}
@@ -49,7 +49,9 @@
 $('#liveqcm_select').on('change',function(){
     var option = $(this).find("option:selected");
     var option_value = option.val();
-    socket.emit('stats',option_value);
+    if(option_value!="option"){
+        socket.emit('stats',option_value);
+    }
     console.log(option_value);
 });
 
@@ -68,6 +70,19 @@ socket.on('stats',(data)=>{
         }]
     },
     options: {
+        scales :{
+            yAxes:[{
+                ticks:{
+                    stepSize:1.0
+                }
+            }]
+        },
+        legend:{display:false},
+        title:{
+            display:true,
+            text:"Nombre de réponses par énoncé",
+            fontSize:16
+        }
     }
     });
 });

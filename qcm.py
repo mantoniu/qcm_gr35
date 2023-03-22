@@ -202,7 +202,7 @@ class LiveQCM():
             return False
     
     def get_reponses_by_time_xy(self) -> tuple:
-        x_values = range(1, len(self.stats + 1))
+        x_values = list(range(1, len(self.stats)+1))
         y_values = []
         for stat in self.stats:
             y_values.append(len(stat.stats))
