@@ -72,8 +72,8 @@
             {% endif %}
             
         </div>
-            <p id ='student_count'>Connectés : 0</p>
-            <p id ='response_count'>Réponses : 0</p>  
+            <p id ='student_count' hidden>Connectés : 0</p>
+            <p id ='response_count' hidden>Réponses : 0</p>  
             </div>  
             <div class="card-navbar">  
                 <a href="{{ "edit/" + statement.id|string }}" style="display: contents;"><button class="animation rectangle" type="submit" id="ajouter">Editer l'énoncé</button></a> 
@@ -126,6 +126,8 @@ function stop_projection(){
     $('#stop').css('display','none');
     $('#stop').html("Désactiver réponses");
     $('#stop').attr('onclick','stop(liveqcm_id)');
+    $('#student_count').css('display','none');
+    $('#response_count').css('display','none');
     socket.emit('stop',liveqcm_id);
 }
 
@@ -143,15 +145,19 @@ socket.on('response',(data)=>{
         $('#progress'+i).val(count_list[i]);
     }
     $('#response_count').html("Réponses : "+data.count);
+    $('#response_count').css('display','flex');
 });
 
 
 socket.on('count',(count)=>{
     console.log(count)
-    $('#student_count').text("Nombre d'étudiants : "+count);
-    $('.progress_bar').css("display","flex");
-    $('.progress_bar').attr('max',count);
-})
+    if(count!=0){
+        $('#student_count').text("Nombre d'étudiants : "+count);
+        $('#student_count').css('display','flex');
+        $('.progress_bar').attr('max',count);
+        $('.progress_bar').css("display","flex");
+    }
+});
 
 </script>
 </body>
