@@ -214,6 +214,13 @@ def my_qcm():
       else:
             return redirect('/teacher')
 
+@app.route('/stats')
+def stats():
+      if is_logged("teacher"):
+            return render_template('/teacher/stats.html',liveqcm_list=saving.liveqcm_data.get_all_liveqcm())
+      else:
+            return redirect('/teacher')
+
 # Permet de renvoyer la liste des énoncés et donc l'affichage de ceux-ci dans my_states.html
 # et si des tags ont été rentrés d'afficher seulement les énoncés correspondant
 @app.route('/my_states',methods=['POST','GET'])
@@ -473,6 +480,15 @@ def correction(id):
       else:
             valids_responses = statement.valids_responses
       socket.emit('correction',{"valids_responses":valids_responses,"decimal":statement.decimal},to=id)
+
+
+# Envoie des statistiques
+@socket.on('stats')
+def send_stats(liveqcmid):
+      x_values = [50,60,70,80,90,100,110,120,130,140,150]
+      y_values = [7,8,8,9,9,9,10,11,14,14,15]
+      socket.emit('stats',{"x_values":x_values,"y_values":y_values},to=request.sid)
+
 
 if __name__ == '__main__':
       socket.run(app)
