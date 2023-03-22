@@ -349,6 +349,11 @@ def upload_file():
 
 @socket.on('disconnect')
 def disconnection():
+      if request.sid in owners.values():
+            liveqcm = saving.liveqcm_data.get_liveqcm_by_owner_email(session['email'])
+            if len(liveqcm.statements)==1:
+                  liveqcm.end()
+                  del owners[session['email']]
       print('disconnected')
       
 # Gestion de la connexion
@@ -405,8 +410,6 @@ def response(response_list,liveqcmid):
       student_email = session['email']
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcmid)
       success = liveqcm.respond(student_email,response_list)
-      print("\nstudent_email,response_list : " + str((student_email,response_list)))
-      print("liveqcm.get_current_responses_from_student_email : " + str(liveqcm.get_current_responses_from_student_email(student_email)))
       liveqcm.debug()
       socket.emit('response_success',success,to=request.sid)
       if success:
