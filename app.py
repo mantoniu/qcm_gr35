@@ -74,7 +74,7 @@ def is_logged(role:str) -> bool:
 # Déconnecter élève
 def disconnect_student(student_email):
       user_liveqcm = saving.liveqcm_data.get_liveqcm_by_student_email(session['email'])
-      if user_liveqcm != None:
+      if user_liveqcm != None and user_liveqcm.owner_email in owners:
             user_liveqcm.student_leave(session['email'])
             socket.emit('count',user_liveqcm.get_students_count(),to=owners[user_liveqcm.owner_email])
 
@@ -284,18 +284,20 @@ def qcm_id(id,statement_number):
       liveqcm = saving.liveqcm_data.get_liveqcm_by_owner_email(session['email'])
       liveqcm_id,statement_index = 0,0
       statement_number = int(statement_number)
+      projected = False
       if liveqcm != None:
             liveqcm_id = liveqcm.id
             statement_index = liveqcm.statement_index
+            projected = session['email'] in owners.keys() and qcm.statements == liveqcm.statements
       
       if statement_number+2 <= len(qcm.statements):
             current_statement = qcm.statements[statement_number]
-            return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=False,projected=session['email'] in owners.keys(),liveqcm_id=liveqcm_id,statement_index=statement_index) 
+            return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=False,projected=projected,liveqcm_id=liveqcm_id,statement_index=statement_index) 
       elif statement_number == len(qcm.statements):
             return redirect('/my_qcm')
       else:
             current_statement = qcm.statements[statement_number]
-            return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=True,projected=session['email'] in owners.keys(),liveqcm_id=liveqcm_id,statement_index=statement_index)
+            return render_template("/teacher/qcm.html",statement=current_statement,qcm=qcm,statement_number=statement_number,final=True,projected=projected,liveqcm_id=liveqcm_id,statement_index=statement_index)
 
 # Renvoi la conversion html du markdown 
 @app.route('/preview',methods=['POST','GET'])
@@ -349,6 +351,11 @@ def upload_file():
 
 @socket.on('disconnect')
 def disconnection():
+      if request.sid in owners.values():
+            liveqcm = saving.liveqcm_data.get_liveqcm_by_owner_email(session['email'])
+            if len(liveqcm.statements)==1:
+                  liveqcm.end()
+                  del owners[session['email']]
       print('disconnected')
       
 # Gestion de la connexion
@@ -405,8 +412,6 @@ def response(response_list,liveqcmid):
       student_email = session['email']
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcmid)
       success = liveqcm.respond(student_email,response_list)
-      print("\nstudent_email,response_list : " + str((student_email,response_list)))
-      print("liveqcm.get_current_responses_from_student_email : " + str(liveqcm.get_current_responses_from_student_email(student_email)))
       liveqcm.debug()
       socket.emit('response_success',success,to=request.sid)
       if success:

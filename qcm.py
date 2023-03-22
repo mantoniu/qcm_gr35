@@ -66,7 +66,7 @@ class Statement():
 
 
     def __eq__(self, stmt: Statement) -> bool:
-        return stmt is None or self.id == stmt.id
+        return self.id == stmt.id
 
 
 class QCM():

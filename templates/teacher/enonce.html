@@ -128,7 +128,9 @@ function stop_projection(){
     $('#stop').attr('onclick','stop(liveqcm_id)');
     $('#student_count').css('display','none');
     $('#response_count').css('display','none');
-    socket.emit('stop',liveqcm_id);
+    $('.progress_bar').css("display","none");
+    $('.progress_bar').val(0);
+    socket.emit('stop');
 }
 
 socket.on('liveqcmid',(id)=>{
