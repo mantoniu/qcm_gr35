@@ -74,7 +74,7 @@ def is_logged(role:str) -> bool:
 # Déconnecter élève
 def disconnect_student(student_email):
       user_liveqcm = saving.liveqcm_data.get_liveqcm_by_student_email(session['email'])
-      if user_liveqcm != None:
+      if user_liveqcm != None and user_liveqcm.owner_email in owners:
             user_liveqcm.student_leave(session['email'])
             socket.emit('count',user_liveqcm.get_students_count(),to=owners[user_liveqcm.owner_email])
 
