@@ -201,11 +201,12 @@ class LiveQCM():
         else:
             return False
     
-    def get_reponses_by_time(self) -> list:
-        index_connected = []
+    def get_reponses_by_time_xy(self) -> tuple:
+        x_values = range(1, len(self.stats + 1))
+        y_values = []
         for stat in self.stats:
-            index_connected.append(len(stat.stats))
-        return index_connected
+            y_values.append(len(stat.stats))
+        return (x_values, y_values)
     
     def get_logs(self) -> list:
         logs = []
