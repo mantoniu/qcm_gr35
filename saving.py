@@ -280,13 +280,18 @@ class LiveStatementsStatsData():
         self.livestatementsstats_array = []
         tab = read_file(self.save_file)
         for row in tab:
-            if len(row) > 1:
+            if len(row) > 5 :
                 stats = {}
-                all_students_data = row[1].split(";")
+                all_students_data = row[3].split(";")
                 for each_students_data in all_students_data:
-                    email_responses_time = each_students_data.split(":")
-                    stats[email_responses_time[0]] = {"responses": list(map(int, email_responses_time[1].split(","))), "time": float(email_responses_time[2])}
-                self.livestatementsstats_array.append(LiveStatementStats(stats=stats, id=row[0]))
+                    dic_infos = each_students_data.split(":")
+                    stats[dic_infos[0]] = {"responses": list(map(int, dic_infos[1].split(","))), "time": float(dic_infos[2]), "validity" : str(dic_infos[3])}
+                joins_leaves = []
+                joins_leaves_str = row[4].split(";")
+                for pairs_str in joins_leaves_str:
+                    pairs = pairs_str.split(":")
+                    joins_leaves.append((pairs[0], pairs[1]))
+                self.livestatementsstats_array.append(LiveStatementStats(id=row[0], start_time=float(row[1]), end_time=float(row[2]), stats=stats, joins_leaves=joins_leaves))
 
     def contains_id(self, id: str):
         for livestatementsstats in self.livestatementsstats_array:
