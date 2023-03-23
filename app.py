@@ -217,7 +217,7 @@ def my_qcm():
 @app.route('/stats')
 def stats():
       if is_logged("teacher"):
-            return render_template('/teacher/stats.html',liveqcm_list=saving.liveqcm_data.get_all_closed_liveqcm_from_owner(session["email"]))
+            return render_template('/teacher/stats.html',liveqcm_list=saving.liveqcm_data.get_all_closed_liveqcm_from_owner(session["email"]),student_list=[Student("email", "password", "student_number", "name", "firstname")])
       else:
             return redirect('/teacher')
 
@@ -488,6 +488,10 @@ def send_stats(liveqcmid):
       xy = liveqcm.get_reponses_by_time_xy()
       socket.emit('stats',{"x_values":xy[0],"y_values":xy[1]},to=request.sid)
 
+# Envoie des statistiques des étudiants
+@socket.on('student_stats')
+def student_stats(student_number):
+      socket.emit('student_stats',"msg",to=request.sid)
 
 if __name__ == '__main__':
       socket.run(app)

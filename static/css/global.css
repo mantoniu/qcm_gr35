@@ -1,8 +1,8 @@
 html, body {
+  min-height: 100vh;
+  height: fit-content;
   font-family: 'Roboto', sans-serif;
   margin: 0;
-  height: 100vh;
-  min-height: 100vh;
   background: #efefef;
 }
 nav{
