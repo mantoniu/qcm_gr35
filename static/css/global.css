@@ -1,14 +1,9 @@
 html, body {
-  min-height: 100vh;
-  height: fit-content;
   font-family: 'Roboto', sans-serif;
   margin: 0;
-<<<<<<< HEAD
   height: 100vh;
   min-height: 100vh;
   max-height: fit-content;
-=======
->>>>>>> bcb105dd978b63ab9d0b2ef8ea6478c0172bb4b4
   background: #efefef;
 }
 nav{
@@ -35,6 +30,7 @@ nav li {
 }
 
 nav li a {
+  font-size: 20px;
   display: block;
   color: black;
   text-align: center;

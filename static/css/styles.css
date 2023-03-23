@@ -10,7 +10,7 @@ html, body {
     letter-spacing: -.63px;
 }
 .column{
-  height: 100%;
+  height: 80%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -77,7 +77,6 @@ input[type="submit"]:hover{
 }
 /* Media query for screens smaller than 600px */
 @media (max-width: 600px) {
-<<<<<<< HEAD
   html, body {
     font-size: 16px; /* réduire la taille de la police */
   }
@@ -94,14 +93,8 @@ input[type="submit"]:hover{
   .form input[type="submit"] {
     font-size: 16px; /* réduire la taille de la police du bouton */
   }
-=======
->>>>>>> bcb105dd978b63ab9d0b2ef8ea6478c0172bb4b4
   .card .identification input {
       font-size: 10%;
       text-align: center;
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> bcb105dd978b63ab9d0b2ef8ea6478c0172bb4b4
