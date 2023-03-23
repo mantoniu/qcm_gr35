@@ -97,21 +97,3 @@ input[type="submit"]:hover{
       text-align: center;
   }
 }
-@media (max-width: 600px) {
-  html, body {
-    font-size: 16px; /* réduire la taille de la police */
-  }
-  
-  .column {
-    flex-direction: column; /* ajuster la direction des colonnes pour l'affichage en portrait */
-  }
-  
-  .card {
-    width: 90%; /* réduire la largeur des cartes */
-    height: 70%; /* ajuster la hauteur pour s'adapter au contenu */
-  }
-  
-  .form input[type="submit"] {
-    font-size: 16px; /* réduire la taille de la police du bouton */
-  }
-}
