@@ -22,6 +22,9 @@ class Statement():
         else:
             self.id = id
 
+    def check_validity(self, responses: list) -> bool:
+        return responses.sort() == self.valids_responses.sort()
+
     def generate_id(self) -> str:
         self.id = hash(str(uuid4()))[:8]
         return self.id
@@ -104,12 +107,35 @@ class QCM():
       return False
 
 class LiveStatementStats():
-    def __init__(self, stats : dict = {}, id: str = None) -> None:
+    def __init__(self, stats : dict = {}, id: str = None, start_time: float = -1, end_time: float = -1, joins_leaves: list = []) -> None:
         self.stats = stats
         if id == None:
             self.generate_id()
         else:
             self.id = id
+        self.start_time = start_time
+        self.end_time = end_time
+        self.joins_leaves = joins_leaves
+    
+    def start(self):
+        self.start_time = time() + 3600
+    
+    def end(self):
+        self.end_time = time() + 3600
+    
+    def join(self, student_email: str):
+        last_index = -1
+        for i in range(len(self.joins_leaves)):
+            if self.joins_leaves[i][0] == student_email:
+                last_index = i
+
+        if last_index != -1 and time() - 0.3 < self.joins_leaves[last_index][1]:
+            del self.joins_leaves[last_index]
+        else:
+            self.joins_leaves.append((student_email, time() + 3600))
+    
+    def leave(self, student_email: str):
+        self.joins_leaves.append((student_email, time() + 3600))
     
     def generate_id(self) -> str:
         self.id = hash(str(uuid4()))
@@ -118,7 +144,10 @@ class LiveStatementStats():
     def get_all_students_responses(self) -> dict:
         return_dic = {}
         for students_email in self.stats:
-            return_dic[students_email] = {"responses" : list(map(str, self.stats[students_email]["responses"])), "time" : datetime.fromtimestamp(self.stats[students_email]["time"])}
+            responses = list(map(str, self.stats[students_email]["responses"]))
+            time = datetime.fromtimestamp(self.stats[students_email]["time"])
+            validity = self.stats[students_email]["validity"]
+            return_dic[students_email] = {"responses" : responses, "time" : time, "validity" : validity}
         return return_dic
     
     def get_students_responses(self) -> dict:
@@ -139,20 +168,40 @@ class LiveStatementStats():
         else:
             return False
     
-    def set_response(self, student_email: str, responses: list) -> None:
-        self.stats[student_email] = {"responses": responses, "time": time() + 3600}
+    def set_response(self, student_email: str, responses: list, validity: bool) -> None:
+        self.stats[student_email] = {"responses": responses, "time": time() + 3600, "validity": validity}
     
     def clear_responses(self):
         self.stats = {}
     
     def get_registering_line(self) -> str:
-        line_to_add = [self.id]
+        start_time_str = str(self.start_time)
+        end_time_str = str
+        if self.end_time != -1:
+            end_time_str = str(self.end_time)
+        else:
+            max_time = 0
+            for students in self.stats:
+                if self.stats[students]["time"] > max_time:
+                    max_time = self.stats[students]["time"]
+            end_time_str = str(max_time)
+        line_to_add = [self.id, start_time_str, end_time_str]
         stats_str = ""
         if len(self.stats) > 0:
             for students_email in self.stats:
-                stats_str += students_email + ":" + (','.join(map(str, self.stats[students_email]["responses"]))) + ":" + str(self.stats[students_email]["time"]) + ";"
+                responses_str = ','.join(map(str, self.stats[students_email]["responses"]))
+                time_str = str(self.stats[students_email]["time"])
+                validity_str = str(self.stats[students_email]["validity"])
+                stats_str += f"{students_email}:{responses_str}:{time_str}:{validity_str};"
             stats_str = stats_str[:-1]
         line_to_add.append(stats_str)
+        if len(self.joins_leaves) > 0:
+            joins_leaves_str = self.joins_leaves[0][0] + ":" + str(self.joins_leaves[0][1])
+            for i in range(1, len(self.joins_leaves)):
+                joins_leaves_str += ";" + self.joins_leaves[i][0] + ":" + str(self.joins_leaves[i][1])
+            line_to_add.append(joins_leaves_str)
+        else:
+            line_to_add.append("")
         return line_to_add
     
     def __str__(self) -> str:
@@ -178,6 +227,7 @@ class LiveQCM():
         else:
             self.id = id
         self.opened = opened
+        self.stats[0].start()
     
     def debug(self):
         to_print = ""
@@ -192,7 +242,8 @@ class LiveQCM():
     def respond(self, student_email: str, responses: list) -> bool :
         if not(self.paused):
             if student_email in self.students_email and not(self.has_responded(student_email)):
-                self.stats[self.statement_index].set_response(student_email, responses)
+                validity = self.statements[self.statement_index].check_validity(responses)
+                self.stats[self.statement_index].set_response(student_email, responses, validity)
                 for i in range(self.statement_index + 1, len(self.stats)):
                     self.stats[i].clear_responses()
                 return True
@@ -282,10 +333,13 @@ class LiveQCM():
         return len(self.statements)
 
     def next_statement(self) -> bool:
+        self.stats[self.statement_index].end()
         self.statement_index = self.statement_index + 1
         if self.statement_index >= self.get_statements_len():
             self.end()
             return True
+        else:
+            self.stats[self.statement_index].start()
         return False
     
     def get_students_count(self) -> int:
@@ -300,9 +354,7 @@ class LiveQCM():
     def student_join(self, email: str) -> bool:
         if not(email in self.students_email):
             self.students_email.append(email)
-            #for students_dic in self.students_responses:
-            #    if not(email in students_dic):
-            #        students_dic[email] = []
+            self.stats[self.statement_index].join(email)
             return True
         else:
             return False
@@ -310,6 +362,7 @@ class LiveQCM():
     def student_leave(self, email: str) -> bool:
         if email in self.students_email:
             self.students_email.remove(email)
+            self.stats[self.statement_index].leave(email)
             return True
         else:
             return False
