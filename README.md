@@ -90,6 +90,7 @@ JAVASCRIPT:
     - my_states.html
     - qcm_list.html
     - qcm.html
+    - stats.html
     
 
 PYTHON :
@@ -109,6 +110,13 @@ PYTHON :
     - Jquery chosen : https://harvesthq.github.io/chosen/
     - Documentation Flask-SocketIO : https://flask-socketio.readthedocs.io/en/latest/
     - Uploading files FLask : https://flask.palletsprojects.com/en/2.2.x/patterns/fileuploads/
+
+
+## Amélioration de la partie 1
+
+    - Meilleur affichage des QCM
+    - Résolution du bug lors de l'ajout puis de la suppresion de réponses
+
 
 ## Améliorations à faire :
 
