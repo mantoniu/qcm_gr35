@@ -431,7 +431,14 @@ class LiveQCMData():
                 return liveqcm
         return None
     
-    def get_liveqcm_by_owner_email(self, email: str) -> LiveQCM:
+    def get_all_closed_liveqcm_from_owner(self, owner_email: str) -> list:
+        liveqcm_array = []
+        for liveqcm in self.liveqcm_array:
+            if liveqcm.owner_email == owner_email and not(liveqcm.opened):
+                liveqcm_array.append(liveqcm)
+        return liveqcm_array
+    
+    def get_opened_liveqcm_by_owner_email(self, email: str) -> LiveQCM:
         for liveqcm in self.liveqcm_array:
             if liveqcm.owner_email == email and liveqcm.opened:
                 return liveqcm

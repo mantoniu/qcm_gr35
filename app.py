@@ -217,7 +217,7 @@ def my_qcm():
 @app.route('/stats')
 def stats():
       if is_logged("teacher"):
-            return render_template('/teacher/stats.html',liveqcm_list=saving.liveqcm_data.get_all_liveqcm())
+            return render_template('/teacher/stats.html',liveqcm_list=saving.liveqcm_data.get_all_closed_liveqcm_from_owner(session["email"]))
       else:
             return redirect('/teacher')
 
@@ -288,7 +288,7 @@ def statement(id):
 def qcm_id(id,statement_number):
       global ownersemail
       qcm = saving.qcm_data.get_qcm_by_id(id)
-      liveqcm = saving.liveqcm_data.get_liveqcm_by_owner_email(session['email'])
+      liveqcm = saving.liveqcm_data.get_opened_liveqcm_by_owner_email(session['email'])
       liveqcm_id,statement_index = 0,0
       statement_number = int(statement_number)
       projected = False
@@ -359,7 +359,7 @@ def upload_file():
 @socket.on('disconnect')
 def disconnection():
       if request.sid in owners.values():
-            liveqcm = saving.liveqcm_data.get_liveqcm_by_owner_email(session['email'])
+            liveqcm = saving.liveqcm_data.get_opened_liveqcm_by_owner_email(session['email'])
             if len(liveqcm.statements)==1:
                   liveqcm.end()
                   del owners[session['email']]
@@ -371,7 +371,7 @@ def connection():
       # Si professeur a projeté actualiser le socket id et renvoyer les compteurs 
       if session['email'] in owners.keys():
             owners[session['email']] = request.sid
-            liveqcm = saving.liveqcm_data.get_liveqcm_by_owner_email(session['email'])
+            liveqcm = saving.liveqcm_data.get_opened_liveqcm_by_owner_email(session['email'])
             socket.emit('count',liveqcm.get_students_count(),to=owners[session['email']])
       
       # Si étudiant et est dans un live qcm rajouté l'étudiant dans la room et renvoyé les compteurs au professeur
@@ -401,8 +401,7 @@ def project(id):
 @socket.on('stop')
 def stop():
       global projected_qcmid
-      print("\nget_liveqcm_by_owner_email(session['email']) : " + str(session['email']))
-      liveqcm_id = saving.liveqcm_data.get_liveqcm_by_owner_email(session['email']).id
+      liveqcm_id = saving.liveqcm_data.get_opened_liveqcm_by_owner_email(session['email']).id
       if liveqcm_id in projected_qcmid:
             liveqcm = saving.liveqcm_data.get_liveqcm_by_id(liveqcm_id)
             liveqcm.end()
