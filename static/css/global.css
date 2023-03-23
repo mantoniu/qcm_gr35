@@ -3,6 +3,7 @@ html, body {
   margin: 0;
   height: 100vh;
   min-height: 100vh;
+  max-height: fit-content;
   background: #efefef;
 }
 nav{
