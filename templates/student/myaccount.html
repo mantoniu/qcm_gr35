@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Compte</title>
     <link rel="stylesheet" type="text/css" href="../../static/css/global.css"></link>
+    <link rel="stylesheet" type="text/css" href="../../static/css/myaccount.css"></link>
 </head>
 <body>
 <nav>
@@ -14,13 +15,17 @@
       <li><a href="/student/myaccount">Mon compte</a></li>
       <li><a href="/student/logout">Déconnexion</a></li>
     </ul>
-</nav>   
+</nav>  
 <center><h1>Bonjour {{ user.firstname + " " + user.name }} </h1></center>
-<h3>Changer de mot de passe : </h3>
-<form action="/student/newpassword" method="POST">
-  Ancien mot de passe : <input type="password" name="actual_password">
-  Nouveau mot de passe : <input type="password" name="new_password">
-  <input type="submit" value="Valider">
-</form>
+<div class="contain-body">
+  <div class="card" id="change_mdp">
+    <form action="/student/newpassword" class="form" method="POST">
+      <h3>Changer de mot de passe : </h3>
+      <input type="password" name="actual_password" placeholder="Mot de passe actuel">
+      <input type="password" name="new_password" placeholder="Nouveau mot de passe">
+      <input type="submit" value="Valider">
+    </form>
+  </div> 
+</div>
 </body>
 </html>
