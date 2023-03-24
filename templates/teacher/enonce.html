@@ -19,9 +19,6 @@
     <script>
         socket = io();
         socket.connect('http://127.0.0.1:5000/')
-        socket.on('connect',()=>{
-            console.log(socket.id);
-        })
     </script>
 </head>    
 <body style="
@@ -88,6 +85,7 @@
 
 var liveqcm_id = "{{ liveqcmid }}";
 
+/* Affichage de la correction */
 function correction(){
     if("{{ statement.decimal|tojson }}"==="false"){
         if($('input#valid').is(':checked')) $('input#valid').prop('checked',false);
@@ -100,6 +98,7 @@ function correction(){
     socket.emit('correction',liveqcm_id);
 }
 
+/* Projection de l'énoncé */
 function projection(id){
     $('#project').html("Stopper la projection");
     $('#project').attr('onclick','stop_projection("{{ statement.id }}")')
@@ -107,19 +106,21 @@ function projection(id){
     socket.emit('project',id);
 }
 
-
+/* Mise en pause de la question */
 function stop(){
     socket.emit('stop_question',liveqcm_id);
     $('#stop').html("Activer réponses");
     $('#stop').attr('onclick','unstop(liveqcm_id)');
 }
 
+/* Remettre en marche la question */
 function unstop(){
     socket.emit('unstop_question',liveqcm_id)
     $('#stop').html("Désactiver réponses");
     $('#stop').attr('onclick','stop(liveqcm_id)');
 }
 
+/* Arreter la projection */
 function stop_projection(){
     $('#project').html("Projeter la question");
     $('#project').attr('onclick','projection("{{ statement.id }}")');
@@ -134,15 +135,14 @@ function stop_projection(){
     socket.emit('stop');
 }
 
+/* Réception de l'id */
 socket.on('liveqcmid',(id)=>{
-    console.log(id)
     liveqcm_id = id;
     $('#liveqcm_id').text("ID du questionnaire : "+id);
 });
 
-
+/* Réception d'une réponse d'un étudiant */
 socket.on('response',(data)=>{
-    console.log(data);
     count_list = data.responses_count
     for(let i=0;i<count_list.length;i++){
         $('#progress'+i).val(count_list[i]);
@@ -151,9 +151,8 @@ socket.on('response',(data)=>{
     $('#response_count').css('display','flex');
 });
 
-
+/* Actualisation des compteurs */
 socket.on('count',(count)=>{
-    console.log(count)
     if(count!=0){
         $('#student_count').text("Nombre d'étudiants : "+count);
         $('#student_count').css('display','flex');
