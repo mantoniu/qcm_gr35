@@ -190,10 +190,11 @@ def register():
 
 # Ajouter des étudiants
 
-@app.route('/add_students')
+@app.route('/tools')
 def add_students():
       if is_logged("teacher"):
-            return render_template('/teacher/add_students.html')
+            user = saving.teachers_data.get_user_by_email(session['email'])
+            return render_template('/teacher/tools.html',tags=user.tags_array)
       else:
             return redirect('/teacher')
 
