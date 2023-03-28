@@ -17,3 +17,5 @@
     flex-direction: column;
     gap: 10px;
 }
+
+.red {border:1px solid red;}
