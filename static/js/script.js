@@ -14,14 +14,15 @@ function connection(){
     document.getElementById('seconnecter').style.display ="none";
 }; 
 
+/* Ajout d'une réponse */
 function addOption(){
-    console.log('test')
     html = "Nom de l'étiquette : <input type='text' name='tag_name'>";
     $('#info').append(html);
     $('#select-tags').append('<option value="foo">Bar</option>');
     $('#select-tags').trigger("chosen:updated");
 }
 
+/* Vérification du formulaire */
 $(document).ready(function(){
     $("#decimal").change(function(){
         if(this.checked){
@@ -73,9 +74,8 @@ function new_card(){
     document.getElementById('new-statement').style.display = "flex";
 }
 
-
+/* Suppression d'une réponse */
 function delete_answer(object){
-    console.log($(object).attr("id"));
     for(let i=$(object).attr("id");i<=count;i++){
         $("#switch"+i).attr("id", "switch"+ (i-1).toString());
         $("#input"+i).attr("name", "switch"+ (i-1).toString());
@@ -132,7 +132,6 @@ function preview(){
                 url : '/preview', 
                 success: function (data) { 
                     html = "<div id='translation'>"+data+"</div>";
-                    console.log(html);
                     $("#header").append(html);
                     renderMermaid();
                     renderMaths();

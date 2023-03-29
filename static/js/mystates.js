@@ -4,6 +4,7 @@ $(function() {
     );
 });
 
+/* Vérification du formulaire */ 
 $(document).ready(function(){ 
     $("#newqcm").submit(function(){           
         if ($('input:checkbox').filter(':checked').length < 1){

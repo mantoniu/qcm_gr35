@@ -18,10 +18,7 @@
     <link rel="stylesheet" href="../../static/css/card-style.css">
     <script>
         socket = io();
-        socket.connect('http://127.0.0.1:5000/')
-        socket.on('connect',()=>{
-            console.log(socket.id);
-        })
+        socket.connect('http://127.0.0.1:5000/');
     </script>
 </head>    
 <body style="
@@ -31,7 +28,7 @@
 " onload="verify_statement()">
 <nav>
     <ul>
-        <li><a href="/add_students">Ajouter des étudiants</a></li>
+        <li><a href="/tools">Outils</a></li>
         <li><a href="/my_qcm">Mes QCM</a></li>
         <li><a href="/my_states">Mes énoncés</a></li>
         <li><a href="/qcm">Liste des QCM</a></li>
@@ -98,21 +95,25 @@
 
 var liveqcm_id = "{{ liveqcm_id }}";
 
+/* Vérification de la projection du qcm et déplacement sur le bon énoncé si oui  */
 function verify_statement(){
     if("{{ projected|tojson }}"==="true" && "{{ statement_index }}"!= "{{ statement_number }}"){
         window.location.replace("/qcm/"+"{{ qcm.id }}/"+"{{ statement_index }}");
     }
 }
 
+/* Passage à la question suivante  */
 function nextquestion(){
     statement_number = parseInt("{{statement_number}}");
     socket.emit('nextquestion',liveqcm_id,statement_number);
 }
 
+/* Déplacement sur l'énoncé suivant */
 socket.on('nextquestion',(statement_number)=>{
     window.location.replace("/qcm/"+"{{ qcm.id }}"+"/"+statement_number);
 });
 
+/* Passage à la question précédente */
 function previous(){
     statement_number = parseInt("{{statement_number}}")
     statement_number --;
@@ -121,6 +122,8 @@ function previous(){
     }
 }
 
+
+/* Affichage de la correction */
 function correction(){
     if("{{ statement.decimal|tojson }}"==="false"){
         if($('input#valid').is(':checked')) $('input#valid').prop('checked',false);
@@ -133,6 +136,7 @@ function correction(){
     socket.emit('correction',liveqcm_id);
 }
 
+/* Projection du qcm */
 function projection(id){
     $('#project').html("Stopper la projection");
     $('#project').attr('onclick','stop_projection("{{ statement.id }}")')
@@ -140,19 +144,21 @@ function projection(id){
     socket.emit('project',id);
 }
 
-
+/* Mettre en pause le qcm */
 function stop(){
     socket.emit('stop_question',liveqcm_id);
     $('#stop').html("Activer réponses");
     $('#stop').attr('onclick','unstop(liveqcm_id)');
 }
 
+/* Remettre le qcm en marche */
 function unstop(){
     socket.emit('unstop_question',liveqcm_id)
     $('#stop').html("Désactiver réponses");
     $('#stop').attr('onclick','stop(liveqcm_id)');
 }
 
+/* Arreter la projection */
 function stop_projection(){
     $('#project').html("Projeter la question");
     $('#project').attr('onclick','projection("{{ statement.id }}")');
@@ -167,16 +173,18 @@ function stop_projection(){
     socket.emit('stop');
 }
 
+/* Réception de l'id du qcm */
 socket.on('liveqcmid',(id)=>{
     liveqcm_id = id;
     $('#liveqcm_id').text("ID du questionnaire : "+id);
 });
 
-
+/* Réception de l'id du qcm après projection */
 socket.on('project',(liveqcmid)=>{
     $('#liveqcm_id').text("Identifiant du questionnaire : "+liveqcmid);
 });
 
+/* Réception d'une réponse d'un étudiant */
 socket.on('response',(data)=>{
     count_list = data.responses_count
     for(let i=0;i<count_list.length;i++){
@@ -186,7 +194,7 @@ socket.on('response',(data)=>{
     $('#response_count').css('display','flex');
 });
 
-
+/* Actualisation des compteurs */
 socket.on('count',(count)=>{
     if(count!=0){
         $('#student_count').text("Nombre d'étudiants : "+count);
@@ -196,6 +204,7 @@ socket.on('count',(count)=>{
     }
 });
 
+/* Recharge la page quand stoppé */
 socket.on('stop',()=>{
     window.location.reload();
 });

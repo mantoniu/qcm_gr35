@@ -190,10 +190,11 @@ def register():
 
 # Ajouter des étudiants
 
-@app.route('/add_students')
+@app.route('/tools')
 def add_students():
       if is_logged("teacher"):
-            return render_template('/teacher/add_students.html')
+            user = saving.teachers_data.get_user_by_email(session['email'])
+            return render_template('/teacher/tools.html',tags=user.tags_array)
       else:
             return redirect('/teacher')
 
@@ -355,6 +356,25 @@ def upload_file():
                   return redirect(url_for('upload_file', name=filename))
       return redirect('/teacher')
 
+
+# Générer un controle
+@app.route('/generate_test',methods=['POST'])
+def generate_test():
+      type_advanced = 'advanced' in request.form
+      user = saving.teachers_data.get_user_by_email(session['email'])
+      selected_tags = {}
+      value = 0
+      subjects_number = int(request.form['subject-number'])
+      for tag in user.tags_array:
+            if tag in request.form:
+                  if not(type_advanced):
+                       value=int(request.form[tag]) 
+                  else:
+                        value = (int(request.form[tag]),int(request.form["a"+tag]))
+                  selected_tags[tag] = value
+      print(selected_tags,subjects_number)
+      return redirect('/my_qcm')
+                  
 
 @socket.on('disconnect')
 def disconnection():

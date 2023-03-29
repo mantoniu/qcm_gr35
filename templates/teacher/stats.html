@@ -28,7 +28,7 @@
 ">
 <nav>
     <ul>
-        <li><a href="/add_students">Ajouter des étudiants</a></li>
+        <li><a href="/tools">Outils</a></li>
       <li><a href="/my_qcm">Mes QCM</a></li>
       <li><a href="/my_states">Mes énoncés</a></li>
       <li><a href="/qcm">Liste des QCM</a></li>
@@ -65,26 +65,25 @@
 
 <script>
 
-
+/* Envoie de la demande de données à la sélection */
 $('#liveqcm_select').on('change',function(){
     var option = $(this).find("option:selected");
     var option_value = option.val();
     if(option_value!="option"){
         socket.emit('stats',option_value);
     }
-    console.log(option_value);
 });
 
+/* Envoie de la demande de données à la sélection */
 $('#student_select').on('change',function(){
     var option = $(this).find("option:selected");
     var option_value = option.val();
-    console.log(option_value);
     if(option_value!="option"){
         socket.emit('student_stats',option_value);
     }
-    console.log(option_value);
 });
 
+/* Réception des stats et affichage du graphique */
 socket.on('stats',(data)=>{
     const xValues = data.x_values;
     const yValues = data.y_values;
