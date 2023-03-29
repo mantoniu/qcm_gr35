@@ -16,6 +16,7 @@ class Statement():
         self.user_email = user_email
         self.tags = tags
         self.decimal = len(possibles_responses)==1
+        self.open_question = len(possibles_responses)==0
 
         if id == None:
             self.generate_id()
@@ -40,6 +41,7 @@ class Statement():
         self.user_email = new_statement.user_email
         self.tags = new_statement.tags
         self.decimal = len(new_statement.possibles_responses)==1
+        self.open_question = len(new_statement.possibles_responses) == 0
     
     def get_registering_line(self) -> list:
         line_to_add = [self.id, self.name, self.question]

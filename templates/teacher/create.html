@@ -53,7 +53,10 @@ var decimal = false;
         <div class="decimal">
             <label for="decimal">Decimal</label>
             <input type="checkbox" id="decimal" name="decimal">
-        </div>
+        </div>            
+        <label> Question ouverte
+            <input type="checkbox" id="open_question" name="open_question">
+        </label>
         <div class="name_card">
         <p>Nom : </p>
         <input name="statement_name" id="statement_name" type="text">
@@ -100,7 +103,7 @@ var decimal = false;
         </div>  
             <div class="card-navbar">  
                 <button class="animation rectangle" type="button" onclick="preview()" id="apercu">Aperçu</button>  
-                <div onclick="add_answer()" class="circle animation"><i class="fas fa-plus"></i></div>  
+                <div id="add_answer" onclick="add_answer()" class="circle animation"><i class="fas fa-plus"></i></div>  
                 <button class="animation rectangle" type="submit" id="ajouter">Valider</button>
             </div>  
         </div>  

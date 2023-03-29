@@ -192,8 +192,8 @@ class StatementsData():
                 statements_list.append(statement)
         return statements_list
 
-    def test(self, tags_dic: list, subjects_number: int, teacher_email: str):
-        used_statements = []
+    def get_random_sets_of_qcm(self, tags_dic: list, subjects_number: int, teacher_email: str):
+        used_statements = [[]]
         qcm_list = []
         for i in range(1,subjects_number+1):
             statements = []
@@ -202,12 +202,10 @@ class StatementsData():
                 tag_statements = self.get_all_statements_by_tag(tag,teacher_email)
                 print(len(tag_statements))
                 if len(tag_statements)>int(tags_dic[tag]):
-                    j = 0
                     for statement in tag_statements:
-                        if statement not in used_statements and j!=tags_dic[tag]:
+                        if statement not in used_statements and len(statements)==tags_dic[tag]:
                             statements.append(statement)
-                            used_statements.append(statement)
-                            j += 1
+            
             random.shuffle(statements)
             qcm = QCM("Examen "+str(i), statements, teacher_email)
             qcm_list.append(qcm)

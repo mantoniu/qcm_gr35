@@ -50,7 +50,7 @@
             <div class="list-response" id="list-response"> 
             {% if statement.decimal %} 
             <p id="decimalresponse" class="textarea-response" style="display: none;"> {{ statement.possibles_responses[0] }}</p>
-            {% else %}  
+            {% elif not(statement.open_question) %}  
                 {% for i in range (0,statement.possibles_responses|length) %}
                     <div class="response">
                         <div class="switch">  
@@ -77,7 +77,9 @@
                 <a href="{{ "edit/" + statement.id|string }}" style="display: contents;"><button class="animation rectangle" type="submit" id="ajouter">Editer l'énoncé</button></a> 
                 <button class="animation rectangle" type="submit" id="stop" onclick="stop(liveqcm_id)" hidden>Désactiver les réponses</button>
                 <button class="animation rectangle" type="submit" id="project" onclick="projection('{{ statement.id }}')">Projeter la question</button>
+                {% if not(statement.open_question) %}
                 <button class="animation rectangle" type="submit" id="correction" onclick="correction()">Correction</button>
+                {% endif %}
             </div>  
     </div>  
 </div> 

@@ -50,16 +50,18 @@ def statement_values():
       tags = []  
       if request.form.getlist('etiquettes'):
             tags = request.form.getlist('etiquettes')
-      if "decimal" not in request.form :
+
+      if "decimal" in request.form:
+            possibles_responses.append(request.form['statement'])
+            valids_reponses.append(0)
+
+      elif not("open_question" in request.form):
             for i in range (0,int(request.form['count'])+1):
                   if 'statement'+str(i) in request.form:
                         possibles_responses.append(request.form['statement'+str(i)])
                   if "switch"+str(i) in request.form:
-                        valids_reponses.append(i)
-      else:
-            possibles_responses.append(request.form['statement'])
-            valids_reponses.append(0)
-            
+                        valids_reponses.append(i)      
+
       return  Statement(name=name, question=question, valids_reponses=valids_reponses, possibles_responses=possibles_responses, user_email=session['email'],tags=tags)
 
 # Fonction qui vérifie si l'utilisateur est connecté
@@ -371,6 +373,7 @@ def generate_test():
                        value=int(request.form[tag]) 
                   else:
                         value = (int(request.form[tag]),int(request.form["a"+tag]))
+                        total = int(request.form['total_number'])
                   selected_tags[tag] = value
       qcmlist = saving.statements_data.test(selected_tags, subjects_number, session['email'])
       return render_template('/teacher/exam.html',qcm_list=qcmlist)

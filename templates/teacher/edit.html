@@ -50,8 +50,19 @@ var decimal = "{{ statement.decimal|tojson }}"==="true"
             <label for="decimal">Decimal</label>
             {% if statement.decimal %}
             <input type="checkbox" id="decimal" name="decimal" checked="checked">
+            <label> Question ouverte
+                <input type="checkbox" id="open_question" name="open_question">
+            </label>
+            {% elif statement.open_question %}
+            <input type="checkbox" id="decimal" name="decimal">
+            <label> Question ouverte
+                <input type="checkbox" id="open_question" name="open_question" checked="checked">
+            </label>
             {% else %}
             <input type="checkbox" id="decimal" name="decimal">
+            <label> Question ouverte
+                <input type="checkbox" id="open_question" name="open_question">
+            </label>
             {% endif %}
         </div>
         <div class="name-card">
