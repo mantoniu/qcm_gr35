@@ -1,6 +1,7 @@
 from utilities import *
 from user import Student, Teacher
 from objects import *
+import random
 
 class TeachersData():
     def __init__(self) -> None:
@@ -184,35 +185,34 @@ class StatementsData():
                 return True
         return False
     
-    def get_all_statements_with_tags(self, tags_array: list, ignore_statements: list = []) -> list:
-        result = []
-        for statements in self.statements_array:
-            if not(self.statement_is_in_list(statements, ignore_statements)):
-                all_tags = True
-                for tags in tags_array:
-                    if not(tags in statements.tags):
-                        all_tags = False
-                if all_tags:
-                    result.append(statements)
-        return result
-    
-    def get_n_statements_with_tags(self, tags_array: list, n: int, ignore_statements: list = []) -> list:
-        result = []
-        count = 0
-        if n <= 0:
-            return []
-        for statements in self.statements_array:
-            if not(self.statement_is_in_list(statements, ignore_statements)):
-                all_tags = True
-                for tags in tags_array:
-                    if not(tags in statements.tags):
-                        all_tags = False
-                if all_tags:
-                    result.append(statements)
-                    count += 1
-                if count >= n:
-                    return result
-        return []
+    def get_all_statements_by_tag(self, tag: str, teacher_email: str):
+        statements_list = []
+        for statement in self.get_statement_from_user(teacher_email):
+            if tag in statement.tags:
+                statements_list.append(statement)
+        return statements_list
+
+    def test(self, tags_dic: list, subjects_number: int, teacher_email: str):
+        used_statements = []
+        qcm_list = []
+        for i in range(1,subjects_number+1):
+            statements = []
+            for tag in tags_dic:
+                print(tag)
+                tag_statements = self.get_all_statements_by_tag(tag,teacher_email)
+                print(len(tag_statements))
+                if len(tag_statements)>int(tags_dic[tag]):
+                    j = 0
+                    for statement in tag_statements:
+                        if statement not in used_statements and j!=tags_dic[tag]:
+                            statements.append(statement)
+                            used_statements.append(statement)
+                            j += 1
+            random.shuffle(statements)
+            qcm = QCM("Examen "+str(i), statements, teacher_email)
+            qcm_list.append(qcm)
+        return qcm_list
+
     
     def get_statements_dic_with_tags_dic(self, tags_dic: dict) -> dict:
         statements_dic = {}

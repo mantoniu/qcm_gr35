@@ -372,9 +372,8 @@ def generate_test():
                   else:
                         value = (int(request.form[tag]),int(request.form["a"+tag]))
                   selected_tags[tag] = value
-      print(selected_tags,subjects_number)
-      return redirect('/my_qcm')
-                  
+      qcmlist = saving.statements_data.test(selected_tags, subjects_number, session['email'])
+      return render_template('/teacher/exam.html',qcm_list=qcmlist)
 
 @socket.on('disconnect')
 def disconnection():
@@ -453,7 +452,6 @@ def liveqcm_join(qcmid):
 # Enregistrement de l'étudiant dans le questionnaire
 @socket.on('studentjoin')
 def student_join(qcmid):
-      print('\n TEST \n')
       disconnect_student(session['email'])      
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(qcmid)
       join_room(qcmid)
