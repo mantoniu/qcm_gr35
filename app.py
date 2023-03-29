@@ -1,5 +1,5 @@
 import globals
-from qcm import *
+from objects import *
 import saving
 from flask import flash,Flask,url_for,render_template,request,session,redirect
 from flaskext.markdown import Markdown

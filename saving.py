@@ -1,6 +1,6 @@
 from utilities import *
 from user import Student, Teacher
-from qcm import *
+from objects import *
 
 class TeachersData():
     def __init__(self) -> None:
@@ -131,7 +131,10 @@ class StatementsData():
                 possibles_responses = []
                 for i in range(6, len(row)):
                     possibles_responses.append(row[i])
-                self.statements_array.append(Statement(id=row[0], name=row[1], question=row[2], valids_reponses=list(map(int, row[3].split(";"))), user_email=row[4], tags=list(map(str, row[5].split(";"))), possibles_responses=possibles_responses))
+                try:
+                    self.statements_array.append(Statement(id=row[0], name=row[1], question=row[2], valids_reponses=list(map(int, row[3].split(";"))), user_email=row[4], tags=list(map(str, row[5].split(";"))), possibles_responses=possibles_responses))
+                except ValueError:
+                    self.statements_array.append(Statement(id=row[0], name=row[1], question=row[2], valids_reponses=list(map(str, row[3].split(";"))), user_email=row[4], tags=list(map(str, row[5].split(";"))), possibles_responses=possibles_responses))
 
     def contains_id(self, id: str):
         for statements in self.statements_array:
@@ -174,6 +177,54 @@ class StatementsData():
     
     def get_all_statements(self) -> list:
         return self.statements_array
+    
+    def statement_is_in_list(self, statement: Statement, array: list) -> bool:
+        for elements in array:
+            if statement.id == elements.id:
+                return True
+        return False
+    
+    def get_all_statements_with_tags(self, tags_array: list, ignore_statements: list = []) -> list:
+        result = []
+        for statements in self.statements_array:
+            if not(self.statement_is_in_list(statements, ignore_statements)):
+                all_tags = True
+                for tags in tags_array:
+                    if not(tags in statements.tags):
+                        all_tags = False
+                if all_tags:
+                    result.append(statements)
+        return result
+    
+    def get_n_statements_with_tags(self, tags_array: list, n: int, ignore_statements: list = []) -> list:
+        result = []
+        count = 0
+        if n <= 0:
+            return []
+        for statements in self.statements_array:
+            if not(self.statement_is_in_list(statements, ignore_statements)):
+                all_tags = True
+                for tags in tags_array:
+                    if not(tags in statements.tags):
+                        all_tags = False
+                if all_tags:
+                    result.append(statements)
+                    count += 1
+                if count >= n:
+                    return result
+        return []
+    
+    def get_statements_dic_with_tags_dic(self, tags_dic: dict) -> dict:
+        statements_dic = {}
+        ignore_statements = []
+        for tags in tags_dic:
+            n_statements = self.get_n_statements_with_tags(tags_array=tags, n=tags_dic[tags], ignore_statements=ignore_statements)
+            if n_statements != []:
+                statements_dic[tags] = n_statements
+                ignore_statements += n_statements
+            else:
+                return {}
+        return statements_dic
     
     def get_statement_by_id(self, id: str) -> Statement:
         for statements in self.statements_array:
@@ -285,7 +336,10 @@ class LiveStatementsStatsData():
                 all_students_data = row[3].split(";")
                 for each_students_data in all_students_data:
                     dic_infos = each_students_data.split(":")
-                    stats[dic_infos[0]] = {"responses": list(map(int, dic_infos[1].split(","))), "time": float(dic_infos[2]), "validity" : str(dic_infos[3])}
+                    try: 
+                        stats[dic_infos[0]] = {"responses": list(map(int, dic_infos[1].split(","))), "time": float(dic_infos[2]), "validity" : str(dic_infos[3])}
+                    except ValueError:
+                        stats[dic_infos[0]] = {"responses": list(map(str, dic_infos[1].split(","))), "time": float(dic_infos[2]), "validity" : str(dic_infos[3])}
                 joins_leaves = []
                 joins_leaves_str = row[4].split(";")
                 for pairs_str in joins_leaves_str:
@@ -349,6 +403,133 @@ class LiveQCMData():
         self.statements_data = statements_data
         self.livestatementsstats_data = livestatementsstats_data
         self.liveqcm_array = []
+        tab = read_file(self.save_file)
+        for row in tab:
+            if len(row) > 3:
+                statements_ids = row[2].split(";")
+                livestatementsstats_ids = row[3].split(";")
+                statements = []
+                is_anything_none = False
+                for ids in statements_ids:
+                    statement = self.statements_data.get_statement_by_id(ids)
+                    if statement is not None:
+                        statements.append(statement)
+                    else:
+                        is_anything_none = True
+                stats = []
+                for ids in livestatementsstats_ids:
+                    stat = self.livestatementsstats_data.get_livestatementsstats_by_id(ids)
+                    if stat is not None:
+                        stats.append(stat)
+                    else:
+                        is_anything_none = True
+                if not(is_anything_none):
+                    self.liveqcm_array.append(LiveQCM(id=row[0], owner_email=row[1], statements=statements, stats=stats, opened=False))
+                else:
+                    self.remove_liveqcm_by_id(row[0])
+
+    def contains_id(self, id: str):
+        for liveqcm in self.liveqcm_array:
+            if liveqcm.id == id:
+                return True
+        return False
+    
+    def contains_liveqcm(self, liveqcm: LiveQCM) -> bool:
+        return self.contains_id(liveqcm.id)
+
+    def add_liveqcm(self, liveqcm: LiveQCM) -> bool:
+        if not(self.contains_liveqcm(liveqcm)):
+            self.liveqcm_array.append(liveqcm)
+            return True
+        else:
+            return False
+    
+    def save_liveqcm_to_file(self, liveqcm: LiveQCM) -> None:
+        add_line_to_file(self.save_file, liveqcm.get_registering_line())
+        for stats in liveqcm.stats:
+            livestatementsstats_data.save_livestatementsstats_to_file(stats)
+
+    def end_and_save_liveqcm(self, liveqcm: LiveQCM) -> None:
+        liveqcm.end()
+        self.save_liveqcm_to_file(liveqcm)
+    
+    def end_and_save_liveqcm_by_id(self, id: str) -> bool:
+        if self.contains_id(id):
+            self.end_and_save_liveqcm(self.get_liveqcm_by_id(id))
+            return True
+        else:
+            return False
+    
+    def get_all_liveqcm(self) -> list:
+        return self.liveqcm_array
+    
+    def get_opened_liveqcm(self) -> list:
+        opened_liveqcm = []
+        for liveqcm in self.liveqcm_array:
+            if liveqcm.opened:
+                opened_liveqcm.append(liveqcm)
+        return opened_liveqcm
+    
+    def get_closed_liveqcm(self) -> list:
+        closed_liveqcm = []
+        for liveqcm in self.liveqcm_array:
+            if not(liveqcm.opened):
+                closed_liveqcm.append(liveqcm)
+        return closed_liveqcm
+    
+    def get_liveqcm_from_user(self, email: str) -> list:
+        result = []
+        for liveqcm in self.liveqcm_array:
+            if liveqcm.owner_email == email:
+                result.append(liveqcm)
+        return result
+    
+    def get_liveqcm_by_id(self, id: str) -> LiveQCM:
+        for liveqcm in self.liveqcm_array:
+            if liveqcm.id == id:
+                return liveqcm
+        return None
+    
+    def get_all_closed_liveqcm_from_owner(self, owner_email: str) -> list:
+        liveqcm_array = []
+        for liveqcm in self.liveqcm_array:
+            if liveqcm.owner_email == owner_email and not(liveqcm.opened):
+                liveqcm_array.append(liveqcm)
+        return liveqcm_array
+    
+    def get_opened_liveqcm_by_owner_email(self, email: str) -> LiveQCM:
+        for liveqcm in self.liveqcm_array:
+            if liveqcm.owner_email == email and liveqcm.opened:
+                return liveqcm
+        return None
+    
+    def get_liveqcm_by_student_email(self, student_email: str) -> LiveQCM:
+        for liveqcm in self.get_opened_liveqcm():
+            if liveqcm.contains_student(student_email):
+                return liveqcm
+        return None
+
+    def remove_liveqcm_by_id(self, id: str) -> bool:
+        remove_lines_which_contains(self.save_file, string=id)
+        if self.contains_id(id):
+            self.liveqcm_array.remove(self.get_liveqcm_by_id(id))
+            return True
+        else:
+            return False
+        
+    
+    def remove_liveqcm(self, liveqcm: LiveQCM) -> bool:
+        remove_lines_which_contains(self.save_file, string=liveqcm.id)
+        if self.contains_liveqcm(liveqcm):
+            self.liveqcm_array.remove(liveqcm)
+            return True
+        else:
+            return False
+
+class TestsData():
+    def __init__(self) -> None:
+        self.save_file = create_save_file("tests.txt")
+        self.tests_array = []
         tab = read_file(self.save_file)
         for row in tab:
             if len(row) > 3:

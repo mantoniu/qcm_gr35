@@ -385,3 +385,61 @@ class LiveQCM():
         else:
             return self.statements == other_liveqcm.statements
 
+class Test():
+    def __init__(self, qcms_attribution: dict, owner_email: str, id:str = None) -> None:
+        self.qcms_attribution = qcms_attribution
+        self.owner_email = owner_email
+        if id == None:
+            self.generate_id()
+        else:
+            self.id = id
+
+    def generate_id(self) -> str:
+        self.id = hash(str(uuid4()))
+        return self.id
+    
+    def attribute_qcms(self, students_emails: list) -> bool:
+        qcms_len = self.get_qcms_len()
+        if qcms_len == len(students_emails):
+            values = list(self.qcms_attribution.values())
+            self.qcms_attribution.clear()
+            for i in range(qcms_len):
+                self.qcms_attribution[students_emails[i]] = values[i]
+            return True
+        else:
+            return False
+    
+    def get_statements_len(self) -> int:
+        return len(list(self.qcms_attribution.values())[0].statements)
+    
+    def get_qcms_len(self) -> int:
+        return len(self.qcms_attribution)
+    
+    def get_students_count(self) -> int:
+        count = 0
+        for keys in self.qcms_attribution:
+            if keys.contains("@"):
+                count += 1
+        return count
+    
+    def contains_student(self, student_email: str) -> bool:
+        for emails in self.qcms_attribution:
+            if student_email == emails:
+                return True
+        return False
+    
+    def get_registering_line(self) -> list:
+        line_to_add = [self.id, self.owner_email]
+        statements_str = self.statements[0].id
+        stats_str = self.stats[0].id
+        for i in range(1, self.get_statements_len()):
+            statements_str += ";" + self.statements[i].id
+            stats_str += ";" + self.stats[i].id
+        line_to_add.append(statements_str)
+        line_to_add.append(stats_str)
+            
+        return line_to_add
+
+    def generate_id(self) -> str:
+        self.id = hash(str(uuid4()))
+        return self.id

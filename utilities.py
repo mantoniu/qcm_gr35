@@ -10,7 +10,7 @@ csv_delimiter = ","
 def hash(word: str) -> str:
     word = "Kilian" + word
     result = md5(word.encode("utf-8")).hexdigest()
-    return result.replace(";", "P")
+    return result.replace(";", "P").replace("@", "4")
 
 def check_hash(word: str, hash: str) -> bool :
     return hash(word) == hash
