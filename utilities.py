@@ -2,7 +2,10 @@ import csv
 from hashlib import md5
 from os import mkdir, path, stat
 import pickle
+from french_lefff_lemmatizer.french_lefff_lemmatizer import FrenchLefffLemmatizer
+from spellchecker import SpellChecker
 
+lemmatizer = FrenchLefffLemmatizer()
 line_separator = "@__|||1S"
 row_separator = "@__|||2S"
 csv_delimiter = ","
@@ -110,3 +113,13 @@ def read_csv(file_name: str) -> None:
         for row in reader:
             tab.append(row)
     return tab
+
+
+def get_corrected_word(word: str):
+    ## On enlève les majuscules du mot
+    word = word.casefold()
+    ## On corrige les erreurs
+    word = SpellChecker(language="fr").correction(word)
+    ## On prend le lemme du mot
+    word = lemmatizer.lemmatize(word)
+    return word

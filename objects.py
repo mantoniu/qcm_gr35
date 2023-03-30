@@ -1,7 +1,7 @@
 from __future__ import annotations
 from markdown import markdown
 from uuid import uuid4
-from utilities import hash
+from utilities import hash,get_corrected_word
 from time import time
 from datetime import datetime
 
@@ -215,6 +215,7 @@ class LiveQCM():
         self.statements = statements
         self.students_email = []
         self.stats = []
+        self.word_dict = {}
         if stats == None:
             for i in range(len(statements)):
                 livestatementstats = LiveStatementStats()
@@ -241,18 +242,31 @@ class LiveQCM():
         students_dic = self.stats[self.statement_index].get_students_responses()
         return student_email in students_dic and students_dic[student_email] != []
 
+
     def respond(self, student_email: str, responses: list) -> bool :
         if not(self.paused):
-            if student_email in self.students_email and not(self.has_responded(student_email)):
-                validity = self.statements[self.statement_index].check_validity(responses)
-                self.stats[self.statement_index].set_response(student_email, responses, validity)
-                for i in range(self.statement_index + 1, len(self.stats)):
-                    self.stats[i].clear_responses()
-                return True
-            else:
-                return False
-        else:
-            return False
+            if student_email in self.students_email and not(self.has_responded(student_email)):    
+                if self.get_current_statement().open_question:
+                    new_word = get_corrected_word(responses[0])
+                    if len(self.word_dict)==0:
+                        self.word_dict[new_word] = 1
+                    else:
+                        for word in list(self.word_dict.keys()):
+                            if word == new_word:
+                                self.word_dict[new_word] += 1
+                            else:
+                                self.word_dict[new_word] = 1
+                    self.stats[self.statement_index].set_response(student_email, [], True)
+                    for i in range(self.statement_index + 1, len(self.stats)):
+                        self.stats[i].clear_responses()
+                    return True
+                else:
+                    validity = self.statements[self.statement_index].check_validity(responses)
+                    self.stats[self.statement_index].set_response(student_email, responses, validity)
+                    for i in range(self.statement_index + 1, len(self.stats)):
+                        self.stats[i].clear_responses()
+                    return True
+        return False
     
     def get_reponses_by_time_xy(self) -> tuple:
         x_values = list(range(1, len(self.stats)+1))
@@ -335,6 +349,7 @@ class LiveQCM():
         return len(self.statements)
 
     def next_statement(self) -> bool:
+        self.word_dict = {}
         self.stats[self.statement_index].end()
         self.statement_index = self.statement_index + 1
         if self.statement_index >= self.get_statements_len():

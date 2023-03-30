@@ -10,7 +10,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.3.0/mermaid.min.js"></script>
-    <script type="text/javascript" src="/static/js/math-rendering.js"></script>
+    <script type="text/javascript" src="/static/js/modules/math-rendering.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script type="text/javascript" src="../../static/js/script.js"></script>
@@ -43,6 +43,8 @@
                 {% if statement.decimal %} 
                 <p id="decimalresponse_correction" class="textarea-response" style="display: none;" hidden></p>
                 <input step="0.01" type="number" id="decimal-response" name="statement" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
+                {% elif statement.open_question %}
+                <input id="open_response" type="text" name="open_response" placeholder="Entrez votre réponse"  class="textarea-response">
                 {% else %}  
                     {% for i in range (0,statement.possibles_responses|length) %}
                         <div class="response">
@@ -83,17 +85,23 @@ function student_join(){
 window.onload = student_join;
 
 function verify_input(){
-    if("{{ statement.decimal|tojson }}"==="false"){
+    if("{{ statement.decimal|tojson }}"==="true"){
+        if($("#decimal-response").val()){
+            return true;
+        }
+        return false;        
+    }
+    else if("{{ statement.open_question|tojson }}"==="true"){
+        if($("#open_response").val()){
+            return true;
+        }
+        return false;       
+    }
+    else{
         for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
             if($('#switch'+i).is(":checked")){
                 return true;
             }
-        }
-        return false;
-    }
-    else{
-        if($("#decimal-response").val()){
-            return true;
         }
         return false;
     }
@@ -103,16 +111,20 @@ function verify_input(){
 function send_response(){
         if(verify_input()){
             response_list = []
-            if("{{ statement.decimal|tojson }}"==="false"){
+            if("{{ statement.decimal|tojson }}"==="true"){
+                response_list.push($('decimal-response').val());
+            }
+            else if("{{ statement.open_question|tojson }}"==="true"){
+                console.log($("#open_response").val())
+                response_list.push($("#open_response").val());
+            }
+            else{
                 for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
                     $('#switch'+i).attr("onclick","return false;");
                     if($('#switch'+i).is(":checked")){
                         response_list.push(i)
                     }
                 }
-            }
-            else{
-                response_list.push($('decimal-response').val());
             }
             socket.emit("newresponse",response_list,"{{liveqcmid}}");
         }

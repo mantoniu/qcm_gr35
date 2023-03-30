@@ -375,7 +375,7 @@ def generate_test():
                         value = (int(request.form[tag]),int(request.form["a"+tag]))
                         total = int(request.form['total_number'])
                   selected_tags[tag] = value
-      qcmlist = saving.statements_data.test(selected_tags, subjects_number, session['email'])
+      qcmlist = saving.statements_data.get_random_sets_of_qcm(selected_tags, subjects_number, session['email'])
       return render_template('/teacher/exam.html',qcm_list=qcmlist)
 
 @socket.on('disconnect')
@@ -442,8 +442,11 @@ def response(response_list,liveqcmid):
       success = liveqcm.respond(student_email,response_list)
       liveqcm.debug()
       socket.emit('response_success',success,to=request.sid)
+      
       if success:
             socket.emit('response',{"responses_count":liveqcm.get_responses_count(),"count":liveqcm.get_total_responses_count()},to=owners[liveqcm.owner_email])
+            if liveqcm.get_current_statement().open_question:
+                  socket.emit('word_cloud',liveqcm.word_dict,to=owners[liveqcm.owner_email])
 
 # Vérification de l'existence d'une projection 
 @socket.on('liveqcm_join')
