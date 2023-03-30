@@ -13,10 +13,14 @@
     <script type="text/javascript" src="/static/js/modules/math-rendering.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script type="text/javascript" src="../../static/js/script.js"></script>
+    <script type="text/javascript" src="../../static/js/teacher/creation.js"></script>
     <link rel="stylesheet" type="text/css" href="../../static/css/global.css" >  
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
     <script>
+        liveqcmid = "{{ liveqcmid }}"
+        decimal = "{{ statement.decimal|tojson }}"==="true";
+        open_question = "{{ statement.open_question|tojson }}"==="true";
+        possibles_responses_number = Number("{{ statement.possibles_responses|length }}")
         socket = io();
         socket.connect('http://127.0.0.1:5000/');
     </script>
@@ -75,112 +79,6 @@
             </div>
     </div>
 </div>
-<script>
-
-
-function student_join(){
-    socket.emit('studentjoin',"{{ liveqcmid }}");
-}
-
-window.onload = student_join;
-
-function verify_input(){
-    if("{{ statement.decimal|tojson }}"==="true"){
-        if($("#decimal-response").val()){
-            return true;
-        }
-        return false;        
-    }
-    else if("{{ statement.open_question|tojson }}"==="true"){
-        if($("#open_response").val()){
-            return true;
-        }
-        return false;       
-    }
-    else{
-        for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
-            if($('#switch'+i).is(":checked")){
-                return true;
-            }
-        }
-        return false;
-    }
-}
-
-
-function send_response(){
-        if(verify_input()){
-            response_list = []
-            if("{{ statement.decimal|tojson }}"==="true"){
-                response_list.push($('decimal-response').val());
-            }
-            else if("{{ statement.open_question|tojson }}"==="true"){
-                console.log($("#open_response").val())
-                response_list.push($("#open_response").val());
-            }
-            else{
-                for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
-                    $('#switch'+i).attr("onclick","return false;");
-                    if($('#switch'+i).is(":checked")){
-                        response_list.push(i)
-                    }
-                }
-            }
-            socket.emit("newresponse",response_list,"{{liveqcmid}}");
-        }
-        else{
-            alert("Veuillez remplir les champs de réponses");
-        }
-}
-
-socket.on('response_success',(success)=>{
-    if(success) alert('Réponse envoyée avec succès !');
-    else alert('Vous avez déjà répondu au questionnaire ! ');
-});
-
-socket.on('stop_question',()=>{
-    $('#valider').attr("onclick","alert('Vous ne pouvez pas répondre pour le moment');");
-    for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
-        $('#switch'+i).attr("onclick","return false;");
-    }
-});
-
-socket.on('unstop_question',()=>{
-    $('#valider').attr("onclick","send_response()");
-    for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
-        $('#switch'+i).attr("onclick","");
-    }
-})
-
-socket.on('nextquestion',()=>{
-    window.location.reload();
-});
-
-socket.on('stop',()=>{
-    window.location.replace('/student');
-})
-
-socket.on('correction',(data)=>{
-    $('#valider').attr("onclick","alert('Vous ne pouvez pas répondre pendant la correction');");
-    if(data.decimal){
-        $("#decimal-response").css('display','none');
-        $("#decimalresponse_correction")
-        .html(data.valids_responses[0])
-        .css('display',"flex");
-    }
-    else{
-        for(let i=0; i<Number("{{ statement.possibles_responses|length }}"); i++){
-            $('#switch'+i).attr("onclick","return false;");
-            if(data.valids_responses.includes(i)){
-                $('#switch'+i).prop('checked',true);
-            }
-            else{
-                $('#switch'+i).prop('checked',false);
-            }
-        }
-    }
-});
-
-</script>
+<script src="../../static/js/student/statement.js"></script>
 </body>
 </html>

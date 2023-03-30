@@ -1,9 +1,7 @@
-var liveqcm_id = "{{ liveqcm_id }}";
-
 /* Démarrer la projection */
 function projection(id){
     $('#project').html("Stopper la projection");
-    $('#project').attr('onclick','stop_projection("{{ statement.id }}")')
+    $('#project').attr('onclick','stop_projection("'+statement_id+'")');
     $('#stop').css("display","flex");
     socket.emit('project',id);
 }
@@ -28,19 +26,19 @@ socket.on('response',(data)=>{
 function stop(){
     socket.emit('stop_question',liveqcm_id);
     $('#stop').html("Activer réponses");
-    $('#stop').attr('onclick','unstop(liveqcm_id)');
+    $('#stop').attr('onclick','unstop("'+liveqcm_id+'")');
 }
 
 /* Remtettre la projection en marche */
 function unstop(){
     socket.emit('unstop_question',liveqcm_id)
     $('#stop').html("Désactiver réponses");
-    $('#stop').attr('onclick','stop(liveqcm_id)');
+    $('#stop').attr('onclick','stop("'+liveqcm_id+'")');
 }
 
 /* Affichage de la correction */
 function correction(){
-    if("{{ statement.decimal|tojson }}"==="false"){
+    if(!decimal){
         if($('input#valid').is(':checked')) $('input#valid').prop('checked',false);
         else $('input#valid').prop('checked',true);
     }
@@ -64,11 +62,11 @@ socket.on('count',(count)=>{
 /* Arreter la projection */
 function stop_projection(){
     $('#project').html("Projeter la question");
-    $('#project').attr('onclick','projection("{{ statement.id }}")');
+    $('#project').attr('onclick','projection("'+statement_id+'")');
     $('#liveqcm_id').text("");
     $('#stop').css('display','none');
     $('#stop').html("Désactiver réponses");
-    $('#stop').attr('onclick','stop(liveqcm_id)');
+    $('#stop').attr('onclick','stop("'+statement_id+'")');
     $('#student_count').css('display','none');
     $('#response_count').css('display','none');
     $('.progress_bar').css("display","none");
