@@ -119,7 +119,9 @@ def get_corrected_word(word: str):
     ## On enlève les majuscules du mot
     word = word.casefold()
     ## On corrige les erreurs
-    word = SpellChecker(language="fr").correction(word)
+    corrected_word = SpellChecker(language="fr").correction(word)
+    if corrected_word != None:
+        word = corrected_word
     ## On prend le lemme du mot
     word = lemmatizer.lemmatize(word)
     return word
