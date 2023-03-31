@@ -130,7 +130,7 @@ class StatementsData():
         self.random_statements_array = []
         tab = read_file(self.save_file)
         for row in tab:
-            if len(row) > 6:
+            if len(row) > 5:
                 possibles_responses = []
                 for i in range(6, len(row)):
                     possibles_responses.append(row[i])
