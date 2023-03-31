@@ -239,7 +239,7 @@ def my_states():
                                     countains_tag.append(statement)
                   return render_template('/teacher/my_states.html', my_states_array=countains_tag,tags=(saving.teachers_data.get_user_by_email(session['email'])).tags_array)
             else :
-                  return render_template('/teacher/my_states.html', my_states_array=saving.statements_data.get_statement_from_user(session['email']),tags=(saving.teachers_data.get_user_by_email(session['email'])).tags_array)
+                  return render_template('/teacher/my_states.html', my_states_array=saving.statements_data.get_statements_from_user(session['email']),tags=(saving.teachers_data.get_user_by_email(session['email'])).tags_array)
       else:
             return redirect('/teacher')
 
@@ -255,7 +255,7 @@ def newstate():
 @app.route('/newqcm',methods=['POST'])
 def newqcm():
       statements_list = []
-      for statement in saving.statements_data.get_statement_from_user(session['email']):
+      for statement in saving.statements_data.get_statements_from_user(session['email']):
             if statement.id in request.form:
                   statements_list.append(statement)
       qcm = QCM(name=request.form['qcm_title'],statements=statements_list,user_email=session['email'])
