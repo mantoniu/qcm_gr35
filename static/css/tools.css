@@ -19,3 +19,9 @@
 }
 
 .red {border:1px solid red;}
+
+
+#total_number{
+    margin: 10px 0;
+    display: none;
+}

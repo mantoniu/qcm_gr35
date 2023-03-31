@@ -9,17 +9,28 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.3.0/mermaid.min.js"></script>
-    <script type="text/javascript" src="/static/js/math-rendering.js"></script>
+    <script type="text/javascript" src="/static/js/modules/math-rendering.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script type="text/javascript" src="../../static/js/script.js"></script>
+    <script type="text/javascript" src="../../static/js/teacher/creation.js"></script>
     <link rel="stylesheet" type="text/css" href="../../static/css/global.css" >    
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../../static/css/card-style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.0.0/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.js"></script>
     <script>
+        qcm_id = "{{ qcm.id }}";
+        statement_id = "{{ statement.id }}";
+        liveqcm_id = "{{ liveqcm_id }}";
+        projected = "{{ projected|tojson }}"==="true";
+        statement_index = "{{ statement_index }}";
+        statement_number = "{{ statement_number }}";
+        decimal = "{{ statement.decimal|tojson }}"==="true";
         socket = io();
         socket.connect('http://127.0.0.1:5000/');
     </script>
+    <script src="../../static/js/teacher/projection.js"></script>
+    <script src="../../static/js/teacher/qcm.js"></script>
 </head>    
 <body style="
     display: flex;
@@ -51,6 +62,8 @@
             <div class="list-response" id="list-response"> 
             {% if statement.decimal %} 
             <p id="decimalresponse" class="textarea-response" style="display: none;"> {{ statement.possibles_responses[0] }}</p>
+            {% elif statement.open_question %}
+            <svg id="cloud_word" width="400" height="500"></svg>
             {% else %}  
                 {% for i in range (0,statement.possibles_responses|length) %}
                     <div class="response">
@@ -84,131 +97,16 @@
                 <button class="animation rectangle" type="submit" id="stop" onclick="stop(liveqcm_id)">Désactiver les réponses</button>
                 <button class="animation rectangle" type="submit" id="project" onclick="stop_projection()">Stopper la projection</button>
                 {% endif %}
+                {% if not(statement.open_question) %}
                 <button class="animation rectangle" type="submit" id="correction" onclick="correction()">Correction</button>
+                {% endif %}
                 {% if not(final) %}
                 <button class="animation rectangle" id="nextquestion" onclick="nextquestion()">Suivant</button>
                 {% endif %}
             </div>  
     </div>  
 </div> 
-<script>
 
-var liveqcm_id = "{{ liveqcm_id }}";
-
-/* Vérification de la projection du qcm et déplacement sur le bon énoncé si oui  */
-function verify_statement(){
-    if("{{ projected|tojson }}"==="true" && "{{ statement_index }}"!= "{{ statement_number }}"){
-        window.location.replace("/qcm/"+"{{ qcm.id }}/"+"{{ statement_index }}");
-    }
-}
-
-/* Passage à la question suivante  */
-function nextquestion(){
-    statement_number = parseInt("{{statement_number}}");
-    socket.emit('nextquestion',liveqcm_id,statement_number);
-}
-
-/* Déplacement sur l'énoncé suivant */
-socket.on('nextquestion',(statement_number)=>{
-    window.location.replace("/qcm/"+"{{ qcm.id }}"+"/"+statement_number);
-});
-
-/* Passage à la question précédente */
-function previous(){
-    statement_number = parseInt("{{statement_number}}")
-    statement_number --;
-    if(statement_number !=-1){
-        window.location.replace("/qcm/"+"{{ qcm.id }}"+"/"+statement_number);
-    }
-}
-
-
-/* Affichage de la correction */
-function correction(){
-    if("{{ statement.decimal|tojson }}"==="false"){
-        if($('input#valid').is(':checked')) $('input#valid').prop('checked',false);
-        else $('input#valid').prop('checked',true);
-    }
-    else{
-        if($('#decimalresponse').is(':hidden')) $('#decimalresponse').css('display','flex');
-        else $('#decimalresponse').css('display','none');
-    }
-    socket.emit('correction',liveqcm_id);
-}
-
-/* Projection du qcm */
-function projection(id){
-    $('#project').html("Stopper la projection");
-    $('#project').attr('onclick','stop_projection("{{ statement.id }}")')
-    $('#stop').css("display","flex");
-    socket.emit('project',id);
-}
-
-/* Mettre en pause le qcm */
-function stop(){
-    socket.emit('stop_question',liveqcm_id);
-    $('#stop').html("Activer réponses");
-    $('#stop').attr('onclick','unstop(liveqcm_id)');
-}
-
-/* Remettre le qcm en marche */
-function unstop(){
-    socket.emit('unstop_question',liveqcm_id)
-    $('#stop').html("Désactiver réponses");
-    $('#stop').attr('onclick','stop(liveqcm_id)');
-}
-
-/* Arreter la projection */
-function stop_projection(){
-    $('#project').html("Projeter la question");
-    $('#project').attr('onclick','projection("{{ statement.id }}")');
-    $('#liveqcm_id').text("");
-    $('#stop').css('display','none');
-    $('#stop').html("Désactiver réponses");
-    $('#stop').attr('onclick','stop(liveqcm_id)');
-    $('#student_count').css('display','none');
-    $('#response_count').css('display','none');
-    $('.progress_bar').css("display","none");
-    $('.progress_bar').val(0);
-    socket.emit('stop');
-}
-
-/* Réception de l'id du qcm */
-socket.on('liveqcmid',(id)=>{
-    liveqcm_id = id;
-    $('#liveqcm_id').text("ID du questionnaire : "+id);
-});
-
-/* Réception de l'id du qcm après projection */
-socket.on('project',(liveqcmid)=>{
-    $('#liveqcm_id').text("Identifiant du questionnaire : "+liveqcmid);
-});
-
-/* Réception d'une réponse d'un étudiant */
-socket.on('response',(data)=>{
-    count_list = data.responses_count
-    for(let i=0;i<count_list.length;i++){
-        $('#progress'+i).val(count_list[i]);
-    }
-    $('#response_count').html("Réponses : "+data.count);
-    $('#response_count').css('display','flex');
-});
-
-/* Actualisation des compteurs */
-socket.on('count',(count)=>{
-    if(count!=0){
-        $('#student_count').text("Nombre d'étudiants : "+count);
-        $('#student_count').css('display','flex');
-        $('.progress_bar').attr('max',count);
-        $('.progress_bar').css("display","flex");
-    }
-});
-
-/* Recharge la page quand stoppé */
-socket.on('stop',()=>{
-    window.location.reload();
-});
-
-</script>
+<script src="../../static/js/modules/word_cloud.js"></script>
 </body>
 </html>

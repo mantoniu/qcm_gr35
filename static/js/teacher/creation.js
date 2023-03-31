@@ -39,6 +39,19 @@ $(document).ready(function(){
         }
     });
 
+    $("#open_question").change(function(){
+        if(this.checked){
+            open_question = true;
+            $("#add_answer").css("display","none");
+            $("#list-response").css("display","none");
+        }
+        else{
+            open_question = false;
+            $("#add_answer").css("display","flex");
+            $("#list-response").css("display","flex");
+        }
+    });
+
     $("#new-statement").submit(function(){
         if($('#statement_name').val()==""){
             alert('Vous devez saisir un nom !');
@@ -53,13 +66,13 @@ $(document).ready(function(){
             if($(this).val().trim() == '' && $(this).attr("id")!="decimal-response")
                 oneEmpty = true;
         });
-        if(!decimal){
+        if(!decimal&&!open_question){
             if(oneEmpty){
                 alert('Il faut remplir tous les champs !');
                 return false;
             }
         }
-        else{
+        else if(decimal){
             if(document.getElementById('decimal-response').value == ''){
                 alert('Veuillez remplir le champ de réponse !');
                 return false;

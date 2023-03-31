@@ -50,16 +50,18 @@ def statement_values():
       tags = []  
       if request.form.getlist('etiquettes'):
             tags = request.form.getlist('etiquettes')
-      if "decimal" not in request.form :
+
+      if "decimal" in request.form:
+            possibles_responses.append(request.form['statement'])
+            valids_reponses.append(0)
+
+      elif not("open_question" in request.form):
             for i in range (0,int(request.form['count'])+1):
                   if 'statement'+str(i) in request.form:
                         possibles_responses.append(request.form['statement'+str(i)])
                   if "switch"+str(i) in request.form:
-                        valids_reponses.append(i)
-      else:
-            possibles_responses.append(request.form['statement'])
-            valids_reponses.append(0)
-            
+                        valids_reponses.append(i)      
+
       return  Statement(name=name, question=question, valids_reponses=valids_reponses, possibles_responses=possibles_responses, user_email=session['email'],tags=tags)
 
 # Fonction qui vérifie si l'utilisateur est connecté
@@ -371,10 +373,10 @@ def generate_test():
                        value=int(request.form[tag]) 
                   else:
                         value = (int(request.form[tag]),int(request.form["a"+tag]))
+                        total = int(request.form['total_number'])
                   selected_tags[tag] = value
-      print(selected_tags,subjects_number)
-      return redirect('/my_qcm')
-                  
+      qcmlist = saving.statements_data.get_random_sets_of_qcm(selected_tags, subjects_number, session['email'])
+      return render_template('/teacher/exam.html',qcm_list=qcmlist)
 
 @socket.on('disconnect')
 def disconnection():
@@ -440,8 +442,11 @@ def response(response_list,liveqcmid):
       success = liveqcm.respond(student_email,response_list)
       liveqcm.debug()
       socket.emit('response_success',success,to=request.sid)
+      
       if success:
             socket.emit('response',{"responses_count":liveqcm.get_responses_count(),"count":liveqcm.get_total_responses_count()},to=owners[liveqcm.owner_email])
+            if liveqcm.get_current_statement().open_question:
+                  socket.emit('word_cloud',liveqcm.word_dict,to=owners[liveqcm.owner_email])
 
 # Vérification de l'existence d'une projection 
 @socket.on('liveqcm_join')
@@ -453,7 +458,6 @@ def liveqcm_join(qcmid):
 # Enregistrement de l'étudiant dans le questionnaire
 @socket.on('studentjoin')
 def student_join(qcmid):
-      print('\n TEST \n')
       disconnect_student(session['email'])      
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(qcmid)
       join_room(qcmid)

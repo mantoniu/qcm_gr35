@@ -63,10 +63,14 @@ $("#tag-form").submit(function(e){
 $('#advanced').change(function(){
   if(this.checked){
     $('div[id="range"]').css('display','inline');
+    $('#total_number').css("display",'block');
     $('#range :input').prop("required",true);
+    $('#total_number').prop("required",true);
   }
   else{
+    $('#total_number').css("display",'none');
     $('div[id="range"]').css('display','none');
     $('#range :input').prop("required",false);
+    $('#total_number').prop("required",false);
   }
 });
