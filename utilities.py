@@ -123,14 +123,11 @@ def read_csv(file_name: str) -> None:
 def get_corrected_word(word: str) -> str:
     ## On enlève les majuscules du mot
     word = word.lower()
-    print(word)
     ## On corrige les erreurs
     corrected_word = spell.correction(word)
     if corrected_word != None:
         word = corrected_word
-    print(word)
     ## On prend le lemme du mot
     if word not in computer_science_words:
         word = lemmatizer.lemmatize(word)
-    print(word)
     return word
