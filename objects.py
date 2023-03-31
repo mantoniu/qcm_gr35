@@ -249,22 +249,18 @@ class LiveQCM():
         else:
             self.word_dict[new_word] = 1
 
-
     def respond(self, student_email: str, responses: list) -> bool :
         if not(self.paused):
             if student_email in self.students_email and not(self.has_responded(student_email)):    
                 if self.get_current_statement().open_question:
                     self.update_word_dict(responses[0])
-                    self.stats[self.statement_index].set_response(student_email, [], True)
-                    for i in range(self.statement_index + 1, len(self.stats)):
-                        self.stats[i].clear_responses()
-                    return True
+                    self.stats[self.statement_index].set_response(student_email, responses, True)
                 else:
                     validity = self.statements[self.statement_index].check_validity(responses)
                     self.stats[self.statement_index].set_response(student_email, responses, validity)
-                    for i in range(self.statement_index + 1, len(self.stats)):
-                        self.stats[i].clear_responses()
-                    return True
+                for i in range(self.statement_index + 1, len(self.stats)):
+                    self.stats[i].clear_responses()
+                return True
         return False
     
     def get_reponses_by_time_xy(self) -> tuple:

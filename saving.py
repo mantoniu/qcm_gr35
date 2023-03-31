@@ -134,10 +134,7 @@ class StatementsData():
                 possibles_responses = []
                 for i in range(6, len(row)):
                     possibles_responses.append(row[i])
-                try:
-                    self.statements_array.append(Statement(id=row[0], name=row[1], question=row[2], valids_reponses=list(map(int, row[3].split(";"))), user_email=row[4], tags=list(map(str, row[5].split(";"))), possibles_responses=possibles_responses))
-                except ValueError:
-                    self.statements_array.append(Statement(id=row[0], name=row[1], question=row[2], valids_reponses=list(map(str, row[3].split(";"))), user_email=row[4], tags=list(map(str, row[5].split(";"))), possibles_responses=possibles_responses))
+                self.statements_array.append(Statement(id=row[0], name=row[1], question=row[2], valids_reponses=list(map(int, row[3].split(";"))), user_email=row[4], tags=list(map(str, row[5].split(";"))), possibles_responses=possibles_responses))
 
     def contains_id(self, id: str):
         for statements in self.statements_array:
