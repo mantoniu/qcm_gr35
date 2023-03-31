@@ -242,20 +242,19 @@ class LiveQCM():
         students_dic = self.stats[self.statement_index].get_students_responses()
         return student_email in students_dic and students_dic[student_email] != []
 
+    def update_word_dict(self, word: str) -> None:
+        new_word = get_corrected_word(word)
+        if new_word in self.word_dict.keys():
+            self.word_dict[new_word] += 1
+        else:
+            self.word_dict[new_word] = 1
+
 
     def respond(self, student_email: str, responses: list) -> bool :
         if not(self.paused):
             if student_email in self.students_email and not(self.has_responded(student_email)):    
                 if self.get_current_statement().open_question:
-                    new_word = get_corrected_word(responses[0])
-                    if len(self.word_dict)==0:
-                        self.word_dict[new_word] = 1
-                    else:
-                        for word in list(self.word_dict.keys()):
-                            if word == new_word:
-                                self.word_dict[new_word] += 1
-                            else:
-                                self.word_dict[new_word] = 1
+                    self.update_word_dict(responses[0])
                     self.stats[self.statement_index].set_response(student_email, [], True)
                     for i in range(self.statement_index + 1, len(self.stats)):
                         self.stats[i].clear_responses()

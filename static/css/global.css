@@ -44,3 +44,8 @@ nav li a:hover {
   background-color: rgb(198, 224, 202);
   color: black;
 }
+
+.projection_info{
+  justify-content: center;
+  display: contents;
+}

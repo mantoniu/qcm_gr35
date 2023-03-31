@@ -5,6 +5,11 @@ import pickle
 from french_lefff_lemmatizer.french_lefff_lemmatizer import FrenchLefffLemmatizer
 from spellchecker import SpellChecker
 
+
+
+computer_science_words = ["javascript","java","c++","algo","c#","php","c","c-","assembleur","html","css","ocaml",'bash','batch',"algorithmique"]
+spell = SpellChecker(language="fr")
+spell.word_frequency.load_words(computer_science_words)
 lemmatizer = FrenchLefffLemmatizer()
 line_separator = "@__|||1S"
 row_separator = "@__|||2S"
@@ -115,13 +120,17 @@ def read_csv(file_name: str) -> None:
     return tab
 
 
-def get_corrected_word(word: str):
+def get_corrected_word(word: str) -> str:
     ## On enlève les majuscules du mot
-    word = word.casefold()
+    word = word.lower()
+    print(word)
     ## On corrige les erreurs
-    corrected_word = SpellChecker(language="fr").correction(word)
+    corrected_word = spell.correction(word)
     if corrected_word != None:
         word = corrected_word
+    print(word)
     ## On prend le lemme du mot
-    word = lemmatizer.lemmatize(word)
+    if word not in computer_science_words:
+        word = lemmatizer.lemmatize(word)
+    print(word)
     return word

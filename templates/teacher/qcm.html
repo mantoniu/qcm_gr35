@@ -49,7 +49,11 @@
 </nav>
 
 <h1> Nom du Qcm : {{ qcm.name }}</h1>
-<h2 id ='liveqcm_id'>{% if projected %} Identifiant du questionnaire : {{ liveqcm_id }} {% endif %}</h2>  
+<div class="projection_info">
+    <h2 id ='liveqcm_id'>{% if projected %} Identifiant du questionnaire : {{ liveqcm_id }} {% endif %}</h2>  
+    <p id ='student_count' hidden>Connectés : 0</p>
+    <p id ='response_count' hidden>Réponses : 0</p>  
+</div>
 <div class="card" id="card" value="{{ statement.id }}"> 
     <div class="header-card" id="header">   
         <div class="translation" id="translation">  
@@ -63,7 +67,7 @@
             {% if statement.decimal %} 
             <p id="decimalresponse" class="textarea-response" style="display: none;"> {{ statement.possibles_responses[0] }}</p>
             {% elif statement.open_question %}
-            <svg id="cloud_word" width="400" height="500"></svg>
+            <svg id="cloud_word" width="400" height="250"></svg>
             {% else %}  
                 {% for i in range (0,statement.possibles_responses|length) %}
                     <div class="response">

@@ -61,6 +61,7 @@ socket.on('count',(count)=>{
 
 /* Arreter la projection */
 function stop_projection(){
+    $("#cloud_word").html("");
     $('#project').html("Projeter la question");
     $('#project').attr('onclick','projection("'+statement_id+'")');
     $('#liveqcm_id').text("");
@@ -78,13 +79,19 @@ function stop_projection(){
 socket.on('word_cloud',(word_dict)=>{
     console.log("Reception dictionnaire");
     console.log(word_dict);
-    data = []
+    data = [];
+    maxsize = 2000;
+    total_value = 0;
     for(elem in word_dict){
-        data.push({text:elem,value:word_dict[elem]*1000})
+        total_value += word_dict[elem];
     }
+    for(elem in word_dict){
+        data.push({text:elem,value:(word_dict[elem]/total_value)*maxsize})
+    }
+    console.log(data);
     $("#cloud_word").html("");
     var layout = d3.layout.cloud()
-        .size([400, 500])
+        .size([350, 250])
         .words(data)
         .on("end", draw);
     layout.start();
