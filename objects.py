@@ -15,7 +15,7 @@ class Statement():
         self.valids_responses = valids_reponses
         self.user_email = user_email
         self.tags = tags
-        self.decimal = len(possibles_responses)==1
+        self.decimal = len(possibles_responses)==1 and possibles_responses[0]!="open_question"
         self.open_question = possibles_responses[0]=="open_question"
 
         if id == None:
@@ -254,7 +254,7 @@ class LiveQCM():
             if student_email in self.students_email and not(self.has_responded(student_email)):    
                 if self.get_current_statement().open_question:
                     self.update_word_dict(responses[0])
-                    self.stats[self.statement_index].set_response(student_email, responses, True)
+                    self.stats[self.statement_index].set_response(student_email, [0], True)
                 else:
                     validity = self.statements[self.statement_index].check_validity(responses)
                     self.stats[self.statement_index].set_response(student_email, responses, validity)

@@ -379,7 +379,7 @@ def generate_test():
                         value = (int(request.form[tag]),int(request.form["a"+tag]))
                         total = int(request.form['total_number'])
                   selected_tags[tag] = value
-      qcmlist = saving.statements_data.get_random_sets_of_qcm(selected_tags, subjects_number, session['email'])
+      qcmlist = saving.statements_data.get_random_sets_of_qcm(selected_tags, session['email'], subjects_number)
       return render_template('/teacher/exam.html',qcm_list=qcmlist)
 
 @socket.on('disconnect')
