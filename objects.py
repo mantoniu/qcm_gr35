@@ -16,7 +16,7 @@ class Statement():
         self.user_email = user_email
         self.tags = tags
         self.decimal = len(possibles_responses)==1
-        self.open_question = len(possibles_responses)==0
+        self.open_question = possibles_responses[0]=="open_question"
 
         if id == None:
             self.generate_id()

@@ -55,7 +55,11 @@ def statement_values():
             possibles_responses.append(request.form['statement'])
             valids_reponses.append(0)
 
-      elif not("open_question" in request.form):
+      elif "open_question" in request.form:
+            possibles_responses.append("open_question")
+            valids_reponses.append(0)
+
+      else:
             for i in range (0,int(request.form['count'])+1):
                   if 'statement'+str(i) in request.form:
                         possibles_responses.append(request.form['statement'+str(i)])
