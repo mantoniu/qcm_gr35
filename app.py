@@ -1,6 +1,5 @@
 import globals
 from objects import *
-from random import shuffle
 import saving
 from flask import flash,Flask,url_for,render_template,request,session,redirect
 from flaskext.markdown import Markdown
@@ -383,11 +382,8 @@ def generate_test():
                         value = (int(request.form[tag]),int(request.form["a"+tag]))
                         total = int(request.form['total_number'])
                   selected_tags[tag] = value
-      qcmlist = saving.statements_data.get_random_sets_of_qcm(selected_tags, session['email'], subjects_number)
+      qcmlist = saving.statements_data.get_random_sets_of_qcm(selected_tags, session['email'], subjects_number, shuffled)
       if qcmlist:
-            if shuffled:
-                  for qcm in qcmlist:
-                        shuffle(qcm.statements)
             return render_template('/teacher/exam.html',qcm_list=qcmlist)
       else:
             return redirect(url_for('tools',error=True))
