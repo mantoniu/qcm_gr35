@@ -27,6 +27,7 @@ $(document).ready(function(){
     $("#decimal").change(function(){
         if(this.checked){
             decimal = true;
+            $("#open_question").prop("checked", false);
             $("#add_answer").css("display","none");
             $("#list-response").css("display","none");
             $("#decimal-response").css("display","flex");
@@ -42,6 +43,7 @@ $(document).ready(function(){
     $("#open_question").change(function(){
         if(this.checked){
             open_question = true;
+            $("#decimal").prop("checked", false)
             $("#add_answer").css("display","none");
             $("#list-response").css("display","none");
         }

@@ -1,14 +1,7 @@
 # qcm_gr35
 
 ## Lancement, installation
-Pour lancer l'application, il faut préalablement installer différents modules :
-
-    - le module Flask avec la commande "pip install Flask"
-    - le module Flask-Markdown avec la commande "pip intall Flask-Markdown"
-    - le module markdown avec la commande "pip install -r requirements.txt" car il faut une version antérieure à la 3.2 pour fonctionner avec md-mermaid
-    - le module md-mermaid avec la commande "pip install md-mermaid"
-    - le module FLask-SocketIO avec la commande "pip install Flask-SocketIO"
-    - le module Flask-Session avec la commande "pip install Flask-Session"
+Pour lancer l'application, il faut préalablement installer les différents modules avec la commande "pip install -r requirements.txt" 
 
 Ensuite il faut utiliser : "python3 app.py" pour lancer le serveur
 
@@ -31,9 +24,15 @@ Méthodes de sauvegarde :
 
 ### Partie générale
 
+JAVASCRIPT :
+    
+    - chosen.jquery.js
+    - math-rendering.js
+    - word-cloud.js
+
 HTML :
 
-    -student_or_teacher.html
+    - student_or_teacher.html
 
 IMAGES :
 
@@ -60,6 +59,7 @@ TXT :
 JAVASCRIPT :
 
     - home.js
+    - statement.js
 
 HTML :
 
@@ -72,12 +72,12 @@ HTML :
 
 JAVASCRIPT:
 
-    - chosen.jquery.js 
+    - creation.js
     - home.js
-    - math-rendering.js
     - mystates.js
-    - script.js
-    - select-button.js
+    - projection.js
+    - qcm.js
+    - stats.js
     
  HTML :
 
@@ -91,13 +91,14 @@ JAVASCRIPT:
     - qcm_list.html
     - qcm.html
     - stats.html
+    - exam.html
     
 
 PYTHON :
 
     - app.py (serveur Flask)
     - globals.py (variables globales)
-    - qcm.py (classe QCM et Statement)
+    - objects.py (classes QCM, Statement, LiveQCM)
     - saving.py 
     - user.py (classe User)
     - utilities.py 
