@@ -296,10 +296,12 @@ class StatementsData():
         return qcms
     
     def get_random_sets_of_qcm_with_range(self, tags_ranges: dict, total_statements: int, teacher_email: str, n: int, randomize: bool = False) -> list:
-        total_sum = 0
+        min_sum = 0
+        max_sum = 0
         for ranges in list(tags_ranges.values()):
-            total_sum += ranges[1]
-        if total_sum < total_statements:
+            min_sum += ranges[0]
+            max_sum += ranges[1]
+        if min_sum <= total_statements and total_statements <= max_sum:
             return []
         qcms = []
         all_statements_with_tags = self.get_all_statements_with_any_tag(list(tags_ranges.keys()), teacher_email)
@@ -315,7 +317,7 @@ class StatementsData():
             statements = []
             one_student_ranges = {}
             total_sum = 0
-            while total_sum < total_statements:
+            while total_sum != total_statements:
                 total_sum = 0
                 for tags in tags_ranges:
                     random_nb = randint(tags_ranges[tags][0], tags_ranges[tags][1])
