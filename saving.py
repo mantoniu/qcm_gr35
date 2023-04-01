@@ -1,7 +1,7 @@
 from utilities import *
 from user import Student, Teacher
 from objects import *
-import random
+from random import sample, randint, shuffle
 from itertools import combinations
 
 class TeachersData():
@@ -187,7 +187,7 @@ class StatementsData():
     def get_all_statements_with_all_tags(self, tags_array: list, teacher_email: str, ignore_statements: list = []) -> list:
         result = []
         statements_from_user = self.get_statements_from_user(teacher_email)
-        for statements in random.sample(statements_from_user, len(statements_from_user)):
+        for statements in sample(statements_from_user, len(statements_from_user)):
             if not(self.statement_is_in_list(statements, ignore_statements)):
                 all_tags = True
                 for tags in tags_array:
@@ -200,7 +200,7 @@ class StatementsData():
     def get_all_statements_with_any_tag(self, tags_array: list, teacher_email: str, ignore_statements: list = []) -> list:
         result = []
         statements_from_user = self.get_statements_from_user(teacher_email)
-        for statements in random.sample(statements_from_user, len(statements_from_user)):
+        for statements in sample(statements_from_user, len(statements_from_user)):
             if not(self.statement_is_in_list(statements, ignore_statements)):
                 for tags in tags_array:
                     if tags in statements.tags:
@@ -214,7 +214,7 @@ class StatementsData():
         if n <= 0:
             return []
         statements_from_user = self.get_statements_from_user(teacher_email)
-        for statements in random.sample(statements_from_user, len(statements_from_user)):
+        for statements in sample(statements_from_user, len(statements_from_user)):
             if not(self.statement_is_in_list(statements, ignore_statements)):
                 all_tags = True
                 for tags in tags_array:
@@ -233,7 +233,7 @@ class StatementsData():
         if n <= 0:
             return []
         statements_from_user = self.get_statements_from_user(teacher_email)
-        for statements in random.sample(statements_from_user, len(statements_from_user)):
+        for statements in sample(statements_from_user, len(statements_from_user)):
             if not(self.statement_is_in_list(statements, ignore_statements)):
                 all_tags = True
                 for tags in tags_array:
@@ -264,33 +264,56 @@ class StatementsData():
         while len(all_combinations) < qcms_len:
             if i > nb_differents_statements:
                 return []
-            all_combinations += list(combinations(random.sample(list(range(0, nb_differents_statements)), nb_differents_statements), i))
+            all_combinations += list(combinations(sample(list(range(0, nb_differents_statements)), nb_differents_statements), i))
             i+=1
         return all_combinations[:qcms_len]
         
     
-    def get_random_sets_of_qcm(self, tags_dic: dict, teacher_email: str, n: int) -> list:
+    def get_random_sets_of_qcm(self, tags_dic: dict, teacher_email: str, n: int, randomize: bool = False) -> list:
         qcms = []
         all_statements_with_tags = self.get_all_statements_with_any_tag(list(tags_dic.keys()), teacher_email)
         uplets_to_exclude = self.generate_uplets_to_exclude(len(all_statements_with_tags), n)
         if not uplets_to_exclude:
             return []
         count = 0
-        for _ in range(n):
-            ignore_statements_indexes = uplets_to_exclude[count]
-            ignore_statements = []
-            for i in range(len(ignore_statements_indexes)):
-                ignore_statements.append(all_statements_with_tags[i])
-            statements = []
-            for tags in tags_dic:
-                for _ in range(tags_dic[tags]):
-                    one_statement = self.get_random_n_statements_with_tags(tags_array=[tags], n=1, teacher_email=teacher_email, ignore_statements=ignore_statements)
-                    if one_statement != []:
-                        statements.append(one_statement[0])
-                    else:
-                        return []
-            qcms.append(QCM(name="Questionnaire", statements=statements, user_email=teacher_email))
-            count+=1
+        if type(list(tags_dic.values)[0]) is int:
+            for _ in range(n):
+                ignore_statements_indexes = uplets_to_exclude[count]
+                ignore_statements = []
+                for i in range(len(ignore_statements_indexes)):
+                    ignore_statements.append(all_statements_with_tags[i])
+                statements = []
+                for tags in tags_dic:
+                    for _ in range(tags_dic[tags]):
+                        one_statement = self.get_random_n_statements_with_tags(tags_array=[tags], n=1, teacher_email=teacher_email, ignore_statements=ignore_statements)
+                        if one_statement != []:
+                            statements.append(one_statement[0])
+                        else:
+                            return []
+                if randomize:
+                    shuffle(statements)
+                qcms.append(QCM(name="Questionnaire", statements=statements, user_email=teacher_email))
+                count+=1
+        elif type(list(tags_dic.values)[0]) is tuple:
+            for _ in range(n):
+                ignore_statements_indexes = uplets_to_exclude[count]
+                ignore_statements = []
+                for i in range(len(ignore_statements_indexes)):
+                    ignore_statements.append(all_statements_with_tags[i])
+                statements = []
+                for tags in tags_dic:
+                    for _ in range(randint(tags_dic[tags][0], tags_dic[tags][1])):
+                        one_statement = self.get_random_n_statements_with_tags(tags_array=[tags], n=1, teacher_email=teacher_email, ignore_statements=ignore_statements)
+                        if one_statement != []:
+                            statements.append(one_statement[0])
+                        else:
+                            return []
+                if randomize:
+                    shuffle(statements)
+                qcms.append(QCM(name="Questionnaire", statements=statements, user_email=teacher_email))
+                count+=1
+        else:
+            return []
         return qcms
     
     def get_statement_by_id(self, id: str) -> Statement:

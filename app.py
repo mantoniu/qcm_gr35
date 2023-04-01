@@ -1,6 +1,6 @@
 import globals
 from objects import *
-import random
+from random import shuffle
 import saving
 from flask import flash,Flask,url_for,render_template,request,session,redirect
 from flaskext.markdown import Markdown
@@ -387,7 +387,7 @@ def generate_test():
       if qcmlist:
             if shuffled:
                   for qcm in qcmlist:
-                        random.shuffle(qcm.statements)
+                        shuffle(qcm.statements)
             return render_template('/teacher/exam.html',qcm_list=qcmlist)
       else:
             return redirect(url_for('tools',error=True))
