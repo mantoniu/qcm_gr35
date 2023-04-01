@@ -46,6 +46,12 @@
     <form id="tag-form" action="/generate_test" method="POST">
       <span class="close">&times;</span>
       <label class="form-label" for="customFile"><h3>Donner le nombre de question par tag</h3></label>      
+      <label style="display: block;"> Ordre :
+        <select style="width: auto; margin-top: 1%;" class="form-select" name="order">
+          <option value="shuffle">Mélangé</option>
+          <option value="sort">Par thèmes</option>
+        </select>
+      </label>
       <label style="display: block; margin: 10px 0;"> Mode avancé
         <input id='advanced' type="checkbox" name="advanced">
       </label>

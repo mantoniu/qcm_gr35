@@ -286,7 +286,7 @@ class StatementsData():
                 for _ in range(tags_dic[tags]):
                     one_statement = self.get_random_n_statements_with_tags(tags_array=[tags], n=1, teacher_email=teacher_email, ignore_statements=ignore_statements)
                     if one_statement != []:
-                        statements.append(one_statement)
+                        statements.append(one_statement[0])
                     else:
                         return []
             qcms.append(QCM(name="Questionnaire", statements=statements, user_email=teacher_email))

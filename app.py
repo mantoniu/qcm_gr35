@@ -1,5 +1,6 @@
 import globals
 from objects import *
+import random
 import saving
 from flask import flash,Flask,url_for,render_template,request,session,redirect
 from flaskext.markdown import Markdown
@@ -83,6 +84,7 @@ def disconnect_student(student_email):
       if user_liveqcm != None and user_liveqcm.owner_email in owners:
             user_liveqcm.student_leave(session['email'])
             socket.emit('count',user_liveqcm.get_students_count(),to=owners[user_liveqcm.owner_email])
+
 
 # Renvoie du fichier pour choisir la partie souhaitée
 @app.route('/')
@@ -366,6 +368,7 @@ def upload_file():
 # Générer un controle
 @app.route('/generate_test',methods=['POST'])
 def generate_test():
+      shuffled = request.form['order'] == "shuffle"
       type_advanced = 'advanced' in request.form
       user = saving.teachers_data.get_user_by_email(session['email'])
       selected_tags = {}
@@ -380,7 +383,13 @@ def generate_test():
                         total = int(request.form['total_number'])
                   selected_tags[tag] = value
       qcmlist = saving.statements_data.get_random_sets_of_qcm(selected_tags, session['email'], subjects_number)
-      return render_template('/teacher/exam.html',qcm_list=qcmlist)
+      if qcmlist:
+            if shuffled:
+                  for qcm in qcmlist:
+                        random.shuffle(qcm.statements)
+            return render_template('/teacher/exam.html',qcm_list=qcmlist)
+      else:
+            return redirect("tools")
 
 ## ROUTE A SUPPRIMER
 @app.route('/exam')
