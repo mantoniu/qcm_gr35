@@ -377,12 +377,15 @@ def generate_test():
       for tag in user.tags_array:
             if tag in request.form:
                   if not(type_advanced):
-                       value=int(request.form[tag]) 
+                        value=int(request.form[tag]) 
                   else:
                         value = (int(request.form[tag]),int(request.form["a"+tag]))
-                        total = int(request.form['total_number'])
                   selected_tags[tag] = value
-      qcmlist = saving.statements_data.get_random_sets_of_qcm(selected_tags, session['email'], subjects_number, shuffled)
+      if type_advanced:
+            total = int(request.form['total_number'])
+            qcmlist = saving.statements_data.get_random_sets_of_qcm_with_range(selected_tags, total, session['email'], subjects_number, shuffled)
+      else:
+            qcmlist = saving.statements_data.get_random_sets_of_qcm(selected_tags, session['email'], subjects_number, shuffled)
       if qcmlist:
             return render_template('/teacher/exam.html',qcm_list=qcmlist)
       else:
