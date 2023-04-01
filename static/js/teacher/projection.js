@@ -1,3 +1,6 @@
+var fill = d3.scaleOrdinal()
+.range(d3.schemeCategory20)
+
 /* Démarrer la projection */
 function projection(id){
     $('#project').html("Stopper la projection");
@@ -75,12 +78,15 @@ function stop_projection(){
     socket.emit('stop');
 }
 
+
+data = []
+
 /* Actualisation du nuage de mot */
 socket.on('word_cloud',(word_dict)=>{
     console.log("Reception dictionnaire");
     console.log(word_dict);
     data = [];
-    maxsize = 2000;
+    maxsize = 2500;
     total_value = 0;
     for(elem in word_dict){
         total_value += word_dict[elem];
@@ -97,3 +103,21 @@ socket.on('word_cloud',(word_dict)=>{
     layout.start();
 });
 
+
+
+function draw(words) {
+    console.log(data)
+    d3.select("#cloud_word")
+        .append("g")
+        .attr("transform", "translate(" + 350 / 2 + "," + 250 / 2 + ")")
+        .selectAll("text")
+        .data(words)
+        .enter()
+        .append("text")
+        .text((d) => d.text)
+        .style("font-size", (d) => d.size + "px")
+        .style("font-family", (d) => d.font)
+        .style("fill", (d, i) => fill(i))
+        .attr("text-anchor", "middle")
+        .attr("transform", (d) => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")");
+}

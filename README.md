@@ -28,8 +28,7 @@ JAVASCRIPT :
     
     - chosen.jquery.js
     - math-rendering.js
-    - word-cloud.js
-
+    
 HTML :
 
     - student_or_teacher.html
