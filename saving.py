@@ -276,7 +276,7 @@ class StatementsData():
         if not uplets_to_exclude:
             return []
         count = 0
-        if type(list(tags_dic.values)[0]) is int:
+        if type(list(tags_dic.values())[0]) is int:
             for _ in range(n):
                 ignore_statements_indexes = uplets_to_exclude[count]
                 ignore_statements = []
@@ -294,7 +294,7 @@ class StatementsData():
                     shuffle(statements)
                 qcms.append(QCM(name="Questionnaire", statements=statements, user_email=teacher_email))
                 count+=1
-        elif type(list(tags_dic.values)[0]) is tuple:
+        elif type(list(tags_dic.values())[0]) is tuple:
             for _ in range(n):
                 ignore_statements_indexes = uplets_to_exclude[count]
                 ignore_statements = []
