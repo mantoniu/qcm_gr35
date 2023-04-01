@@ -3,6 +3,20 @@ var btn = document.getElementById("add-student");
 var span = document.getElementsByClassName("close")[1];
 var span2 = document.getElementsByClassName("close")[0];
 
+$(function() {
+  $("#select-tags").chosen(
+      {no_results_text:"Pas d'étiquette intitulée : "}
+  );
+});
+
+
+document.addEventListener("DOMContentLoaded", function(){
+  if(error){
+    alert("Erreur lors de la création de l'examen");
+    window.location.replace('/tools');
+  }
+});
+
 btn.onclick = function() {
   modal.style.display = "block";
 }

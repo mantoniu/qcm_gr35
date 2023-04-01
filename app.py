@@ -198,11 +198,12 @@ def register():
 
 # Ajouter des étudiants
 
-@app.route('/tools')
-def add_students():
+@app.route('/tools',methods=['GET'])
+def tools():
       if is_logged("teacher"):
+            error = request.args.get('error')
             user = saving.teachers_data.get_user_by_email(session['email'])
-            return render_template('/teacher/tools.html',tags=user.tags_array)
+            return render_template('/teacher/tools.html',tags=user.tags_array,error=error)
       else:
             return redirect('/teacher')
 
@@ -388,6 +389,8 @@ def generate_test():
                   for qcm in qcmlist:
                         random.shuffle(qcm.statements)
             return render_template('/teacher/exam.html',qcm_list=qcmlist)
+      else:
+            return redirect(url_for('tools',error=True))
 
 ## ROUTE A SUPPRIMER
 @app.route('/exam')
