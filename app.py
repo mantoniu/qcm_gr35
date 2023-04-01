@@ -388,8 +388,6 @@ def generate_test():
                   for qcm in qcmlist:
                         random.shuffle(qcm.statements)
             return render_template('/teacher/exam.html',qcm_list=qcmlist)
-      else:
-            return redirect("tools")
 
 ## ROUTE A SUPPRIMER
 @app.route('/exam')

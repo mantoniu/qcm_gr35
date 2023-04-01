@@ -73,7 +73,7 @@ HTML :
 JAVASCRIPT:
 
     - creation.js
-    - home.js
+    - tools.js
     - mystates.js
     - projection.js
     - qcm.js

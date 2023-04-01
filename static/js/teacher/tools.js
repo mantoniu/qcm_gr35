@@ -45,7 +45,7 @@ $("#tag-form").submit(function(e){
       for(let i=0;i<selectedValues.length;i++){
         let elem1 = $("input[name='"+selectedValues[i]+"']");
         let elem2 = $("input[name='a"+selectedValues[i]+"']");
-        if(elem1.val()>elem2.val()){       
+        if(Number(elem1.val())>Number(elem2.val())){       
           elem1.addClass("red")
                 .attr("onchange","remove_red(this);");
           ;
@@ -65,12 +65,12 @@ $('#advanced').change(function(){
     $('div[id="range"]').css('display','inline');
     $('#total_number').css("display",'block');
     $('#range :input').prop("required",true);
-    $('#total_number').prop("required",true);
+    $('#total_number :input').prop("required",true);
   }
   else{
     $('#total_number').css("display",'none');
     $('div[id="range"]').css('display','none');
     $('#range :input').prop("required",false);
-    $('#total_number').prop("required",false);
+    $('#total_number :input').prop("required",false);
   }
 });
