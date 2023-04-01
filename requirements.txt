@@ -1,3 +1,7 @@
+Flask==2.2.2
+Flask_Session==0.4.0
+Flask_SocketIO==5.3.2
+FrenchLefffLemmatizer==0.3
 Markdown<3.2
-flask-markdown
-flask-session
+pyspellchecker==0.7.1
+spellchecker==0.4

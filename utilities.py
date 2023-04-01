@@ -2,15 +2,13 @@ import csv
 from hashlib import md5
 from os import mkdir, path, stat
 import pickle
-from french_lefff_lemmatizer.french_lefff_lemmatizer import FrenchLefffLemmatizer
 from spellchecker import SpellChecker
-
-
+import spacy
 
 computer_science_words = ["javascript","java","c++","algo","c#","php","c","c-","assembleur","html","css","ocaml",'bash','batch',"algorithmique"]
 spell = SpellChecker(language="fr")
 spell.word_frequency.load_words(computer_science_words)
-lemmatizer = FrenchLefffLemmatizer()
+nlp = spacy.load('fr_core_news_md')
 line_separator = "@__|||1S"
 row_separator = "@__|||2S"
 csv_delimiter = ","
@@ -119,6 +117,9 @@ def read_csv(file_name: str) -> None:
             tab.append(row)
     return tab
 
+def lemmatize(word: str) -> str:
+    return nlp(word)[0].lemma_
+
 
 def get_corrected_word(word: str) -> str:
     ## On enlève les majuscules du mot
@@ -129,5 +130,5 @@ def get_corrected_word(word: str) -> str:
         word = corrected_word
     ## On prend le lemme du mot
     if word not in computer_science_words:
-        word = lemmatizer.lemmatize(word)
+        word = lemmatize(word)
     return word
