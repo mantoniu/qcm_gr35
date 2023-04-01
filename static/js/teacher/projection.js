@@ -86,7 +86,7 @@ socket.on('word_cloud',(word_dict)=>{
     console.log("Reception dictionnaire");
     console.log(word_dict);
     data = [];
-    maxsize = 2500;
+    maxsize = 2000;
     total_value = 0;
     for(elem in word_dict){
         total_value += word_dict[elem];
