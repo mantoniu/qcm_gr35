@@ -320,7 +320,7 @@ class StatementsData():
             while total_sum != total_statements:
                 total_sum = 0
                 for tags in tags_ranges:
-                    random_nb = randint(tags_ranges[tags][0], tags_ranges[tags][1])
+                    random_nb = randint(tags_ranges[tags][0], tags_ranges[tags][1] + 1)
                     one_student_ranges[tags] = random_nb
                     total_sum += random_nb
             for tags in one_student_ranges:
