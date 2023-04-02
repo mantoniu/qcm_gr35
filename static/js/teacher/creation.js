@@ -26,14 +26,12 @@ function addOption(){
 $(document).ready(function(){
     $("#decimal").change(function(){
         if(this.checked){
-            decimal = true;
             $("#open_question").prop("checked", false);
             $("#add_answer").css("display","none");
             $("#list-response").css("display","none");
             $("#decimal-response").css("display","flex");
         }
         else{
-            decimal = false;
             $("#add_answer").css("display","flex");
             $("#list-response").css("display","flex");
             $("#decimal-response").css("display","none");
@@ -42,19 +40,21 @@ $(document).ready(function(){
 
     $("#open_question").change(function(){
         if(this.checked){
-            open_question = true;
+            $("#decimal-response").css("display","none");
             $("#decimal").prop("checked", false)
             $("#add_answer").css("display","none");
             $("#list-response").css("display","none");
         }
         else{
-            open_question = false;
+            $("#decimal-response").css("display","none");
             $("#add_answer").css("display","flex");
             $("#list-response").css("display","flex");
         }
     });
 
     $("#new-statement").submit(function(){
+        open_question = $("#open_question").is(":checked");
+        decimal = $("#decimal").is(":checked");
         if($('#statement_name').val()==""){
             alert('Vous devez saisir un nom !');
             return false;
@@ -68,6 +68,8 @@ $(document).ready(function(){
             if($(this).val().trim() == '' && $(this).attr("id")!="decimal-response")
                 oneEmpty = true;
         });
+        console.log(open_question);
+        console.log(decimal)
         if(!decimal&&!open_question){
             if(oneEmpty){
                 alert('Il faut remplir tous les champs !');

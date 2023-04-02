@@ -91,6 +91,9 @@ var decimal = "{{ statement.decimal|tojson }}"==="true"
         <div class="body-card">  
             <div class="content" id="content-response">  
                 <input id="count" type="hidden" name="count" value="1">  
+                {% if statement.open_question %}
+                <input step="0.01" type="number" id="decimal-response" name="statement" type="text" placeholder="Ecrire une réponse..." class="textarea-response" style="display: none;"></textarea>  
+                {% endif %}
                 {% if statement.decimal %}
                 <input step="0.01" type="number" id="decimal-response" name="statement" type="text" placeholder="Ecrire une réponse..." class="textarea-response" value="{{ statement.possibles_responses[0] }}">
                 {% endif %}
