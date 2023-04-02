@@ -68,8 +68,6 @@ $(document).ready(function(){
             if($(this).val().trim() == '' && $(this).attr("id")!="decimal-response")
                 oneEmpty = true;
         });
-        console.log(open_question);
-        console.log(decimal)
         if(!decimal&&!open_question){
             if(oneEmpty){
                 alert('Il faut remplir tous les champs !');

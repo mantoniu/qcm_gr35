@@ -65,7 +65,6 @@ def statement_values():
                         possibles_responses.append(request.form['statement'+str(i)])
                   if "switch"+str(i) in request.form:
                         valids_reponses.append(i)      
-
       return  Statement(name=name, question=question, valids_reponses=valids_reponses, possibles_responses=possibles_responses, user_email=session['email'],tags=tags)
 
 # Fonction qui vérifie si l'utilisateur est connecté
@@ -318,7 +317,7 @@ def qcm_id(id,statement_number):
 # Renvoi la conversion html du markdown 
 @app.route('/preview',methods=['POST','GET'])
 def preview():
-      return md.markdown("\n"+request.form['text'], extensions=md_extensions)
+      return (md.markdown("\n"+request.form['text'], extensions=md_extensions))
 
 # Creation d'un tag
 @app.route('/newtag',methods=['POST'])
