@@ -124,7 +124,7 @@ PYTHON :
     - Éventuellement mieux sécuriser les enregistrements (interdire les chaînes séparatrices par exemple)
     - Mettre en place les statistiques
 
-## Explication mise en place nuage de mots
+# Explication mise en place nuage de mots
 
     Pour mettre en place le nuage de mots avec les différentes contraintes demandées, j’ai tout d’abord rechercher comment corriger un mot sur Python. J’ai donc trouvé un module intéressant nommé « pyspellchecker » qui corrige les fautes de frappes et les erreurs en revoyant le mot corrigé. Je me suis ensuite renseigné pour obtenir une méthode efficace afin d’obtenir la base d’un mot, c’est-à-dire sans le pluriel et, par exemple pour les verbes conjugués le verbe à l’infinitif. Cette forme est appelée « le lemme » d’un mot et permet de rassembler sous un seul terme les variantes d’un mot. 
     
