@@ -276,7 +276,7 @@ def create():
 # Edition énoncé
 @app.route('/statement/edit/<id>',methods=['GET'])
 def edit(id):
-      return render_template('/teacher/edit.html',statement=saving.statements_data.get_statement_by_id(id))
+      return render_template('/teacher/edit.html',statement=saving.statements_data.get_statement_by_id(id),tags=(saving.teachers_data.get_user_by_email(session['email'])).tags_array)
 
 # Renvoi de l'affichage de l'énoncé correspondant
 @app.route('/statement/<id>',methods=['POST','GET'])

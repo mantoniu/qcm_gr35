@@ -40,8 +40,8 @@ class Statement():
         self.valids_responses = new_statement.valids_responses
         self.user_email = new_statement.user_email
         self.tags = new_statement.tags
-        self.decimal = len(new_statement.possibles_responses)==1
-        self.open_question = len(new_statement.possibles_responses) == 0
+        self.decimal = len(new_statement.possibles_responses)==1 and new_statement.possibles_responses[0]!="open_question"
+        self.open_question = new_statement.possibles_responses[0]=="open_question"
     
     def get_registering_line(self) -> list:
         line_to_add = [self.id, self.name, self.question]
