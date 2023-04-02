@@ -215,11 +215,11 @@ def qcm():
             return redirect('/teacher')
 
 
-# Permet de renvoyer la liste des qcm et donc l'affichage de ceux-ci dans my_qcm.html
+# Permet de renvoyer la liste des qcm et donc l'affichage de ceux-ci dans qcm.html
 @app.route('/my_qcm')
 def my_qcm():
       if is_logged("teacher"):
-            return render_template('/teacher/my_qcm.html', my_qcm_array=saving.qcm_data.get_qcm_from_user(session['email']))
+            return render_template('/teacher/qcm_list.html', qcm_array=saving.qcm_data.get_qcm_from_user(session['email']), page="myqcm")
       else:
             return redirect('/teacher')
 
@@ -276,7 +276,7 @@ def create():
 # Edition énoncé
 @app.route('/statement/edit/<id>',methods=['GET'])
 def edit(id):
-      return render_template('/teacher/edit.html',statement=saving.statements_data.get_statement_by_id(id))
+      return render_template('/teacher/edit.html',statement=saving.statements_data.get_statement_by_id(id),tags=(saving.teachers_data.get_user_by_email(session['email'])).tags_array)
 
 # Renvoi de l'affichage de l'énoncé correspondant
 @app.route('/statement/<id>',methods=['POST','GET'])

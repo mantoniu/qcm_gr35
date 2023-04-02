@@ -67,7 +67,7 @@
             {% if statement.decimal %} 
             <p id="decimalresponse" class="textarea-response" style="display: none;"> {{ statement.possibles_responses[0] }}</p>
             {% elif statement.open_question %}
-            <svg id="cloud_word" width="350" height="250"></svg>
+            <svg id="cloud_word" width="350" height="300"></svg>
             {% else %}  
                 {% for i in range (0,statement.possibles_responses|length) %}
                     <div class="response">

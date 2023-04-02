@@ -80,12 +80,11 @@ JAVASCRIPT:
     
  HTML :
 
-    - add_students.html
+    - tools.html
     - create.html
     - edit.html
     - enonce.html
     - index.html
-    - my_qcm.html
     - my_states.html
     - qcm_list.html
     - qcm.html
@@ -110,7 +109,9 @@ PYTHON :
     - Jquery chosen : https://harvesthq.github.io/chosen/
     - Documentation Flask-SocketIO : https://flask-socketio.readthedocs.io/en/latest/
     - Uploading files FLask : https://flask.palletsprojects.com/en/2.2.x/patterns/fileuploads/
-
+    - Pyspellchecker : https://pyspellchecker.readthedocs.io/en/latest/quickstart.html
+    - French Leff lemmatizer : https://github.com/ClaudeCoulombe/FrenchLefffLemmatizer
+    - D3.js documentation : https://devdocs.io/d3~4/
 
 ## Amélioration de la partie 1
 
@@ -124,4 +125,13 @@ PYTHON :
     - Résultats après avoir fini un QCM
     - Éventuellement mieux sécuriser les enregistrements (interdire les chaînes séparatrices par exemple)
     - Mettre en place les statistiques
-    - Résoudre bug de réponse
+
+## Explication mise en place nuage de mots (Antoine-Marie)
+
+Pour mettre en place le nuage de mots avec les différentes contraintes demandées, j’ai tout d’abord rechercher comment corriger un mot sur Python. J’ai donc trouvé un module intéressant nommé « pyspellchecker » qui corrige les fautes de frappes et les erreurs en revoyant le mot corrigé. Je me suis ensuite renseigné pour obtenir une méthode efficace afin d’obtenir la base d’un mot, par exemple pour les verbes conjugués le verbe à l’infinitif ou bien le singulier pour les mots au pluriel. Cette forme est appelée **le lemme d’un mot** et permet de rassembler sous un seul terme les variantes d’un mot. 
+    
+On enlève donc tout d’abord les majuscules du mot, on procède à sa correction et enfin on obtient son lemme. Si le mot obtenu n’existe pas dans les clés du dictionnaire stockant tous les lemmes répondus ainsi que le nombre de réponses correspondant on le rajoute dans le dictionnaire, sinon on ajoute 1 au nombre de réponses.
+    
+Afin de procéder à l’affichage, le dictionnaire est par la suite envoyé au client avec un socket. Il va être traité pour correspondre à la fonction d’affichage qui utilise le module D3.js et donc apparaitre dans l’espace qui lui est consacré sous l’énoncé.
+
+Nous avons effectué différents tests pour vérifier l’efficacité de notre correcteur avec des mots aux pluriels ou bien des mots correspondant au monde de l’informatique.  Certains langages n’étaient pas reconnus et nous les avons donc ajouté dans le correcteur.

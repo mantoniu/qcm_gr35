@@ -71,10 +71,13 @@ var decimal = "{{ statement.decimal|tojson }}"==="true"
         </div>
         <div class="etiquettes-bloc">
             <p>Choix des étiquettes : &nbsp;</p>
-            <select class="chzn-select" id="select-tags" data-placeholder="Etiquettes" multiple="true" name="etiquettes[]" style="width:200px;">
-            {% for tag in statement.tags %}
-                <h1>{{ tag }}</h1>
+            <select class="chzn-select" id="select-tags" data-placeholder="Etiquettes" multiple="true" name="etiquettes" style="width:200px;">
+            {% for tag in tags %}
+                {% if tag in statement.tags %}
                 <option selected="selected">{{ tag }}</option>
+                {% else %}
+                <option>{{ tag }}</option>
+                {% endif %}
             {% endfor %}
             </select>
         </div>
@@ -90,6 +93,8 @@ var decimal = "{{ statement.decimal|tojson }}"==="true"
                 <input id="count" type="hidden" name="count" value="1">  
                 {% if statement.decimal %}
                 <input step="0.01" type="number" id="decimal-response" name="statement" type="text" placeholder="Ecrire une réponse..." class="textarea-response" value="{{ statement.possibles_responses[0] }}">
+                {% endif %}
+                {% if statement.decimal or statement.open_question %}
                 <div class="list-response" id="list-response" style="display: none;">  
                     <div class="response">  
                         <div class="switch">  
@@ -134,7 +139,7 @@ var decimal = "{{ statement.decimal|tojson }}"==="true"
         </div>  
             <div class="card-navbar">  
                 <button class="animation rectangle" type="button" onclick="preview()" id="apercu">Aperçu</button>  
-                {% if statement.decimal %}
+                {% if statement.decimal or statement.open_question %}
                 <div id="add_answer" onclick="add_answer()" class="circle animation" style="display: none;"><i class="fas fa-plus"></i></div>  
                 {% else %}
                 <div id="add_answer" onclick="add_answer()" class="circle animation"><i class="fas fa-plus"></i></div>  
