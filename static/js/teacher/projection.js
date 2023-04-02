@@ -97,7 +97,7 @@ socket.on('word_cloud',(word_dict)=>{
     console.log(data);
     $("#cloud_word").html("");
     var layout = d3.layout.cloud()
-        .size([350, 250])
+        .size([350, 300])
         .words(data)
         .on("end", draw);
     layout.start();
@@ -109,7 +109,7 @@ function draw(words) {
     console.log(data)
     d3.select("#cloud_word")
         .append("g")
-        .attr("transform", "translate(" + 350 / 2 + "," + 250 / 2 + ")")
+        .attr("transform", "translate(" + 350 / 2 + "," + 300 / 2 + ")")
         .selectAll("text")
         .data(words)
         .enter()
