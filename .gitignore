@@ -1,9 +1,4 @@
 flask_session
 __pycache__
 *.pyc
-saves/statements.txt
-saves/students.txt
-saves/qcm.txt
-saves/teachers.txt
-saves/livestatementsstats.txt
-saves/liveqcm.txt
+*.txt
