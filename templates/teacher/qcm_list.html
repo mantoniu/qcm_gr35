@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if page=="myqcm" %}
     <title>Mes QCM</title>
+    {% else %}
+    <title>Liste des QCM</title>
+    {% endif %}
     <link rel="stylesheet" type="text/css" href="../../static/css/global.css" >
     <link rel="stylesheet" type="text/css" href="../../static/css/list_qcm.css" >
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" rel="stylesheet">
@@ -27,10 +31,15 @@
 <div id="content">
     <ul>
         {% for qcm in qcm_array %}
-            <a class="lien-qcm" href="{{ 'qcm/' + qcm.id + '/0'}}"><li>{{ qcm.name }}</a><a href="{{ "qcm/delete/" + qcm.id|string }}"> <button type="button" class="suppr-enonce"><i class="fas fa-trash"></i></button></a></li>
+            <a class="lien-qcm" href="{{ 'qcm/' + qcm.id + '/0'}}">
+            <li>{{ qcm.name }}</a>
+                {% if page=="myqcm" %}
+                    <a href="{{ 'qcm/delete/' + qcm.id|string }}"> <button type="button" class="suppr-enonce"><i class="fas fa-trash"></i></button></a>
+                {% endif %}
+            </li>
         {% endfor %}
         {% if qcm_array|length == 0 %}
-            <h2>Aucun Qcm enregistré</h2>
+        <h2> La liste des qcm est vide </h2>
         {% endif %}
     </ul>
 </div>

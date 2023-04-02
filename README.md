@@ -80,12 +80,11 @@ JAVASCRIPT:
     
  HTML :
 
-    - add_students.html
+    - tools.html
     - create.html
     - edit.html
     - enonce.html
     - index.html
-    - my_qcm.html
     - my_states.html
     - qcm_list.html
     - qcm.html

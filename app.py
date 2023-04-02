@@ -215,11 +215,11 @@ def qcm():
             return redirect('/teacher')
 
 
-# Permet de renvoyer la liste des qcm et donc l'affichage de ceux-ci dans my_qcm.html
+# Permet de renvoyer la liste des qcm et donc l'affichage de ceux-ci dans qcm.html
 @app.route('/my_qcm')
 def my_qcm():
       if is_logged("teacher"):
-            return render_template('/teacher/my_qcm.html', my_qcm_array=saving.qcm_data.get_qcm_from_user(session['email']))
+            return render_template('/teacher/qcm_list.html', qcm_array=saving.qcm_data.get_qcm_from_user(session['email']), page="myqcm")
       else:
             return redirect('/teacher')
 
