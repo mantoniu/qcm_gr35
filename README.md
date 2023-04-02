@@ -109,7 +109,9 @@ PYTHON :
     - Jquery chosen : https://harvesthq.github.io/chosen/
     - Documentation Flask-SocketIO : https://flask-socketio.readthedocs.io/en/latest/
     - Uploading files FLask : https://flask.palletsprojects.com/en/2.2.x/patterns/fileuploads/
-
+    - Pyspellchecker : https://pyspellchecker.readthedocs.io/en/latest/quickstart.html
+    - French Leff lemmatizer : https://github.com/ClaudeCoulombe/FrenchLefffLemmatizer
+    - D3.js documentation : https://devdocs.io/d3~4/
 
 ## Amélioration de la partie 1
 
