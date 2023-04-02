@@ -126,10 +126,10 @@ PYTHON :
 
 ## Explication mise en place nuage de mots (Antoine-Marie)
 
-    Pour mettre en place le nuage de mots avec les différentes contraintes demandées, j’ai tout d’abord rechercher comment corriger un mot sur Python. J’ai donc trouvé un module intéressant nommé « pyspellchecker » qui corrige les fautes de frappes et les erreurs en revoyant le mot corrigé. Je me suis ensuite renseigné pour obtenir une méthode efficace afin d’obtenir la base d’un mot, c’est-à-dire sans le pluriel et, par exemple pour les verbes conjugués le verbe à l’infinitif. Cette forme est appelée « le lemme » d’un mot et permet de rassembler sous un seul terme les variantes d’un mot. 
+Pour mettre en place le nuage de mots avec les différentes contraintes demandées, j’ai tout d’abord rechercher comment corriger un mot sur Python. J’ai donc trouvé un module intéressant nommé « pyspellchecker » qui corrige les fautes de frappes et les erreurs en revoyant le mot corrigé. Je me suis ensuite renseigné pour obtenir une méthode efficace afin d’obtenir la base d’un mot, c’est-à-dire sans le pluriel et, par exemple pour les verbes conjugués le verbe à l’infinitif. Cette forme est appelée « le lemme » d’un mot et permet de rassembler sous un seul terme les variantes d’un mot. 
     
-    On enlève donc tout d’abord les majuscules du mot, on procède à sa correction et enfin on obtient son lemme. Si le mot obtenu n’existe pas dans le dictionnaire stockant tous les lemmes et le nombre de réponses correspondant on le rajoute dans ce dictionnaire, sinon on ajoute 1 au nombre de réponse.
+On enlève donc tout d’abord les majuscules du mot, on procède à sa correction et enfin on obtient son lemme. Si le mot obtenu n’existe pas dans le dictionnaire stockant tous les lemmes et le nombre de réponses correspondant on le rajoute dans ce dictionnaire, sinon on ajoute 1 au nombre de réponse.
     
-    Afin de procéder à l’affichage, le dictionnaire est par la suite envoyé au client avec un socket. Il va être traité pour correspondre à la fonction d’affichage qui utilise le module D3.js et donc apparaitre dans l’espace qui lui est consacré sous l’énoncé.
+Afin de procéder à l’affichage, le dictionnaire est par la suite envoyé au client avec un socket. Il va être traité pour correspondre à la fonction d’affichage qui utilise le module D3.js et donc apparaitre dans l’espace qui lui est consacré sous l’énoncé.
 
-    Nous avons effectué différents tests pour vérifier l’efficacité de notre correcteur avec des mots aux pluriels ou bien des mots correspondant au monde de l’informatique.  Certains langages n’étaient pas reconnus et nous les avons donc ajouté dans le correcteur.
+Nous avons effectué différents tests pour vérifier l’efficacité de notre correcteur avec des mots aux pluriels ou bien des mots correspondant au monde de l’informatique.  Certains langages n’étaient pas reconnus et nous les avons donc ajouté dans le correcteur.
