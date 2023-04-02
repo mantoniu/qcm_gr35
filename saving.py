@@ -287,6 +287,7 @@ class StatementsData():
                     one_statement = self.get_random_n_statements_with_tags(tags_array=[tags], n=1, teacher_email=teacher_email, ignore_statements=ignore_statements)
                     if one_statement != []:
                         statements.append(one_statement[0])
+                        ignore_statements.append(one_statement[0])
                     else:
                         return []
             if randomize:
@@ -301,7 +302,7 @@ class StatementsData():
         for ranges in list(tags_ranges.values()):
             min_sum += ranges[0]
             max_sum += ranges[1]
-        if min_sum <= total_statements and total_statements <= max_sum:
+        if not(min_sum <= total_statements and total_statements <= max_sum):
             return []
         qcms = []
         all_statements_with_tags = self.get_all_statements_with_any_tag(list(tags_ranges.keys()), teacher_email)
@@ -328,6 +329,7 @@ class StatementsData():
                     one_statement = self.get_random_n_statements_with_tags(tags_array=[tags], n=1, teacher_email=teacher_email, ignore_statements=ignore_statements)
                     if one_statement != []:
                         statements.append(one_statement[0])
+                        ignore_statements.append(one_statement[0])
                     else:
                         return []
             if randomize:
