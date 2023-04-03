@@ -292,7 +292,7 @@ class StatementsData():
                         return []
             if randomize:
                 shuffle(statements)
-            qcms.append(QCM(name="Questionnaire", statements=statements, user_email=teacher_email))
+            qcms.append(QCM(name="Sujet "+str(count+1), statements=statements, user_email=teacher_email))
             count+=1
         return qcms
     

@@ -31,51 +31,48 @@
     </ul>
   </nav>
 
+<center><h1 style="margin-top: 5%;"> Génération de controles </h1></center>
 
-<div class="contain-body">
-  
-  <h1>Génération de controles </h1>
-  
-  <div class="tags-div">
-    <select id="select-tags" data-placeholder="Etiquettes" multiple="true" name="etiquettes" style="width:500px;">
-      {% for tag in tags %}
-      <option>{{ tag }}</option>
-      {% endfor %}
-    </select>
-    <input class="button-add button-search-submit" type="button" onclick="exam_generator()" value="Valider">
-  </div>
-  
-  <div id="tags-modal" class="modal">
-    <div id="tag-content" class="modal-content">
-      <form id="tag-form" action="/generate_test" method="POST">
-        <span class="close">&times;</span>
-        <label class="form-label" for="customFile"><h3>Donner le nombre de question par tag</h3></label>      
-        <label> Ordre :
-          <select class="form-select" name="order">
-            <option value="shuffle">Mélangé</option>
-            <option value="sort">Par thèmes</option>
-          </select>
-        </label>
-        <label> Mode avancé
-          <input id='advanced' type="checkbox" name="advanced">
-        </label>
-        <ul id="tag-list"></ul>
-        <label> Nombre de sujets :
-          <input required="required" type="number" name="subject-number">
-        </label>
-        <label id='total_number'> Nombre total de question :
-          <input type="number" name="total_number">
-        </label>
-        <input id="submit-tags" type="submit" value="Valider">
-      </form>
-    </div>
-  </div>
-  
-  <h1 style="margin-top: 5%;"> Ajout d'étudiants </h1>
-    
-  <button id="add-student">Ajouter des étudiants</button>
-  
+<div class="tags-div">
+  <select id="select-tags" data-placeholder="Etiquettes" multiple="true" name="etiquettes" style="width:500px;">
+    {% for tag in tags %}
+    <option>{{ tag }}</option>
+    {% endfor %}
+  </select>
+  <input class="button-add button-search-submit" type="button" onclick="exam_generator()" value="Valider">
 </div>
+
+<div id="tags-modal" class="modal">
+  <div id="tag-content" class="modal-content">
+    <form id="tag-form" action="/generate_test" method="POST">
+      <span class="close">&times;</span>
+      <label class="form-label" for="customFile"><h3>Donner le nombre de question par tag</h3></label>      
+      <label style="display: block;"> Ordre :
+        <select style="width: auto; margin-top: 1%;" class="form-select" name="order">
+          <option value="shuffle">Mélangé</option>
+          <option value="sort">Par thèmes</option>
+        </select>
+      </label>
+      <label style="display: block; margin: 10px 0;"> Mode avancé
+        <input id='advanced' type="checkbox" name="advanced">
+      </label>
+      <ul id="tag-list"></ul>
+      <label> Nombre de sujets :
+        <input required="required" type="number" name="subject-number">
+      </label>
+      <label id='total_number'> Nombre total de question :
+        <input type="number" name="total_number">
+      </label>
+      <input id="submit-tags" type="submit" value="Valider" style="margin-top: 5%; display: block;">
+    </form>
+  </div>
+</div>
+
+<center><h1 style="margin-top: 5%;"> Ajout d'étudiants </h1></center>
+
+<center><button id="add-student">Ajouter des étudiants</button></center>
+
+
 
 <div id="csv-modal" class="modal">
   <div class="modal-content">

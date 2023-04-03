@@ -369,6 +369,7 @@ def upload_file():
 def generate_test():
       shuffled = request.form['order'] == "shuffle"
       type_advanced = 'advanced' in request.form
+      anonymous = 'anonymous' in request.form
       user = saving.teachers_data.get_user_by_email(session['email'])
       selected_tags = {}
       value = 0
@@ -386,17 +387,10 @@ def generate_test():
       else:
             qcmlist = saving.statements_data.get_random_sets_of_qcm(selected_tags, session['email'], subjects_number, shuffled)
       if qcmlist:
-            return render_template('/teacher/exam.html',qcm_list=qcmlist)
+            return render_template('/teacher/exam.html',qcm_list=qcmlist,anonymous=anonymous)
       else:
             return redirect(url_for('tools',error=True))
 
-## ROUTE A SUPPRIMER
-@app.route('/exam')
-def exam():
-      exam1 = saving.qcm_data.get_qcm_by_id("7ab14ffd8d57e76131d051889fb777f3")
-      exam2 = saving.qcm_data.get_qcm_by_id("4f95a8899d30e54efbe1ddd65f12088c")
-      qcm_list = [exam1,exam2]
-      return render_template('/teacher/exam.html',qcm_list=qcm_list)
 
 @socket.on('disconnect')
 def disconnection():
@@ -516,13 +510,14 @@ def next_question(liveqcm_id,statement_number):
 @socket.on('correction')
 def correction(id):
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(id)
-      statement = liveqcm.get_current_statement()
-      liveqcm.pause()
-      if statement.decimal:
-            valids_responses = statement.possibles_responses
-      else:
-            valids_responses = statement.valids_responses
-      socket.emit('correction',{"valids_responses":valids_responses,"decimal":statement.decimal},to=id)
+      if liveqcm != None:
+            statement = liveqcm.get_current_statement()
+            liveqcm.pause()
+            if statement.decimal:
+                  valids_responses = statement.possibles_responses
+            else:
+                  valids_responses = statement.valids_responses
+            socket.emit('correction',{"valids_responses":valids_responses,"decimal":statement.decimal},to=id)
 
 
 # Envoie des statistiques
