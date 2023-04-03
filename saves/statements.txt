@@ -1,6 +1,16 @@
-c95dc579@__|||2SPYTHON1@__|||2SPY1@__|||2S0@__|||2Seee@gmail.com@__|||2Spython@__|||2S1@__|||2S2@__|||1S48936dff@__|||2SPYTHON2@__|||2SPY2@__|||2S0@__|||2Seee@gmail.com@__|||2Spython@__|||2S1@__|||2S2@__|||1S22779b75@__|||2SPYTHON3@__|||2SPY3@__|||2S0@__|||2Seee@gmail.com@__|||2Spython@__|||2S1@__|||2S2@__|||1S49a0243a@__|||2SPYTHON4@__|||2SPY4@__|||2S0@__|||2Seee@gmail.com@__|||2Spython@__|||2S1@__|||2S2@__|||1Sb368cdfd@__|||2SJAVA1@__|||2SJAVA1@__|||2S0@__|||2Seee@gmail.com@__|||2Sjava@__|||2S1@__|||2S2@__|||1S8eb628b5@__|||2SJAVA2@__|||2SJAVA2@__|||2S0@__|||2Seee@gmail.com@__|||2Sjava@__|||2S1@__|||2S2@__|||1S55603d91@__|||2SJAVA3@__|||2SJAVA3@__|||2S0@__|||2Seee@gmail.com@__|||2Sjava@__|||2S1@__|||2S2@__|||1S5ee3fff9@__|||2SJAVA4@__|||2SJAVA4@__|||2S0@__|||2Seee@gmail.com@__|||2Sjava@__|||2S1@__|||2S2
-@__|||1S34fb2d41@__|||2Sbonjour@__|||2SCombien de pates à une mouche ?
+bbe81a17@__|||2SLangages@__|||2SQuel est votre langage préféré ?@__|||2S0@__|||2Seee@gmail.com@__|||2Sprogrammation@__|||2Sopen_question@__|||1S3c15e570@__|||2SCalcul@__|||2SQue vaut : $ 2 + 3*4 $ ?@__|||2S0@__|||2Seee@gmail.com@__|||2Smaths@__|||2S14@__|||1S50c0a08d@__|||2SFonction récursive@__|||2SA quoi correspond cette fonction : 
 
+```python
+def fonction(n):
+    if n == 0:
+        return 1
+    else:
+        return n  * factorielle(n-1)
+```@__|||2S1@__|||2Seee@gmail.com@__|||2Spython@__|||2SFonction multiplication@__|||2SFonction factorielle@__|||2SFonction somme@__|||1Sc833730f@__|||2SBoucle For@__|||2SQuel est le résultat de cette fonction ?
 
-## Title 1 ##
-# Title 2 #@__|||2S0@__|||2Swollscheidtf@gmail.com@__|||2Ssvt@__|||2Sd@__|||2Sd
+```
+somme=0
+for i in range(4) :
+   somme+= i
+print(somme)
+```@__|||2S0@__|||2Seee@gmail.com@__|||2Spython@__|||2S6@__|||2S10@__|||2S14@__|||1Sbb3dbef9@__|||2SModule@__|||2S## Quel module python avez-vous le plus utilisé ?@__|||2S0@__|||2Seee@gmail.com@__|||2Spython@__|||2Sopen_question@__|||1S6b641fed@__|||2SFlask Socket-IO@__|||2SComment obtenir le socket id d'un client dans un serveur Flask ?@__|||2S2@__|||2Seee@gmail.com@__|||2Spython@__|||2Srequest.id@__|||2Ssocket.id@__|||2Srequest.sid@__|||1Saf15db1e@__|||2SMots clés@__|||2SQuel mot clé permet en java de définir qu'une classe est une spécialisation d'un autre classe ?@__|||2S1@__|||2Seee@gmail.com@__|||2Sjava@__|||2Simplements@__|||2Sextends@__|||2Sspecializes@__|||1S90bb68ef@__|||2SEgualité String@__|||2SComment vérifié l'égalité entre deux String en Java ?@__|||2S0@__|||2Seee@gmail.com@__|||2Sjava@__|||2SAvec la méthode equals()@__|||2SAvec l'opérateur "=="@__|||1S6830b012@__|||2SSurcharge@__|||2SQuand la surcharge de méthode est-elle déterminée?@__|||2S3@__|||2Seee@gmail.com@__|||2Sjava@__|||2SAu moment de l’exécution@__|||2S Au moment de la compilation@__|||2SAu moment du codage@__|||2SAu moment de l’exécution@__|||1Scf29c27c@__|||2SVisibilité@__|||2SQuels mots-clés sont utilisés pour spécifier la visibilité des propriétés et des méthodes ?@__|||2S1;3;4@__|||2Seee@gmail.com@__|||2Sjava@__|||2Sfinal@__|||2Sprivate@__|||2Sabstract@__|||2Sprotected@__|||2Spublic

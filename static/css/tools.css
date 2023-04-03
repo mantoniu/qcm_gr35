@@ -25,21 +25,3 @@
     margin: 10px 0;
     display: none;
 }
-#add-student{
-    width: 450px;
-    height: 20%;
-    border: 8px solid rgb(198, 224, 202);
-    border-radius: 20px;
-    background: rgb(198, 224, 202);
-    color: black;
-    font-size: 1.5em;
-    font-weight: bold;
-    transition: 0.3s ease;
-}
-#add-student:hover{
-    background: #9ACF87;
-}
-#add-student:active{
-    transform: scale(0.95);
-    background: #a5d196;
-}

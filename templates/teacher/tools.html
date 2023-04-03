@@ -46,13 +46,17 @@
   <div id="tag-content" class="modal-content">
     <form id="tag-form" action="/generate_test" method="POST">
       <span class="close">&times;</span>
-      <label class="form-label" for="customFile"><h3>Donner le nombre de question par tag</h3></label>      
+      <center><label class="form-label" for="customFile"><h2>Générateur d'examen</h2></label>    </center>  
+      <label style="display: block;"> Anonyme 
+        <input type="checkbox" name="anonymous">
+      </label>
       <label style="display: block;"> Ordre :
         <select style="width: auto; margin-top: 1%;" class="form-select" name="order">
           <option value="shuffle">Mélangé</option>
           <option value="sort">Par thèmes</option>
         </select>
       </label>
+      <h3 style="margin-top: 15px;">Nombre de question par tag</h3>
       <label style="display: block; margin: 10px 0;"> Mode avancé
         <input id='advanced' type="checkbox" name="advanced">
       </label>
@@ -82,8 +86,9 @@
       <input type="file" name="file" class="form-control" id="customFile" accept=".csv"/>
       <input id="submitnews" type="submit" value="Valider">
     </form>  
-  </div>
 </div>
+</div>
+
 
 <script src="../../static/js/teacher/tools.js"></script>
 </body>
