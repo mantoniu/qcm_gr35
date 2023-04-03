@@ -45,68 +45,70 @@ var decimal = false;
 
 </script>
 <script type="text/javascript" src="../../static/js/teacher/creation.js"></script>
-<form method="POST" id="new-statement" action="/newstate" class="form-card">
-
-    <div class="info" id="info">
-        <div class="decimal">
-            <label for="decimal">Decimal</label>
-            <input type="checkbox" id="decimal" name="decimal">
-        </div>            
-        <label> Question ouverte
-            <input type="checkbox" id="open_question" name="open_question">
-        </label>
-        <div class="name_card">
-        <p>Nom : </p>
-        <input name="statement_name" id="statement_name" type="text">
-        </div>
-        <div class="etiquettes_bloc">
-        <p>Choix des étiquettes : &nbsp;</p>
-        <select class="chzn-select" id="select-tags" data-placeholder="Etiquettes" multiple="true" name="etiquettes" style="width:200px;">
-        {% for tag in tags %}
-        <option>{{ tag }}</option>
-        {% endfor %}
-        </select>
-    </div>
-    </div>
+<div class="contain-body">
+    <form method="POST" id="new-statement" action="/newstate" class="form-card">
     
-
-    <div class="card">  
-        <div class="header-card" id="header">  
-            <textarea name="enonce" type="text" spellcheck="false" placeholder="Ecrire l énoncé..." id="enonce"></textarea>
+        <div class="info" id="info">
+            <div class="decimal">
+                <label for="decimal">Decimal</label>
+                <input type="checkbox" id="decimal" name="decimal">
+            </div>            
+            <label> Question ouverte
+                <input type="checkbox" id="open_question" name="open_question">
+            </label>
+            <div class="name_card">
+            <p>Nom : </p>
+            <input name="statement_name" id="statement_name" type="text">
+            </div>
+            <div class="etiquettes_bloc">
+            <p>Choix des étiquettes : &nbsp;</p>
+            <select class="chzn-select" id="select-tags" data-placeholder="Etiquettes" multiple="true" name="etiquettes" style="width:200px;">
+            {% for tag in tags %}
+            <option>{{ tag }}</option>
+            {% endfor %}
+            </select>
+        </div>
+        </div>
+        
+    
+        <div class="card">  
+            <div class="header-card" id="header">  
+                <textarea name="enonce" type="text" spellcheck="false" placeholder="Ecrire l énoncé..." id="enonce"></textarea>
+            </div> 
+            <div class="body-card">  
+                <div class="content" id="content-response">  
+                    <input step="0.01" type="number" id="decimal-response" name="statement" type="text" placeholder="Ecrire une réponse..." class="textarea-response" style="display: none;"></textarea>  
+                    <input id="count" type="hidden" name="count" value="1">  
+                    <div class="list-response" id="list-response">  
+                        <div class="response">  
+                            <div class="switch">  
+                                <label id="switch0" class="switch">
+                                    <input type="checkbox" name="switch0" id="switch0">
+                                    <span class="slider round"></span>  
+                                </label>  
+                            </div>  
+                            <textarea name="statement0" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
+                        </div>  
+                        <div class="response">  
+                            <div class="switch">  
+                                <label id="switch1" class="switch">
+                                    <input type="checkbox" name="switch1" id="switch1">
+                                    <span class="slider round"></span>  
+                                </label>  
+                            </div>  
+                            <textarea name="statement1" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
+                        </div>  
+                </div>  
+            </div>  
+                <div class="card-navbar">  
+                    <button class="animation rectangle" type="button" onclick="preview()" id="apercu">Aperçu</button>  
+                    <div id="add_answer" onclick="add_answer()" class="circle animation"><i class="fas fa-plus"></i></div>  
+                    <button class="animation rectangle" type="submit" id="ajouter">Valider</button>
+                </div>  
+            </div>  
         </div> 
-        <div class="body-card">  
-            <div class="content" id="content-response">  
-                <input step="0.01" type="number" id="decimal-response" name="statement" type="text" placeholder="Ecrire une réponse..." class="textarea-response" style="display: none;"></textarea>  
-                <input id="count" type="hidden" name="count" value="1">  
-                <div class="list-response" id="list-response">  
-                    <div class="response">  
-                        <div class="switch">  
-                            <label id="switch0" class="switch">
-                                <input type="checkbox" name="switch0" id="switch0">
-                                <span class="slider round"></span>  
-                            </label>  
-                        </div>  
-                        <textarea name="statement0" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
-                    </div>  
-                    <div class="response">  
-                        <div class="switch">  
-                            <label id="switch1" class="switch">
-                                <input type="checkbox" name="switch1" id="switch1">
-                                <span class="slider round"></span>  
-                            </label>  
-                        </div>  
-                        <textarea name="statement1" type="text" placeholder="Ecrire une réponse..." class="textarea-response"></textarea>  
-                    </div>  
-            </div>  
-        </div>  
-            <div class="card-navbar">  
-                <button class="animation rectangle" type="button" onclick="preview()" id="apercu">Aperçu</button>  
-                <div id="add_answer" onclick="add_answer()" class="circle animation"><i class="fas fa-plus"></i></div>  
-                <button class="animation rectangle" type="submit" id="ajouter">Valider</button>
-            </div>  
-        </div>  
-    </div> 
-</form>
+    </form>
+</div>
 
 </body>
 </html>
