@@ -369,6 +369,7 @@ def upload_file():
 def generate_test():
       shuffled = request.form['order'] == "shuffle"
       type_advanced = 'advanced' in request.form
+      anonymous = 'anonymous' in request.form
       user = saving.teachers_data.get_user_by_email(session['email'])
       selected_tags = {}
       value = 0
@@ -386,7 +387,7 @@ def generate_test():
       else:
             qcmlist = saving.statements_data.get_random_sets_of_qcm(selected_tags, session['email'], subjects_number, shuffled)
       if qcmlist:
-            return render_template('/teacher/exam.html',qcm_list=qcmlist)
+            return render_template('/teacher/exam.html',qcm_list=qcmlist,anonymous=anonymous)
       else:
             return redirect(url_for('tools',error=True))
 
