@@ -391,13 +391,6 @@ def generate_test():
       else:
             return redirect(url_for('tools',error=True))
 
-## ROUTE A SUPPRIMER
-@app.route('/exam')
-def exam():
-      exam1 = saving.qcm_data.get_qcm_by_id("7ab14ffd8d57e76131d051889fb777f3")
-      exam2 = saving.qcm_data.get_qcm_by_id("4f95a8899d30e54efbe1ddd65f12088c")
-      qcm_list = [exam1,exam2]
-      return render_template('/teacher/exam.html',qcm_list=qcm_list)
 
 @socket.on('disconnect')
 def disconnection():

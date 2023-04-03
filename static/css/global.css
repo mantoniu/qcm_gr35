@@ -49,3 +49,21 @@ nav li a:hover {
   justify-content: center;
   display: contents;
 }
+
+
+@page{
+  size: A4;
+  margin: 2.5em;
+}
+
+@media print {
+  .pagebreak {
+    clear: both;
+    page-break-after: always;
+  }
+  div{
+    margin-top: 20px;
+    break-inside: avoid;
+  }
+  
+}
