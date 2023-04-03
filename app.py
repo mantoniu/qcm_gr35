@@ -516,13 +516,14 @@ def next_question(liveqcm_id,statement_number):
 @socket.on('correction')
 def correction(id):
       liveqcm = saving.liveqcm_data.get_liveqcm_by_id(id)
-      statement = liveqcm.get_current_statement()
-      liveqcm.pause()
-      if statement.decimal:
-            valids_responses = statement.possibles_responses
-      else:
-            valids_responses = statement.valids_responses
-      socket.emit('correction',{"valids_responses":valids_responses,"decimal":statement.decimal},to=id)
+      if liveqcm != None:
+            statement = liveqcm.get_current_statement()
+            liveqcm.pause()
+            if statement.decimal:
+                  valids_responses = statement.possibles_responses
+            else:
+                  valids_responses = statement.valids_responses
+            socket.emit('correction',{"valids_responses":valids_responses,"decimal":statement.decimal},to=id)
 
 
 # Envoie des statistiques
